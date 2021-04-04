@@ -1,14 +1,16 @@
 package com.itba.runningMate.landing;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -16,35 +18,58 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
 
-public class LandingActivity extends AppCompatActivity {
+public class LandingActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    public static final double DEFAULT_LATITUDE = -34.5997;
+    public static final double DEFAULT_LONGITUDE = -58.3819;
+    public static final int DEFAULT_ZOOM = 15;
+    public static final int MY_LOCATION_ZOOM = 15;
+    public static final String KEY_CAMERA_POSITION = "camera_position";
+    public static final String KEY_LOCATION = "location";
 
     private Button startButton;
     private Button stopButton;
-    private TextView textView;
+
     private LocationUpdateBroadcastReceiver locationUpdateBroadcastReceiver;
+
+    private SupportMapFragment mapFragment;
+    private GoogleMap googleMap;
+    private boolean centerCamara;
+    /*
+        estos campos me pueden servir para el caso que no este pudiendo conseguir la ultima
+        ubicación, muestro esto
+    */
+    private LatLng lastKnownLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
 
+        centerCamara = true;
+
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         startButton = findViewById(R.id.button_landing_start);
         stopButton = findViewById(R.id.button_landing_stop);
-        textView = findViewById(R.id.text);
         locationUpdateBroadcastReceiver = new LocationUpdateBroadcastReceiver();
-
 
         startButton.setOnClickListener(l -> startTracking());
         stopButton.setOnClickListener(l -> stopTracking());
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestLocationPermission();
-        } else {
-            initLocationService();
+        if (savedInstanceState != null) {
+            lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+//            cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
     }
 
@@ -61,8 +86,12 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     private void initLocationService() {
-        Intent intent = new Intent(this, LocationService.class);
-        startService(intent);
+        if (!hasLocationPermissions()) {
+            requestLocationPermission();
+        } else {
+            Intent intent = new Intent(this, LocationService.class);
+            startService(intent);
+        }
     }
 
     private void requestLocationPermission() {
@@ -92,6 +121,8 @@ public class LandingActivity extends AppCompatActivity {
                     grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 initLocationService();
+                initGoogleMapMyLocationUI();
+                getDeviceLocation();
                 return;
             } else {
                 new AlertDialog.Builder(this)
@@ -105,8 +136,7 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     private void startTracking() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (!hasLocationPermissions()) {
             requestLocationPermission();
         } else {
             sendCommandTo(LocationService.class, LocationService.ACTION_START_TRACKING);
@@ -114,8 +144,7 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     private void stopTracking() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (!hasLocationPermissions()) {
             requestLocationPermission();
         } else {
             sendCommandTo(LocationService.class, LocationService.ACTION_STOP_TRACKING);
@@ -128,6 +157,82 @@ public class LandingActivity extends AppCompatActivity {
         startService(intent);
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+
+        if (!hasLocationPermissions()) {
+            requestLocationPermission();
+            return;
+        }
+
+        initLocationService();
+        initGoogleMapMyLocationUI();
+        getDeviceLocation();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getDeviceLocation() {
+        if (googleMap != null && hasLocationPermissions()) {
+            LocationServices.getFusedLocationProviderClient(this)
+                    .getLastLocation()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Location location = task.getResult();
+                            lastKnownLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(location.getLatitude(),
+                                            location.getLongitude()), MY_LOCATION_ZOOM));
+                        } else {
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(DEFAULT_LATITUDE,
+                                            DEFAULT_LONGITUDE), DEFAULT_ZOOM));
+                        }
+                    });
+        } else {
+            requestLocationPermission();
+        }
+    }
+
+    private void initGoogleMapMyLocationUI() {
+        if (googleMap == null) {
+            return;
+        }
+        try {
+            if (hasLocationPermissions()) {
+                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.setOnCameraMoveStartedListener(i -> {
+                    if (i == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION
+                            || i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                        centerCamara = false;
+                    }
+                });
+                googleMap.setOnMyLocationButtonClickListener(() -> centerCamara = true);
+            } else {
+                googleMap.setMyLocationEnabled(false);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                requestLocationPermission();
+            }
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    private boolean hasLocationPermissions() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        if (googleMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, googleMap.getCameraPosition());
+            outState.putParcelable(KEY_LOCATION, lastKnownLocation);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
     private class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -135,7 +240,12 @@ public class LandingActivity extends AppCompatActivity {
             if (intent.getAction().equals(LocationService.ACTION_LOCATION_UPDATE)) {
                 double latitude = intent.getDoubleExtra("latitude", 0f);
                 double longitude = intent.getDoubleExtra("longitude", 0f);
-                textView.setText(latitude + ", " + longitude);
+                lastKnownLocation = new LatLng(latitude, longitude);
+                if (centerCamara) {
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(latitude,
+                                    longitude), MY_LOCATION_ZOOM));
+                }
             }
         }
     }

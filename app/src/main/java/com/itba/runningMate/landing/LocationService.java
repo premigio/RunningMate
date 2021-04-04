@@ -33,6 +33,8 @@ public class LocationService extends Service {
     static final String ACTION_START_TRACKING = Constants.APPLICATION_PACKAGE + ".START_TRACKING";
     static final String ACTION_STOP_TRACKING = Constants.APPLICATION_PACKAGE + ".STOP_TRACKING";
     static final String HANDLER_THREAD_NAME = "LocationServiceHandlerThread";
+    static final int LOCATION_UPDATE_INTERVAL = 5000;
+    static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
 
     private NotificationManagerCompat notificationManager;
 
@@ -139,8 +141,8 @@ public class LocationService extends Service {
     protected void initUpLocationUpdates() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(1000);
+        locationRequest.setInterval(LOCATION_UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(LOCATION_UPDATE_FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationCallback = new LocationCallback() {
             @Override
