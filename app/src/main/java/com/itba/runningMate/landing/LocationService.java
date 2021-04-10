@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Binder;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
@@ -15,12 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
 
@@ -43,13 +46,14 @@ public class LocationService extends Service {
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-    private List<Location> locations;
+    private List<LatLng> locations;
     private boolean isTracking;
+    private OnLocationUpdateListener onLocationUpdateListener;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new LocationServiceBinder();
     }
 
 
@@ -129,8 +133,12 @@ public class LocationService extends Service {
     private void handleLocationUpdate(@NonNull LocationResult locationResult) {
         Location location = locationResult.getLastLocation();
         if (isTracking) {
-            locations.add(location);
+            locations.add(new LatLng(location.getLatitude(), location.getLongitude()));
         }
+        if (onLocationUpdateListener != null) {
+            onLocationUpdateListener.onLocationUpdate(new LatLng(location.getLatitude(), location.getLongitude()));
+        }
+
         Intent intent = new Intent(ACTION_LOCATION_UPDATE);
         intent.putExtra("latitude", location.getLatitude());
         intent.putExtra("longitude", location.getLongitude());
@@ -154,13 +162,42 @@ public class LocationService extends Service {
                 locationCallback,
                 Looper.getMainLooper()));
         /*
-        TODO: chequear que los settings sean los apropiados
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
-        SettingsClient client = LocationServices.getSettingsClient(this);
-        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
-        task.addOnFailureListener( ... );
-         */
+            TODO: chequear que los settings sean los apropiados
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(locationRequest);
+            SettingsClient client = LocationServices.getSettingsClient(this);
+            Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+            task.addOnFailureListener( ... );
+        */
+    }
+
+    public class LocationServiceBinder extends Binder {
+
+        public LocationServiceBinder() {
+        }
+
+        /*
+            Aca van todos los metodos que yo quiero/permito que el cliente pueda utilizar
+        */
+        public List<LatLng> getLocations() {
+            return locations;
+        }
+
+        public boolean isTracking() {
+            return isTracking;
+        }
+
+        public void startTracking() {
+            handler.post(LocationService.this::toggleTrackingService);
+        }
+
+        public void stopTracking() {
+            handler.post(LocationService.this::toggleTrackingService);
+        }
+
+        public void setOnLocationUpdateListener(OnLocationUpdateListener listener) {
+            onLocationUpdateListener = listener;
+        }
     }
 
 }

@@ -3,12 +3,15 @@ package com.itba.runningMate.landing;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.Button;
 
@@ -24,10 +27,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
+import com.itba.runningMate.landing.LocationService.LocationServiceBinder;
 
-public class LandingActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+public class LandingActivity extends AppCompatActivity implements OnMapReadyCallback, OnLocationUpdateListener {
 
     public static final double DEFAULT_LATITUDE = -34.5997;
     public static final double DEFAULT_LONGITUDE = -58.3819;
@@ -40,6 +46,9 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
     private Button stopButton;
 
     private LocationUpdateBroadcastReceiver locationUpdateBroadcastReceiver;
+    private LocationServiceBinder locationServiceBinder;
+    private ServiceConnection serviceConnection;
+    private boolean serviceBounded;
 
     private SupportMapFragment mapFragment;
     private GoogleMap googleMap;
@@ -57,32 +66,33 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
 
         centerCamara = true;
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         startButton = findViewById(R.id.button_landing_start);
         stopButton = findViewById(R.id.button_landing_stop);
         locationUpdateBroadcastReceiver = new LocationUpdateBroadcastReceiver();
+        serviceConnection = new LocationServiceConnection();
 
         startButton.setOnClickListener(l -> startTracking());
         stopButton.setOnClickListener(l -> stopTracking());
 
         if (savedInstanceState != null) {
             lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-//            cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(locationUpdateBroadcastReceiver, new IntentFilter(LocationService.ACTION_LOCATION_UPDATE));
+//        registerReceiver(locationUpdateBroadcastReceiver, new IntentFilter(LocationService.ACTION_LOCATION_UPDATE));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(locationUpdateBroadcastReceiver);
+        serviceBounded = false;
+        unbindService(serviceConnection);
+//        unregisterReceiver(locationUpdateBroadcastReceiver);
     }
 
     private void initLocationService() {
@@ -91,6 +101,8 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
         } else {
             Intent intent = new Intent(this, LocationService.class);
             startService(intent);
+            // The binding is asynchronous, and bindService() returns immediately without returning the IBinder to the client.
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
     }
 
@@ -194,6 +206,7 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void initGoogleMapMyLocationUI() {
         if (googleMap == null) {
             return;
@@ -233,6 +246,38 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onLocationUpdate(LatLng newLocation) {
+        if (serviceBounded) {
+            if (centerCamara) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, MY_LOCATION_ZOOM));
+            }
+            if (lastKnownLocation != null && locationServiceBinder.isTracking()) {
+                googleMap.addPolyline(new PolylineOptions()
+                        .color(Color.BLUE)
+                        .width(8f)
+                        .add(lastKnownLocation)
+                        .add(newLocation));
+            }
+        }
+        lastKnownLocation = newLocation;
+    }
+
+    public class LocationServiceConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            locationServiceBinder = (LocationServiceBinder) service;
+            serviceBounded = true;
+            locationServiceBinder.setOnLocationUpdateListener(LandingActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBounded = false;
+        }
+    }
+
     private class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -246,6 +291,10 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
                             new LatLng(latitude,
                                     longitude), MY_LOCATION_ZOOM));
                 }
+//                if (serviceBounded) {
+//                    System.out.println("My locations...");
+//                    System.out.println(locationServiceBinder.getLocations());
+//                }
             }
         }
     }
