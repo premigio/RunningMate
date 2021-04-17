@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -49,7 +50,6 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
     private SupportMapFragment mapFragment;
     private GoogleMap googleMap;
 
-    private LandingStateStorage stateStorage;
     private LandingPresenter presenter;
     private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
         if (i == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION
@@ -68,10 +68,7 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
 
         setContentView(R.layout.activity_landing);
 
-        final SharedPreferences preferences = this.getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
-
-        stateStorage = new LandingStateStorageImpl(preferences);
-        presenter = new LandingPresenter(this, stateStorage);
+        createPresenter();
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -81,6 +78,15 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
 
         startButton.setOnClickListener(l -> startTracking());
         stopButton.setOnClickListener(l -> stopTracking());
+    }
+
+    public void createPresenter() {
+        presenter = (LandingPresenter) getLastNonConfigurationInstance();
+        if (presenter == null) {
+            final SharedPreferences preferences = this.getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
+            final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
+            presenter = new LandingPresenter(this, stateStorage);
+        }
     }
 
     @Override
@@ -260,5 +266,11 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onServiceDisconnected(ComponentName name) {
         presenter.onTrackingServiceDetached();
+    }
+
+    @Nullable
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return presenter;
     }
 }
