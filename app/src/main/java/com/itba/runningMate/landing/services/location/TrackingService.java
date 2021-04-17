@@ -1,4 +1,4 @@
-package com.itba.runningMate.landing;
+package com.itba.runningMate.landing.services.location;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -6,17 +6,17 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Binder;
+import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Process;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -26,70 +26,91 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
+import com.itba.runningMate.landing.ui.LandingActivity;
 
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LocationService extends Service {
+public class TrackingService extends Service {
 
-    static final String ACTION_LOCATION_UPDATE = Constants.APPLICATION_PACKAGE + ".LOCATION_UPDATE";
-    static final String ACTION_START_TRACKING = Constants.APPLICATION_PACKAGE + ".START_TRACKING";
-    static final String ACTION_STOP_TRACKING = Constants.APPLICATION_PACKAGE + ".STOP_TRACKING";
-    static final String HANDLER_THREAD_NAME = "LocationServiceHandlerThread";
-    static final int LOCATION_UPDATE_INTERVAL = 5000;
-    static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
+    public static final String HANDLER_THREAD_NAME = "LocationServiceHandlerThread";
+    public static final int LOCATION_UPDATE_INTERVAL = 5000;
+    public static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
 
     private NotificationManagerCompat notificationManager;
 
     private HandlerThread handlerThread;
-    private LocationServiceHandler handler;
+    private Handler handler;
 
     private FusedLocationProviderClient fusedLocationClient;
-    private LocationCallback locationCallback;
-    private List<LatLng> locations;
+    private WeakReference<OnLocationUpdateListener> onLocationUpdateListener;
+    private LatLng lastLocation;
+    private List<LatLng> trackedLocations;
     private boolean isTracking;
-    private OnLocationUpdateListener onLocationUpdateListener;
+    private final LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(@NonNull LocationResult locationResult) {
+            handleLocationUpdate(locationResult);
+        }
+    };
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return new LocationServiceBinder();
+        return new TrackingServiceBinder(this);
     }
-
 
     @Override
     public void onCreate() {
         super.onCreate();
-        locations = new LinkedList<>();
+        Log.i(TrackingService.class.getName(), " => Tracking service started");
+        trackedLocations = new LinkedList<>();
         isTracking = false;
         notificationManager = NotificationManagerCompat.from(this);
         handlerThread = new HandlerThread(HANDLER_THREAD_NAME, Process.THREAD_PRIORITY_BACKGROUND);
         handlerThread.start();
-        handler = new LocationServiceHandler(handlerThread.getLooper());
+        handler = new Handler(handlerThread.getLooper());
         initUpLocationUpdates();
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        String action = intent.getAction();
-        if (action != null) {
-            switch (action) {
-                case ACTION_START_TRACKING:
-                    startForegroundService();
-                    handler.post(this::toggleTrackingService);
-                    break;
-                case ACTION_STOP_TRACKING:
-                    stopForegroundService();
-                    handler.post(this::toggleTrackingService);
-                    break;
-                default:
-                    break;
-            }
-        }
-
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+        handlerThread.quit();
+    }
+
+    public void startTracking() {
+        startForegroundService();
+        handler.post(TrackingService.this::toggleTrackingService);
+    }
+
+    public void stopTracking() {
+        stopForegroundService();
+        handler.post(TrackingService.this::toggleTrackingService);
+    }
+
+    public boolean isTracking() {
+        return isTracking;
+    }
+
+    public void setOnLocationUpdateListener(OnLocationUpdateListener listener) {
+        onLocationUpdateListener = new WeakReference<>(listener);
+    }
+
+    public void removeLocationUpdateListener() {
+        onLocationUpdateListener = null;
+    }
+
+    public List<LatLng> getTrackedLocations() {
+        return trackedLocations;
     }
 
     private void startForegroundService() {
@@ -123,44 +144,29 @@ public class LocationService extends Service {
         isTracking = !isTracking;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        fusedLocationClient.removeLocationUpdates(locationCallback);
-        handlerThread.quit();
+    public LatLng getLastLocation() {
+        return lastLocation;
     }
 
     private void handleLocationUpdate(@NonNull LocationResult locationResult) {
         Location location = locationResult.getLastLocation();
+        lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
         if (isTracking) {
-            locations.add(new LatLng(location.getLatitude(), location.getLongitude()));
+            trackedLocations.add(lastLocation);
         }
         if (onLocationUpdateListener != null) {
-            onLocationUpdateListener.onLocationUpdate(new LatLng(location.getLatitude(), location.getLongitude()));
+            onLocationUpdateListener.get().onLocationUpdate(lastLocation.latitude, lastLocation.longitude);
         }
-
-        Intent intent = new Intent(ACTION_LOCATION_UPDATE);
-        intent.putExtra("latitude", location.getLatitude());
-        intent.putExtra("longitude", location.getLongitude());
-        sendBroadcast(intent);
     }
 
     @SuppressLint("MissingPermission")
-    protected void initUpLocationUpdates() {
+    private void initUpLocationUpdates() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(LOCATION_UPDATE_INTERVAL);
         locationRequest.setFastestInterval(LOCATION_UPDATE_FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                handleLocationUpdate(locationResult);
-            }
-        };
-        handler.post(() -> fusedLocationClient.requestLocationUpdates(locationRequest,
-                locationCallback,
-                Looper.getMainLooper()));
+        handler.post(() -> fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper()));
         /*
             TODO: chequear que los settings sean los apropiados
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -169,35 +175,6 @@ public class LocationService extends Service {
             Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
             task.addOnFailureListener( ... );
         */
-    }
-
-    public class LocationServiceBinder extends Binder {
-
-        public LocationServiceBinder() {
-        }
-
-        /*
-            Aca van todos los metodos que yo quiero/permito que el cliente pueda utilizar
-        */
-        public List<LatLng> getLocations() {
-            return locations;
-        }
-
-        public boolean isTracking() {
-            return isTracking;
-        }
-
-        public void startTracking() {
-            handler.post(LocationService.this::toggleTrackingService);
-        }
-
-        public void stopTracking() {
-            handler.post(LocationService.this::toggleTrackingService);
-        }
-
-        public void setOnLocationUpdateListener(OnLocationUpdateListener listener) {
-            onLocationUpdateListener = listener;
-        }
     }
 
 }
