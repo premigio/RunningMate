@@ -1,24 +1,29 @@
 package com.itba.runningMate.landing.ui;
 
+import com.itba.runningMate.domain.Sprint;
 import com.itba.runningMate.landing.model.Route;
 import com.itba.runningMate.landing.repository.LandingStateStorage;
 import com.itba.runningMate.landing.services.location.OnLocationUpdateListener;
 import com.itba.runningMate.landing.services.location.Tracker;
+import com.itba.runningMate.repository.sprint.SprintRepository;
 
 import java.lang.ref.WeakReference;
+import java.util.Calendar;
 
 public class LandingPresenter implements OnLocationUpdateListener {
 
     private final WeakReference<LandingView> view;
     private final LandingStateStorage stateStorage;
+    private final SprintRepository sprintRepository;
 
     private Tracker tracker;
     private boolean isTrackerAttached;
 
-    public LandingPresenter(LandingView view, LandingStateStorage stateStorage) {
+    public LandingPresenter(final LandingStateStorage stateStorage, final SprintRepository sprintRepository, final LandingView view) {
         this.isTrackerAttached = false;
         this.view = new WeakReference<>(view);
         this.stateStorage = stateStorage;
+        this.sprintRepository = sprintRepository;
     }
 
     public void onViewAttached() {
@@ -82,7 +87,7 @@ public class LandingPresenter implements OnLocationUpdateListener {
         if (view.get() != null && !view.get().areLocationPermissionGranted()) {
             view.get().requestLocationPermission();
         } else {
-            if (isTrackerAttached) {
+            if (isTrackerAttached && !tracker.isTracking()) {
                 tracker.startTracking();
             }
         }
@@ -92,8 +97,13 @@ public class LandingPresenter implements OnLocationUpdateListener {
         if (view.get() != null && !view.get().areLocationPermissionGranted()) {
             view.get().requestLocationPermission();
         } else {
-            if (isTrackerAttached) {
+            if (isTrackerAttached && tracker.isTracking()) {
                 tracker.stopTracking();
+                sprintRepository.insertRoute(new Sprint()
+                        .route(tracker.querySprint().getLocations())
+                        .startTime(Calendar.getInstance().getTime())
+                        .endTime(Calendar.getInstance().getTime())
+                );
             }
         }
     }

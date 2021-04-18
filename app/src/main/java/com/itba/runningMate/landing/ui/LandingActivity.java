@@ -29,11 +29,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
+import com.itba.runningMate.db.SprintDb;
 import com.itba.runningMate.landing.model.Route;
 import com.itba.runningMate.landing.repository.LandingStateStorage;
 import com.itba.runningMate.landing.repository.LandingStateStorageImpl;
 import com.itba.runningMate.landing.services.location.Tracker;
 import com.itba.runningMate.landing.services.location.TrackingService;
+import com.itba.runningMate.repository.sprint.SprintRepository;
+import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 
 public class LandingActivity extends AppCompatActivity implements OnMapReadyCallback, LandingView, ServiceConnection {
 
@@ -85,7 +88,8 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
         if (presenter == null) {
             final SharedPreferences preferences = this.getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
             final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
-            presenter = new LandingPresenter(this, stateStorage);
+            final SprintRepository sprintRepository = new SprintRepositoryImpl(SprintDb.getInstance(getApplicationContext()).SprintDao());
+            presenter = new LandingPresenter(stateStorage, sprintRepository, this);
         }
     }
 
@@ -194,7 +198,7 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void showLocation(double latitude, double longitude, float zoom) {
         if (googleMap != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
         }
     }
 
