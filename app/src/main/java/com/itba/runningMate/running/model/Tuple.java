@@ -1,4 +1,4 @@
-package com.itba.runningMate.landing.model;
+package com.itba.runningMate.running.model;
 
 public class Tuple<T, K> {
 

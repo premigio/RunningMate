@@ -1,6 +1,6 @@
-package com.itba.runningMate.landing.ui;
+package com.itba.runningMate.running.ui;
 
-import com.itba.runningMate.landing.model.Route;
+import com.itba.runningMate.running.model.Route;
 
 public interface LandingView {
 

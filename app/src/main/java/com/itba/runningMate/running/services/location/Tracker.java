@@ -1,6 +1,6 @@
-package com.itba.runningMate.landing.services.location;
+package com.itba.runningMate.running.services.location;
 
-import com.itba.runningMate.landing.model.Route;
+import com.itba.runningMate.running.model.Route;
 
 public interface Tracker {
 

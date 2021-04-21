@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.adapters;
+package com.itba.runningMate.fragments.history.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.itba.runningMate.fragments.interfaces.ClickListener;
 import com.itba.runningMate.model.DummyRView;
 import com.itba.runningMate.R;
 
@@ -20,7 +19,6 @@ public class RecyclerViewOldRunAdapter
         extends RecyclerView.Adapter<RecyclerViewOldRunAdapter.ORViewHolder> {
 
     private List<DummyRView> dummyList;
-    private ClickListener clickListener;
 
     public RecyclerViewOldRunAdapter(List<DummyRView> mDummyList) {
         this.dummyList = mDummyList;
@@ -49,10 +47,6 @@ public class RecyclerViewOldRunAdapter
     @Override
     public int getItemCount() {
         return dummyList.size();
-    }
-
-    public void setOldRunClickListener(ClickListener clickListener) {
-        this.clickListener = clickListener;
     }
 
     class ORViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments;
+package com.itba.runningMate.fragments.running;
 
 import android.os.Bundle;
 

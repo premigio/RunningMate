@@ -1,4 +1,4 @@
-package com.itba.runningMate.landing.services.location;
+package com.itba.runningMate.running.services.location;
 
 public interface OnLocationUpdateListener {
 

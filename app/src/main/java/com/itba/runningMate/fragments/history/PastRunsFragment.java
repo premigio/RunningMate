@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments;
+package com.itba.runningMate.fragments.history;
 
 import android.os.Bundle;
 
@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.itba.runningMate.fragments.adapters.RecyclerViewOldRunAdapter;
+import com.itba.runningMate.fragments.history.adapters.RecyclerViewOldRunAdapter;
 import com.itba.runningMate.model.DummyRView;
 import com.itba.runningMate.R;
 
