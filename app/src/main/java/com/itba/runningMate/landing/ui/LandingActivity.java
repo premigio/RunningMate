@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -28,11 +29,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
+import com.itba.runningMate.db.SprintDb;
 import com.itba.runningMate.landing.model.Route;
 import com.itba.runningMate.landing.repository.LandingStateStorage;
 import com.itba.runningMate.landing.repository.LandingStateStorageImpl;
 import com.itba.runningMate.landing.services.location.Tracker;
 import com.itba.runningMate.landing.services.location.TrackingService;
+import com.itba.runningMate.repository.sprint.SprintRepository;
+import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 
 public class LandingActivity extends AppCompatActivity implements OnMapReadyCallback, LandingView, ServiceConnection {
 
@@ -49,7 +53,6 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
     private SupportMapFragment mapFragment;
     private GoogleMap googleMap;
 
-    private LandingStateStorage stateStorage;
     private LandingPresenter presenter;
     private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
         if (i == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION
@@ -68,10 +71,7 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
 
         setContentView(R.layout.activity_landing);
 
-        final SharedPreferences preferences = this.getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
-
-        stateStorage = new LandingStateStorageImpl(preferences);
-        presenter = new LandingPresenter(this, stateStorage);
+        createPresenter();
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -81,6 +81,16 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
 
         startButton.setOnClickListener(l -> startTracking());
         stopButton.setOnClickListener(l -> stopTracking());
+    }
+
+    public void createPresenter() {
+        presenter = (LandingPresenter) getLastNonConfigurationInstance();
+        if (presenter == null) {
+            final SharedPreferences preferences = this.getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
+            final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
+            final SprintRepository sprintRepository = new SprintRepositoryImpl(SprintDb.getInstance(getApplicationContext()).SprintDao());
+            presenter = new LandingPresenter(stateStorage, sprintRepository, this);
+        }
     }
 
     @Override
@@ -188,7 +198,7 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void showLocation(double latitude, double longitude, float zoom) {
         if (googleMap != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
         }
     }
 
@@ -260,5 +270,11 @@ public class LandingActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onServiceDisconnected(ComponentName name) {
         presenter.onTrackingServiceDetached();
+    }
+
+    @Nullable
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return presenter;
     }
 }

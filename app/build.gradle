@@ -37,8 +37,17 @@ android {
     }
 }
 
+def room_version = "2.2.6"
+def gson_version = "2.8.6"
+def rxJavaVersion = '2.1.1'
+
 dependencies {
 
+    implementation "io.reactivex.rxjava2:rxandroid:$rxJavaVersion"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation "com.google.code.gson:gson:$gson_version"
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
