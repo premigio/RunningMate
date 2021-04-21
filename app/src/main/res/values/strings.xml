@@ -1,3 +1,21 @@
 <resources>
+    // Running Mate App
     <string name="app_name">Running Mate</string>
+
+    // Landing Activity
+    <string name="alertdialog_rationale_location_title">Location permission needed</string>
+    <string name="alertdialog_rationale_location_message">
+        Without location permission enabled we can not track your run.
+    </string>
+    <string name="alertdialog_denied_location_title">Location permission denied</string>
+    <string name="alertdialog_denied_location_message">
+        Without location permission enabled we can not track your run.
+        You can always change location permissions from system settings.
+    </string>
+    <string name="button_landing_start">Start</string>
+    <string name="button_landing_stop">Stop</string>
+
+    <string name="run">Run</string>
+    <string name="past">Past Runs</string>
+    <string name="past_under">Old runs! Aca va el mapita, quizas algo mas, todo depende de nosotros</string>
 </resources>
