@@ -1,4 +1,4 @@
-package com.itba.runningMate.landing.ui;
+package com.itba.runningMate.running.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -30,11 +30,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.SprintDb;
-import com.itba.runningMate.landing.model.Route;
-import com.itba.runningMate.landing.repository.LandingStateStorage;
-import com.itba.runningMate.landing.repository.LandingStateStorageImpl;
-import com.itba.runningMate.landing.services.location.Tracker;
-import com.itba.runningMate.landing.services.location.TrackingService;
+import com.itba.runningMate.running.model.Route;
+import com.itba.runningMate.running.repository.LandingStateStorage;
+import com.itba.runningMate.running.repository.LandingStateStorageImpl;
+import com.itba.runningMate.running.services.location.Tracker;
+import com.itba.runningMate.running.services.location.TrackingService;
 import com.itba.runningMate.repository.sprint.SprintRepository;
 import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 

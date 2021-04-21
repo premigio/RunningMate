@@ -1,4 +1,4 @@
-package com.itba.runningMate.landing.services.location;
+package com.itba.runningMate.running.services.location;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -26,7 +26,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
-import com.itba.runningMate.landing.ui.LandingActivity;
+import com.itba.runningMate.running.ui.LandingActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;

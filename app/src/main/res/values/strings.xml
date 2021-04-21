@@ -14,4 +14,8 @@
     </string>
     <string name="button_landing_start">Start</string>
     <string name="button_landing_stop">Stop</string>
+
+    <string name="run">Run</string>
+    <string name="past">Past Runs</string>
+    <string name="past_under">Old runs! Aca va el mapita, quizas algo mas, todo depende de nosotros</string>
 </resources>

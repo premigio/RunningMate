@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RunningMate">
-        <activity android:name=".landing.ui.LandingActivity">
+        <activity android:name=".mainpage.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +32,7 @@
         <!-- Recommended for Android 9 (API level 28) and lower. -->
         <!-- Required for Android 10 (API level 29) and higher. -->
         <service
-            android:name=".landing.services.location.TrackingService"
+            android:name=".running.services.location.TrackingService"
             android:foregroundServiceType="location" />
 
         <meta-data

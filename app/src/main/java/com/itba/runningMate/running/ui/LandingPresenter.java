@@ -1,10 +1,10 @@
-package com.itba.runningMate.landing.ui;
+package com.itba.runningMate.running.ui;
 
 import com.itba.runningMate.domain.Sprint;
-import com.itba.runningMate.landing.model.Route;
-import com.itba.runningMate.landing.repository.LandingStateStorage;
-import com.itba.runningMate.landing.services.location.OnLocationUpdateListener;
-import com.itba.runningMate.landing.services.location.Tracker;
+import com.itba.runningMate.running.model.Route;
+import com.itba.runningMate.running.repository.LandingStateStorage;
+import com.itba.runningMate.running.services.location.OnLocationUpdateListener;
+import com.itba.runningMate.running.services.location.Tracker;
 import com.itba.runningMate.repository.sprint.SprintRepository;
 
 import java.lang.ref.WeakReference;

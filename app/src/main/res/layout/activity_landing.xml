@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:padding="16dp"
-        tools:context=".landing.ui.LandingActivity" />
+        tools:context=".running.ui.LandingActivity" />
 
 
     <Button

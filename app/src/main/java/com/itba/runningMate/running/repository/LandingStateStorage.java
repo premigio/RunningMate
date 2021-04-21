@@ -1,4 +1,4 @@
-package com.itba.runningMate.landing.repository;
+package com.itba.runningMate.running.repository;
 
 public interface LandingStateStorage {
 
