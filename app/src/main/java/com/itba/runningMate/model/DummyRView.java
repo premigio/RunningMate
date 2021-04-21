@@ -1,4 +1,4 @@
-package com.itba.runningMate.Model;
+package com.itba.runningMate.model;
 
 public class DummyRView {
     private String title; // FIXME: Dejamos un titulo? quizas con la fecha

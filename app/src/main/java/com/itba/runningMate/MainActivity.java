@@ -6,9 +6,9 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
-import com.itba.runningMate.Fragments.Adapters.ViewPagerAdapter;
-import com.itba.runningMate.Fragments.PastRunsFragment;
-import com.itba.runningMate.Fragments.RunFragment;
+import com.itba.runningMate.fragments.adapters.ViewPagerAdapter;
+import com.itba.runningMate.fragments.PastRunsFragment;
+import com.itba.runningMate.fragments.RunFragment;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 

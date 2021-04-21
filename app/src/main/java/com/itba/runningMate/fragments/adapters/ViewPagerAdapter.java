@@ -1,4 +1,4 @@
-package com.itba.runningMate.Fragments.Adapters;
+package com.itba.runningMate.fragments.adapters;
 
 import java.util.ArrayList;
 import java.util.List;

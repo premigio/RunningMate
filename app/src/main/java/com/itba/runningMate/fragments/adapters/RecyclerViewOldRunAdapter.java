@@ -1,4 +1,4 @@
-package com.itba.runningMate.Fragments.Adapters;
+package com.itba.runningMate.fragments.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.itba.runningMate.Fragments.Interfaces.ClickListener;
-import com.itba.runningMate.Model.DummyRView;
+import com.itba.runningMate.fragments.interfaces.ClickListener;
+import com.itba.runningMate.model.DummyRView;
 import com.itba.runningMate.R;
 
 import java.util.List;

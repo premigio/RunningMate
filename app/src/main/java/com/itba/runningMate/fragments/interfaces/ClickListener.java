@@ -1,4 +1,4 @@
-package com.itba.runningMate.Fragments.Interfaces;
+package com.itba.runningMate.fragments.interfaces;
 
 import android.view.View;
 

@@ -1,4 +1,4 @@
-package com.itba.runningMate.Fragments;
+package com.itba.runningMate.fragments;
 
 import android.os.Bundle;
 
@@ -10,11 +10,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.itba.runningMate.Fragments.Adapters.RecyclerViewOldRunAdapter;
-import com.itba.runningMate.Fragments.Interfaces.ClickListener;
-import com.itba.runningMate.Model.DummyRView;
+import com.itba.runningMate.fragments.adapters.RecyclerViewOldRunAdapter;
+import com.itba.runningMate.model.DummyRView;
 import com.itba.runningMate.R;
 
 import java.util.ArrayList;
