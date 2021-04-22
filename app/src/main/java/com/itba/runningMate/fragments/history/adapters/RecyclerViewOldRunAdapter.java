@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.itba.runningMate.model.DummyRView;
+import com.itba.runningMate.fragments.history.model.DummyRView;
 import com.itba.runningMate.R;
 
 import java.util.List;
