@@ -1,8 +1,8 @@
-package com.itba.runningMate.running.ui;
+package com.itba.runningMate.fragments.running.ui;
 
-import com.itba.runningMate.running.model.Route;
+import com.itba.runningMate.fragments.running.model.Route;
 
-public interface LandingView {
+public interface RunningView {
 
     void showRoute(Route route);
 

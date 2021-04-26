@@ -1,25 +1,25 @@
-package com.itba.runningMate.running.ui;
+package com.itba.runningMate.fragments.running.ui;
 
 import com.itba.runningMate.domain.Sprint;
-import com.itba.runningMate.running.model.Route;
-import com.itba.runningMate.running.repository.LandingStateStorage;
-import com.itba.runningMate.running.services.location.OnLocationUpdateListener;
-import com.itba.runningMate.running.services.location.Tracker;
+import com.itba.runningMate.fragments.running.model.Route;
+import com.itba.runningMate.fragments.running.repository.LandingStateStorage;
+import com.itba.runningMate.fragments.running.services.location.OnLocationUpdateListener;
+import com.itba.runningMate.fragments.running.services.location.Tracker;
 import com.itba.runningMate.repository.sprint.SprintRepository;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 
-public class LandingPresenter implements OnLocationUpdateListener {
+public class RunningPresenter implements OnLocationUpdateListener {
 
-    private final WeakReference<LandingView> view;
+    private final WeakReference<RunningView> view;
     private final LandingStateStorage stateStorage;
     private final SprintRepository sprintRepository;
 
     private Tracker tracker;
     private boolean isTrackerAttached;
 
-    public LandingPresenter(final LandingStateStorage stateStorage, final SprintRepository sprintRepository, final LandingView view) {
+    public RunningPresenter(final LandingStateStorage stateStorage, final SprintRepository sprintRepository, final RunningView view) {
         this.isTrackerAttached = false;
         this.view = new WeakReference<>(view);
         this.stateStorage = stateStorage;

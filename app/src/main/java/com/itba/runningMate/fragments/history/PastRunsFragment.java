@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.itba.runningMate.fragments.history.adapters.RecyclerViewOldRunAdapter;
-import com.itba.runningMate.model.DummyRView;
+import com.itba.runningMate.fragments.history.model.DummyRView;
 import com.itba.runningMate.R;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.itba.runningMate.running.services.location;
+package com.itba.runningMate.fragments.running.services.location;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -26,7 +26,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
-import com.itba.runningMate.running.ui.LandingActivity;
+import com.itba.runningMate.mainpage.MainActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -114,7 +114,7 @@ public class TrackingService extends Service {
     }
 
     private void startForegroundService() {
-        Intent notificationIntent = new Intent(this, LandingActivity.class);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
         /*
             Agregar una accion al notificationIntent para decirle a nuestra landing activity que
             hacer. Tambien podes usar el paramentro flag del pendingIntnet para agreagar mas data
