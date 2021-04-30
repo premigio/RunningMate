@@ -23,7 +23,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,13 +33,13 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.SprintDb;
-import com.itba.runningMate.repository.sprint.SprintRepository;
-import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 import com.itba.runningMate.fragments.running.model.Route;
 import com.itba.runningMate.fragments.running.repository.LandingStateStorage;
 import com.itba.runningMate.fragments.running.repository.LandingStateStorageImpl;
 import com.itba.runningMate.fragments.running.services.location.Tracker;
 import com.itba.runningMate.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.repository.sprint.SprintRepository;
+import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
@@ -163,7 +162,6 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
                 showLocationPermissionNotGrantedError();
             }
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -177,9 +175,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         if (shouldRequestRationale1 || shouldRequestRationale2) {
             showLocationPermissionRationale();
         } else {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    Constants.PERMISSION_LOCATION);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.PERMISSION_LOCATION);
         }
     }
 
@@ -270,7 +266,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         new AlertDialog.Builder(getActivity())
                 .setTitle(getText(R.string.alertdialog_rationale_location_title))
                 .setMessage(getText(R.string.alertdialog_rationale_location_message))
-                .setPositiveButton("ok", ((dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
+                .setPositiveButton("ok", ((dialog, which) -> requestPermissions(
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                         Constants.PERMISSION_LOCATION)))
                 .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
