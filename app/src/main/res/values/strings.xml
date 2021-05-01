@@ -17,5 +17,6 @@
 
     <string name="run">Run</string>
     <string name="past">Past Runs</string>
-    <string name="past_under">Old runs! Aca va el mapita, quizas algo mas, todo depende de nosotros</string>
+    <string name="past_under">Old runs!</string>
+    <string name="walking_icon_desc">Walking Icon</string>
 </resources>

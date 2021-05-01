@@ -1,37 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:focusable="true"
-    android:clickable="true"
+    android:id="@+id/old_run_row_ll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    android:padding="5dp"
-    android:id="@+id/old_run_row_ll">
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:padding="5dp">
 
-    <TextView
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/row_data_iv_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="2dp"
+        android:contentDescription="@string/walking_icon_desc"
+        android:paddingTop="10dp"
+        android:src="@drawable/ic_walking_icon"
+        app:layout_constraintLeft_toLeftOf="@+id/old_run_row_ll"/>
+
+    <LinearLayout
+        android:id="@+id/row_data_ll_rv"
         android:layout_width="match_parent"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/old_run_title"
-        android:text="@string/past"
-        android:padding="5dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        />
-
-    <TextView
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/old_run_content"
-        android:text="@string/past_under"
-        android:padding="5dp"
-        android:textColor="@color/black"
-        />
+        android:layout_marginStart="50dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="@id/old_run_row_ll">
+
+        <TextView
+            android:id="@+id/old_run_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/past"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/old_run_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/past_under"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black" />
+    </LinearLayout>
 
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
