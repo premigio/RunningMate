@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.itba.runningMate.fragments.history.adapters.RecyclerViewOldRunAdapter;
+import com.itba.runningMate.fragments.pastruns.RecyclerViewRunListAdapter;
 import com.itba.runningMate.fragments.history.model.DummyRView;
 import com.itba.runningMate.R;
 
@@ -22,7 +22,7 @@ public class PastRunsFragment extends Fragment {
 
     List<DummyRView> dummyList;
     RecyclerView recyclerView;
-    RecyclerViewOldRunAdapter recyclerViewOldRunAdapter;
+    RecyclerViewRunListAdapter recyclerViewOldRunAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
 
     public PastRunsFragment() {
@@ -46,7 +46,7 @@ public class PastRunsFragment extends Fragment {
 
         dummyList = new ArrayList<>();
         prepareItems();
-        recyclerViewOldRunAdapter = new RecyclerViewOldRunAdapter(dummyList);
+        recyclerViewOldRunAdapter = new RecyclerViewRunListAdapter();
         recyclerView.setAdapter(recyclerViewOldRunAdapter);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_old_runs);

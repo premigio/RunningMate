@@ -6,9 +6,9 @@
     android:focusable="true"
     android:clickable="true"
     android:layout_width="match_parent"
-    android:background="@color/our_orange"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_marginBottom="10dp"
+    android:padding="5dp"
     android:id="@+id/old_run_row_ll">
 
     <TextView
@@ -31,5 +31,7 @@
         android:padding="5dp"
         android:textColor="@color/black"
         />
+
+
 
 </LinearLayout>
