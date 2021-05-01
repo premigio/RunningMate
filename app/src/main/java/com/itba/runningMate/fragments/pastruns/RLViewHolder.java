@@ -23,8 +23,8 @@ class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListen
 
         TextView title, content;
 
-        title = itemView.findViewById(R.id.old_run_title);
-        content = itemView.findViewById(R.id.old_run_content);
+        title = itemView.findViewById(R.id.run_list_card_title);
+        content = itemView.findViewById(R.id.run_list_distance_content);
 
         title.setText(model.getTitle());
         content.setText(model.getTitle());
