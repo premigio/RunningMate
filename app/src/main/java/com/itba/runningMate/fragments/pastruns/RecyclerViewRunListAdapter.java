@@ -34,8 +34,8 @@ public class RecyclerViewRunListAdapter extends RecyclerView.Adapter<RLViewHolde
         notifyDataSetChanged();
     }
 
-    public void setClickListener(WeakReference<OnRunClickListener> listener) {
-        this.listener = listener;
+    public void setClickListener(OnRunClickListener listener) {
+        this.listener = new WeakReference<>(listener);
     }
 
     @Override

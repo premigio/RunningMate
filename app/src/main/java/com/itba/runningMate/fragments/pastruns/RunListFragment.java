@@ -22,15 +22,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
-public class RunListFragment extends Fragment implements RunListView {
+public class RunListFragment extends Fragment implements RunListView, OnRunClickListener {
 
     private RunListPresenter presenter;
 
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     RecyclerViewRunListAdapter rvRunListAdapter;
-
-    WeakReference<OnRunClickListener> listener;
 
     public RunListFragment() {
         // Required empty public constructor
@@ -45,12 +43,7 @@ public class RunListFragment extends Fragment implements RunListView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_past_runs, container, false);
-
-        setUpRecyclerView(view);
-        setUpRefreshLayout(view);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_past_runs, container, false);
     }
 
     private void setUpRecyclerView(View view){
@@ -59,12 +52,13 @@ public class RunListFragment extends Fragment implements RunListView {
 
         recyclerView.setHasFixedSize(true);
 
-        recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(),
+        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),
                 DividerItemDecoration.VERTICAL));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         rvRunListAdapter = new RecyclerViewRunListAdapter();
+        rvRunListAdapter.setClickListener(this);
         recyclerView.setAdapter(rvRunListAdapter);
     }
 
@@ -72,8 +66,6 @@ public class RunListFragment extends Fragment implements RunListView {
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_old_runs);
         swipeRefreshLayout.setOnRefreshListener(() ->{
             presenter.refreshAction();
-            rvRunListAdapter.update(presenter.model);
-            rvRunListAdapter.notifyDataSetChanged();
             swipeRefreshLayout.setRefreshing(false);
         });
     }
@@ -81,9 +73,11 @@ public class RunListFragment extends Fragment implements RunListView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         presenter = new RunListPresenter(this);
-        listener = new WeakReference<>(position -> presenter.onRunClick(position));
-        rvRunListAdapter.setClickListener(listener);
+
+        setUpRecyclerView(view);
+        setUpRefreshLayout(view);
 
     }
 
@@ -103,6 +97,7 @@ public class RunListFragment extends Fragment implements RunListView {
     @Override
     public void updateOldRuns(List<DummyRView> list){
         rvRunListAdapter.update(list);
+        rvRunListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -113,5 +108,10 @@ public class RunListFragment extends Fragment implements RunListView {
                                 + "\n Content = "
                                 + model.getContent(),
                         Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRunClick(int position) {
+        presenter.onRunClick(position);
     }
 }

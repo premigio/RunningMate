@@ -31,6 +31,9 @@ public class RunListPresenter {
 
     public void refreshAction(){
             model.add(new DummyRView("Item" + model.size(), "dummy with number " + model.size()));
+            if (view.get() != null){
+                view.get().updateOldRuns(model);
+            }
     }
 
 
@@ -39,13 +42,6 @@ public class RunListPresenter {
         for (int i = 0; i < 15; i++) {
             DummyRView dummy = new DummyRView("Item" + i, "dummy with number " + i);
             model.add(dummy);
-        }
-    }
-
-
-    public void onRunClick(DummyRView model) {
-        if (view.get() != null) {
-            view.get().showModelToast(model);
         }
     }
 

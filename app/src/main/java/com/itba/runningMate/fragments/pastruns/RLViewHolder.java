@@ -17,9 +17,12 @@ class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListen
 
     public RLViewHolder(@NonNull View itemView) {
         super(itemView);
+        itemView.setOnClickListener(this);
     }
 
     public void bind(DummyRView model){
+
+        if (model == null) return;
 
         TextView title, content;
 
@@ -40,13 +43,4 @@ class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListen
         this.listener = listener;
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        Toast.makeText(v.getContext(),
-//                "Title = "
-//                        + runList.get(getBindingAdapterPosition()).getTitle()
-//                        + "\n Content = "
-//                        + runList.get(getBindingAdapterPosition()).getContent(),
-//                Toast.LENGTH_SHORT).show();
-//    }
 }
