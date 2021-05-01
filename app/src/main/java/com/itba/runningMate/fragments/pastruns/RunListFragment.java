@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.itba.runningMate.R;
-import com.itba.runningMate.fragments.history.model.DummyRView;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -19,8 +17,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
 public class RunListFragment extends Fragment implements RunListView, OnRunClickListener {
 

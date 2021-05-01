@@ -1,12 +1,9 @@
 package com.itba.runningMate.fragments.pastruns;
 
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.itba.runningMate.R;
-import com.itba.runningMate.fragments.history.model.DummyRView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

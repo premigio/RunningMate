@@ -1,7 +1,5 @@
 package com.itba.runningMate.fragments.pastruns;
 
-import com.itba.runningMate.fragments.history.model.DummyRView;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
