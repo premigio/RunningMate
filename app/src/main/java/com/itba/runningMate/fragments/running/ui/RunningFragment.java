@@ -41,8 +41,9 @@ import com.itba.runningMate.fragments.running.services.location.Tracker;
 import com.itba.runningMate.fragments.running.services.location.TrackingService;
 import com.itba.runningMate.repository.sprint.SprintRepository;
 import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
+import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
+import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
-import java.util.Date;
 
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
@@ -105,7 +106,10 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         // todo: 'this.getActivity().getSharedPreferences' fijate que onda si hay leak
         final SharedPreferences preferences = this.getActivity().getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
         final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
-        final SprintRepository sprintRepository = new SprintRepositoryImpl(SprintDb.getInstance(this.getActivity().getApplicationContext()).SprintDao());
+        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
+        final SprintRepository sprintRepository = new SprintRepositoryImpl(
+                SprintDb.getInstance(this.getActivity().getApplicationContext()).SprintDao(),
+                schedulerProvider);
         presenter = new RunningPresenter(stateStorage, sprintRepository, this);
         /*}*/
     }
