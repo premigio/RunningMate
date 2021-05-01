@@ -17,6 +17,8 @@
 
     <string name="run">Run</string>
     <string name="past">Past Runs</string>
-    <string name="past_under">Old runs!</string>
+    <string name="past_title">Run on 19/09/08</string>
+    <string name="distance">5.4 km</string>
+    <string name="time">15:50</string>
     <string name="walking_icon_desc">Walking Icon</string>
 </resources>

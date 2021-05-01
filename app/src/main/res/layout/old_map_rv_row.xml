@@ -34,20 +34,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="@string/past"
+            android:text="@string/past_title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/old_run_content"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="@string/past_under"
+            android:text="@string/distance"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/black" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/time_of_run"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/time"
+        app:layout_constraintRight_toRightOf="@id/old_run_row_ll"
+        app:layout_constraintBottom_toBottomOf="@id/old_run_row_ll"
+        app:layout_constraintTop_toTopOf="@id/old_run_row_ll"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
