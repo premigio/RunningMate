@@ -44,15 +44,13 @@ import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
+import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
+import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
+import static com.itba.runningMate.Constants.DEFAULT_ZOOM;
+import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
+
 
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
-
-    public static final double DEFAULT_LATITUDE = -34.606451;
-    public static final double DEFAULT_LONGITUDE = -58.4396797;
-    public static final int DEFAULT_ZOOM = 10;
-    public static final int MY_LOCATION_ZOOM = 15;
-    public static final String KEY_CENTER_CAMERA = "is_camera_centered";
-    public static final String KEY_LOCATION = "location";
 
     private Button startButton;
     private Button stopButton;

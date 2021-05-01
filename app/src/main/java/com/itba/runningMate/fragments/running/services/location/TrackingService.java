@@ -33,11 +33,13 @@ import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.itba.runningMate.Constants.LOCATION_UPDATE_FASTEST_INTERVAL;
+import static com.itba.runningMate.Constants.LOCATION_UPDATE_INTERVAL;
+import static com.itba.runningMate.Constants.STOP_WATCH_UPDATE_INTERVAL;
+
 public class TrackingService extends Service {
 
-    public static final String HANDLER_THREAD_NAME = "LocationServiceHandlerThread";
-    public static final int LOCATION_UPDATE_INTERVAL = 5000;
-    public static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
+    private static final String HANDLER_THREAD_NAME = "LocationServiceHandlerThread";
 
     private NotificationManagerCompat notificationManager;
 
@@ -231,7 +233,7 @@ public class TrackingService extends Service {
             endTimeMillis = System.currentTimeMillis();
             elapsedMillis = endTimeMillis - startTimeMillis;
             mainHandler.post(() -> callbackStopWatchUpdate(elapsedMillis));
-            serviceHandler.postDelayed(this::stopWatch, 100L);
+            serviceHandler.postDelayed(this::stopWatch, STOP_WATCH_UPDATE_INTERVAL);
         }
     }
 

@@ -4,10 +4,11 @@ import android.content.SharedPreferences;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
+import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
+
 public class LandingStateStorageImpl implements LandingStateStorage {
 
-    public static final double DEFAULT_LATITUDE = -34.5997;
-    public static final double DEFAULT_LONGITUDE = -58.3819;
     public static final String KEY_CENTER_CAMERA = "is_camera_centered";
     public static final String KEY_LOCATION_LATITUDE = "location_lat";
     public static final String KEY_LOCATION_LONGITUDE = "location_long";
