@@ -25,8 +25,14 @@ public class SprintEntity {
     @ColumnInfo(name = "end_time")
     public Date endTime;
 
-    /*@ColumnInfo(name = "kms")
-    public double kms;*/
+    @ColumnInfo(name = "distance")
+    private float distance;
+
+    @ColumnInfo(name = "velocity")
+    private float velocity;
+
+    @ColumnInfo(name = "pace")
+    private long pace;
 
     public SprintEntity() {
     }
@@ -83,4 +89,42 @@ public class SprintEntity {
         this.endTime = endTime;
     }
 
+    public SprintEntity distance(float distance) {
+        this.distance = distance;
+        return this;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public SprintEntity velocity(float velocity) {
+        this.velocity = velocity;
+        return this;
+    }
+
+    public float getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
+    }
+
+    public SprintEntity pace(long pace) {
+        this.pace = pace;
+        return this;
+    }
+
+    public long getPace() {
+        return pace;
+    }
+
+    public void setPace(long pace) {
+        this.pace = pace;
+    }
 }

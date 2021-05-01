@@ -27,33 +27,43 @@ import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.mainpage.MainActivity;
+import com.itba.runningMate.utils.sprint.SprintMetrics;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.itba.runningMate.Constants.LOCATION_UPDATE_FASTEST_INTERVAL;
+import static com.itba.runningMate.Constants.LOCATION_UPDATE_INTERVAL;
+import static com.itba.runningMate.Constants.STOP_WATCH_UPDATE_INTERVAL;
+
 public class TrackingService extends Service {
 
-    public static final String HANDLER_THREAD_NAME = "LocationServiceHandlerThread";
-    public static final int LOCATION_UPDATE_INTERVAL = 5000;
-    public static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
+    private static final String HANDLER_THREAD_NAME = "LocationServiceHandlerThread";
 
     private NotificationManagerCompat notificationManager;
 
-    private HandlerThread handlerThread;
-    private Handler handler;
+    private HandlerThread serviceHandlerThread;
+    private Handler serviceHandler;
+    private Handler mainHandler;
 
     private FusedLocationProviderClient fusedLocationClient;
-    private WeakReference<OnLocationUpdateListener> onLocationUpdateListener;
+    private WeakReference<OnTrackingUpdateListener> onTrackingUpdateListener;
+
+    private boolean isTracking;
+
     private LatLng lastLocation;
     private List<LatLng> trackedLocations;
-    private boolean isTracking;
+    private float elapsedDistance;
+    private long elapsedMillis;
+    private long pace;
     private final LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(@NonNull LocationResult locationResult) {
             handleLocationUpdate(locationResult);
         }
     };
+    private long startTimeMillis = 0L;
 
     @Nullable
     @Override
@@ -61,18 +71,7 @@ public class TrackingService extends Service {
         return new TrackingServiceBinder(this);
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.i(TrackingService.class.getName(), " => Tracking service started");
-        trackedLocations = new LinkedList<>();
-        isTracking = false;
-        notificationManager = NotificationManagerCompat.from(this);
-        handlerThread = new HandlerThread(HANDLER_THREAD_NAME, Process.THREAD_PRIORITY_BACKGROUND);
-        handlerThread.start();
-        handler = new Handler(handlerThread.getLooper());
-        initUpLocationUpdates();
-    }
+    private long endTimeMillis = 0L;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -81,32 +80,49 @@ public class TrackingService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.i(TrackingService.class.getName(), " => Tracking service started");
+        trackedLocations = new LinkedList<>();
+        elapsedMillis = 0L;
+        elapsedDistance = 0f;
+        pace = 0L;
+        isTracking = false;
+        notificationManager = NotificationManagerCompat.from(this);
+        serviceHandlerThread = new HandlerThread(HANDLER_THREAD_NAME, Process.THREAD_PRIORITY_BACKGROUND);
+        serviceHandlerThread.start();
+        serviceHandler = new Handler(serviceHandlerThread.getLooper());
+        mainHandler = new Handler(Looper.getMainLooper());
+        initLocationUpdates();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         fusedLocationClient.removeLocationUpdates(locationCallback);
-        handlerThread.quit();
+        serviceHandlerThread.quit();
     }
 
     public void startTracking() {
         startForegroundService();
-        handler.post(TrackingService.this::toggleTrackingService);
-    }
-
-    public void stopTracking() {
-        stopForegroundService();
-        handler.post(TrackingService.this::toggleTrackingService);
+        isTracking = true;
+        elapsedMillis = 0L;
+        elapsedDistance = 0F;
+        startTimeMillis = System.currentTimeMillis();
+        serviceHandler.post(this::stopWatch);
     }
 
     public boolean isTracking() {
         return isTracking;
     }
 
-    public void setOnLocationUpdateListener(OnLocationUpdateListener listener) {
-        onLocationUpdateListener = new WeakReference<>(listener);
+    public void stopTracking() {
+        stopForegroundService();
+        isTracking = false;
     }
 
-    public void removeLocationUpdateListener() {
-        onLocationUpdateListener = null;
+    public void setOnTrackingUpdateListener(OnTrackingUpdateListener listener) {
+        onTrackingUpdateListener = new WeakReference<>(listener);
     }
 
     public List<LatLng> getTrackedLocations() {
@@ -148,25 +164,60 @@ public class TrackingService extends Service {
         return lastLocation;
     }
 
+    public void removeLocationUpdateListener() {
+        onTrackingUpdateListener = null;
+    }
+
     private void handleLocationUpdate(@NonNull LocationResult locationResult) {
         Location location = locationResult.getLastLocation();
         lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
         if (isTracking) {
             trackedLocations.add(lastLocation);
+            if (trackedLocations.size() >= 2) {
+                LatLng prev = trackedLocations.get(trackedLocations.size() - 2);
+                float[] aux = new float[1];
+                Location.distanceBetween(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude(), aux);
+                elapsedDistance += aux[0] / 1000f;
+                pace = SprintMetrics.calculatePace(elapsedDistance, elapsedMillis);
+                callbackDistanceUpdate(elapsedDistance);
+                callbackPaceUpdate(pace);
+            }
         }
-        if (onLocationUpdateListener != null) {
-            onLocationUpdateListener.get().onLocationUpdate(lastLocation.latitude, lastLocation.longitude);
+        callbackLocationUpdate(lastLocation.latitude, lastLocation.longitude);
+    }
+
+    private void callbackLocationUpdate(double latitude, double longitude) {
+        if (onTrackingUpdateListener != null) {
+            onTrackingUpdateListener.get().onLocationUpdate(latitude, longitude);
+        }
+    }
+
+    private void callbackDistanceUpdate(float distance) {
+        if (onTrackingUpdateListener != null) {
+            onTrackingUpdateListener.get().onDistanceUpdate(distance);
+        }
+    }
+
+    private void callbackPaceUpdate(long pace) {
+        if (onTrackingUpdateListener != null) {
+            onTrackingUpdateListener.get().onPaceUpdate(pace);
+        }
+    }
+
+    private void callbackStopWatchUpdate(long elapsedTime) {
+        if (onTrackingUpdateListener != null) {
+            onTrackingUpdateListener.get().onStopWatchUpdate(elapsedTime);
         }
     }
 
     @SuppressLint("MissingPermission")
-    private void initUpLocationUpdates() {
+    private void initLocationUpdates() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(LOCATION_UPDATE_INTERVAL);
         locationRequest.setFastestInterval(LOCATION_UPDATE_FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        handler.post(() -> fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper()));
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         /*
             TODO: chequear que los settings sean los apropiados
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -175,6 +226,35 @@ public class TrackingService extends Service {
             Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
             task.addOnFailureListener( ... );
         */
+    }
+
+    private void stopWatch() {
+        if (isTracking) {
+            endTimeMillis = System.currentTimeMillis();
+            elapsedMillis = endTimeMillis - startTimeMillis;
+            mainHandler.post(() -> callbackStopWatchUpdate(elapsedMillis));
+            serviceHandler.postDelayed(this::stopWatch, STOP_WATCH_UPDATE_INTERVAL);
+        }
+    }
+
+    public long getStartTimeMillis() {
+        return startTimeMillis;
+    }
+
+    public long getEndTimeMillis() {
+        return endTimeMillis;
+    }
+
+    public float getElapsedDistance() {
+        return elapsedDistance;
+    }
+
+    public long getElapsedMillis() {
+        return elapsedMillis;
+    }
+
+    public long getPace() {
+        return pace;
     }
 
 }

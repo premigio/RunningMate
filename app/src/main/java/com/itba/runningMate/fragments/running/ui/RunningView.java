@@ -8,6 +8,12 @@ public interface RunningView {
 
     void showLocation(double latitude, double longitude);
 
+    void updateDistanceTextView(String elapsedDistance);
+
+    void updateStopwatchTextView(String elapsedTime);
+
+    void updatePaceTextView(String pace);
+
     void showDefaultLocation();
 
     void mapEnableMyLocation();

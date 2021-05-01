@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,18 +41,22 @@ import com.itba.runningMate.fragments.running.services.location.Tracker;
 import com.itba.runningMate.fragments.running.services.location.TrackingService;
 import com.itba.runningMate.repository.sprint.SprintRepository;
 import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
+import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
+import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+
+import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
+import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
+import static com.itba.runningMate.Constants.DEFAULT_ZOOM;
+import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
+
 
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
-    public static final double DEFAULT_LATITUDE = -34.606451;
-    public static final double DEFAULT_LONGITUDE = -58.4396797;
-    public static final int DEFAULT_ZOOM = 10;
-    public static final int MY_LOCATION_ZOOM = 15;
-    public static final String KEY_CENTER_CAMERA = "is_camera_centered";
-    public static final String KEY_LOCATION = "location";
-
     private Button startButton;
     private Button stopButton;
+    private TextView stopWatch;
+    private TextView distance;
+    private TextView pace;
 
     private MapView mapView;
     private GoogleMap googleMap;
@@ -85,6 +90,9 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
         startButton = view.findViewById(R.id.button_landing_start);
         stopButton = view.findViewById(R.id.button_landing_stop);
+        distance = view.findViewById(R.id.distance);
+        pace = view.findViewById(R.id.pace);
+        stopWatch = view.findViewById(R.id.stopwatch);
 
         startButton.setOnClickListener(l -> startTracking());
         stopButton.setOnClickListener(l -> stopTracking());
@@ -96,7 +104,10 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         // todo: 'this.getActivity().getSharedPreferences' fijate que onda si hay leak
         final SharedPreferences preferences = this.getActivity().getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
         final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
-        final SprintRepository sprintRepository = new SprintRepositoryImpl(SprintDb.getInstance(this.getActivity().getApplicationContext()).SprintDao());
+        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
+        final SprintRepository sprintRepository = new SprintRepositoryImpl(
+                SprintDb.getInstance(this.getActivity().getApplicationContext()).SprintDao(),
+                schedulerProvider);
         presenter = new RunningPresenter(stateStorage, sprintRepository, this);
         /*}*/
     }
@@ -215,6 +226,21 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     }
 
     @Override
+    public void updateDistanceTextView(String elapsedDistance) {
+        distance.setText(elapsedDistance);
+    }
+
+    @Override
+    public void updateStopwatchTextView(String elapsedTime) {
+        stopWatch.setText(elapsedTime);
+    }
+
+    @Override
+    public void updatePaceTextView(String pace) {
+        this.pace.setText(pace);
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         setupGoogleMap();
@@ -289,6 +315,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
+        /* todo: remove observers o fijarse si se hace solo */
         presenter.onTrackingServiceDetached();
     }
 

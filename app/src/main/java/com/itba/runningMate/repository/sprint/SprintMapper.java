@@ -21,7 +21,10 @@ public class SprintMapper {
                 .uid(model.getUid())
                 .route(model.getRoute())
                 .startTime(model.getStartTime())
-                .endTime(model.getEndTime());
+                .endTime(model.getEndTime())
+                .distance(model.getDistance())
+                .pace(model.getPace())
+                .velocity(model.getVelocity());
     }
 
     public static List<Sprint> toModel(final List<SprintEntity> entities) {
