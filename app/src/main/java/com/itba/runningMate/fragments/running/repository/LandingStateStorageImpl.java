@@ -72,7 +72,7 @@ public class LandingStateStorageImpl implements LandingStateStorage {
             editor.putFloat(KEY_LOCATION_LATITUDE, lastKnownLatitude.floatValue());
         }
         if (lastKnownLongitude != null) {
-            editor.putFloat(KEY_LOCATION_LATITUDE, lastKnownLongitude.floatValue());
+            editor.putFloat(KEY_LOCATION_LONGITUDE, lastKnownLongitude.floatValue());
         }
         if (centerCamera != null) {
             editor.putBoolean(KEY_CENTER_CAMERA, centerCamera);

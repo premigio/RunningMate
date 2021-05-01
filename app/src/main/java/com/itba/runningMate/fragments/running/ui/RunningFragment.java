@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +42,8 @@ import com.itba.runningMate.fragments.running.services.location.TrackingService;
 import com.itba.runningMate.repository.sprint.SprintRepository;
 import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 
+import java.util.Date;
+
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
     public static final double DEFAULT_LATITUDE = -34.606451;
@@ -52,6 +55,9 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
     private Button startButton;
     private Button stopButton;
+    private TextView stopWatch;
+    private TextView distance;
+    private TextView pace;
 
     private MapView mapView;
     private GoogleMap googleMap;
@@ -85,6 +91,9 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
         startButton = view.findViewById(R.id.button_landing_start);
         stopButton = view.findViewById(R.id.button_landing_stop);
+        distance = view.findViewById(R.id.distance);
+        pace = view.findViewById(R.id.pace);
+        stopWatch = view.findViewById(R.id.stopwatch);
 
         startButton.setOnClickListener(l -> startTracking());
         stopButton.setOnClickListener(l -> stopTracking());
@@ -215,6 +224,21 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     }
 
     @Override
+    public void updateDistanceTextView(String elapsedDistance) {
+        distance.setText(elapsedDistance);
+    }
+
+    @Override
+    public void updateStopwatchTextView(String elapsedTime) {
+        stopWatch.setText(elapsedTime);
+    }
+
+    @Override
+    public void updatePaceTextView(String pace) {
+        this.pace.setText(pace);
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         setupGoogleMap();
@@ -289,6 +313,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
+        /* todo: remove observers o fijarse si se hace solo */
         presenter.onTrackingServiceDetached();
     }
 

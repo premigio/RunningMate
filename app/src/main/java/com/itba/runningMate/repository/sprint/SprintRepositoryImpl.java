@@ -19,18 +19,18 @@ public class SprintRepositoryImpl implements SprintRepository {
     }
 
     @Override
-    public Flowable<List<Sprint>> getRoutes() {
+    public Flowable<List<Sprint>> getSprint() {
         return sprintDao.getRoutes().map(SprintMapper::toModel);
     }
 
     @Override
-    public Single<Sprint> getRoute(int uid) {
+    public Single<Sprint> getSprint(int uid) {
         return sprintDao.getRoute(uid).map(SprintMapper::toModel);
     }
 
     @Override
-    public void insertRoute(Sprint route) {
-        sprintDao.insertRoute(SprintMapper.toEntity(route))
+    public void insertSprint(Sprint sprint) {
+        sprintDao.insertRoute(SprintMapper.toEntity(sprint))
                 .onErrorComplete()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -38,8 +38,8 @@ public class SprintRepositoryImpl implements SprintRepository {
     }
 
     @Override
-    public void deleteRoute(Sprint route) {
-        sprintDao.deleteRoute(SprintMapper.toEntity(route))
+    public void deleteSprint(Sprint sprint) {
+        sprintDao.deleteRoute(SprintMapper.toEntity(sprint))
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

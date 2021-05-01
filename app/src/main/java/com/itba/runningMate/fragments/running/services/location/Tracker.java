@@ -10,9 +10,19 @@ public interface Tracker {
 
     Route querySprint();
 
+    long queryStartTime();
+
+    long queryEndTime();
+
+    float queryDistance();
+
+    long queryElapsedTime();
+
+    long queryPace();
+
     boolean isTracking();
 
-    void setOnLocationUpdateListener(OnLocationUpdateListener listener);
+    void setOnTrackingUpdateListener(OnTrackingUpdateListener listener);
 
     void removeLocationUpdateListener();
 }
