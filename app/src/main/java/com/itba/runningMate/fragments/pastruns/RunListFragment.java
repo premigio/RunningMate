@@ -104,7 +104,6 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
     @Override
     public void updateOldRuns(List<Sprint> list) {
         rvRunListAdapter.update(list);
-        rvRunListAdapter.notifyDataSetChanged();
     }
 
     @Override

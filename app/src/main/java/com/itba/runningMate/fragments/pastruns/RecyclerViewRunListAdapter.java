@@ -51,6 +51,9 @@ public class RecyclerViewRunListAdapter extends RecyclerView.Adapter<RLViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RLViewHolder holder, int position) {
+        if (listener == null) {
+            return;
+        }
         holder.bind(currentRunList.get(position));
         holder.setOnClickListener(listener.get());
     }

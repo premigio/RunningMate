@@ -26,6 +26,14 @@ public class SprintMetrics {
         return distance / 1000f;
     }
 
+    /* Km */
+    public static float calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
+        float[] aux = new float[1];
+        Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, aux);
+        float distance = aux[0] / 1000f;
+        return Math.round(distance * 100.0) / 100.0f;
+    }
+
     /* Km/H */
     public static float calculateVelocity(float distanceKm, long timeMillis) {
         return (distanceKm * (18000 / 5f)) / (float) (timeMillis / 1000);
@@ -33,10 +41,7 @@ public class SprintMetrics {
 
     /* Ms */
     public static long calculatePace(float distanceKm, long timeMillis) {
-        return (long) (timeMillis / (distanceKm));
+        return (long) (distanceKm != 0F ? (timeMillis / distanceKm) : 0L);
     }
 
-    private double getDistance(LatLng a, LatLng b) {
-        return Math.sqrt(Math.pow(Math.abs(a.latitude - b.latitude), 2) + Math.pow(Math.abs(a.longitude - b.longitude), 2));
-    }
 }

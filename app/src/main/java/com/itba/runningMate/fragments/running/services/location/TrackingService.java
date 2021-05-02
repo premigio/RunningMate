@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
+import com.itba.runningMate.domain.Sprint;
 import com.itba.runningMate.mainpage.MainActivity;
 import com.itba.runningMate.utils.sprint.SprintMetrics;
 
@@ -175,9 +176,7 @@ public class TrackingService extends Service {
             trackedLocations.add(lastLocation);
             if (trackedLocations.size() >= 2) {
                 LatLng prev = trackedLocations.get(trackedLocations.size() - 2);
-                float[] aux = new float[1];
-                Location.distanceBetween(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude(), aux);
-                elapsedDistance += aux[0] / 1000f;
+                elapsedDistance += SprintMetrics.calculateDistance(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude());
                 pace = SprintMetrics.calculatePace(elapsedDistance, elapsedMillis);
                 callbackDistanceUpdate(elapsedDistance);
                 callbackPaceUpdate(pace);
