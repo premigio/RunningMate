@@ -21,7 +21,7 @@ public interface SprintDao {
     Single<SprintEntity> getRoute(final int id);
 
     @Insert
-    Completable insertRoute(SprintEntity route);
+    Single<Long> insertRoute(SprintEntity route);
 
     @Delete
     Completable deleteRoute(SprintEntity route);

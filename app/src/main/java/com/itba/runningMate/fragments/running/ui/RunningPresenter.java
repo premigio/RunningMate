@@ -8,11 +8,14 @@ import com.itba.runningMate.fragments.running.repository.LandingStateStorage;
 import com.itba.runningMate.fragments.running.services.location.OnTrackingUpdateListener;
 import com.itba.runningMate.fragments.running.services.location.Tracker;
 import com.itba.runningMate.repository.sprint.SprintRepository;
+import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import io.reactivex.disposables.Disposable;
 
 public class RunningPresenter implements OnTrackingUpdateListener {
 
@@ -21,15 +24,21 @@ public class RunningPresenter implements OnTrackingUpdateListener {
     private final WeakReference<RunningView> view;
     private final LandingStateStorage stateStorage;
     private final SprintRepository sprintRepository;
+    private SchedulerProvider schedulers;
 
     private Tracker tracker;
     private boolean isTrackerAttached;
+    private Disposable disposable;
 
-    public RunningPresenter(final LandingStateStorage stateStorage, final SprintRepository sprintRepository, final RunningView view) {
+    public RunningPresenter(final LandingStateStorage stateStorage,
+                            final SprintRepository sprintRepository,
+                            final SchedulerProvider schedulers,
+                            final RunningView view) {
         this.isTrackerAttached = false;
         this.view = new WeakReference<>(view);
         this.stateStorage = stateStorage;
         this.sprintRepository = sprintRepository;
+        this.schedulers = schedulers;
     }
 
     public void onViewAttached() {
@@ -83,10 +92,6 @@ public class RunningPresenter implements OnTrackingUpdateListener {
     }
 
     public void onTrackingServiceDetached() {
-        /*
-            TODO: esto puede ser que este en null?, ni idea el tiempo lo determinara
-            En teoria no hace falta ni llamar a este metodo por que por detras es una weak reference
-         */
         tracker.removeLocationUpdateListener();
         this.tracker = null;
         this.isTrackerAttached = false;
@@ -103,23 +108,41 @@ public class RunningPresenter implements OnTrackingUpdateListener {
     }
 
     public void stopRun() {
-        if (view.get() != null && !view.get().areLocationPermissionGranted()) {
-            view.get().requestLocationPermission();
-        } else {
-            if (isTrackerAttached && tracker.isTracking()) {
-                tracker.stopTracking();
-                float distKm = tracker.queryDistance();
-                long timeMillis = tracker.queryElapsedTime();
-                sprintRepository.insertSprint(new Sprint()
-                        .startTime(new Date(tracker.queryStartTime()))
-                        .elapsedTime(timeMillis)
-                        .route(tracker.querySprint().getLocations())
-                        .distance(distKm)
-                        .pace(tracker.queryPace())
-                        .velocity(tracker.queryVelocity())
-                );
-            }
+        if (isTrackerAttached && tracker.isTracking()) {
+            tracker.stopTracking();
+            float distKm = tracker.queryDistance();
+            long timeMillis = tracker.queryElapsedTime();
+            disposable = sprintRepository.insertSprint(
+                    new Sprint()
+                            .startTime(new Date(tracker.queryStartTime()))
+                            .elapsedTime(timeMillis)
+                            .route(tracker.querySprint().getLocations())
+                            .distance(distKm)
+                            .pace(tracker.queryPace())
+                            .velocity(tracker.queryVelocity())
+            )
+                    .subscribeOn(schedulers.io())
+                    .observeOn(schedulers.ui())
+                    .subscribe(this::onSprintSaved, this::onSprintSavedError);
         }
+        if (view.get() != null) {
+            view.get().removeRoutes();
+        }
+    }
+
+    private void onSprintSaved(final long sprintId) {
+        if (view.get() == null) {
+            return;
+        }
+        view.get().launchSprintActivity(sprintId);
+        disposable.dispose();
+    }
+
+    private void onSprintSavedError(final Throwable e) {
+        if (view.get() == null) {
+            return;
+        }
+        view.get().showSaveSprintError();
     }
 
     public void centerCamera() {
@@ -143,7 +166,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
     }
 
     public void onStartStopButtonClick() {
-        if (view == null || !isTrackerAttached) {
+        if (view.get() == null || !isTrackerAttached) {
             return;
         }
         if (tracker.isTracking()) {
