@@ -14,7 +14,7 @@ import io.reactivex.Single;
 @Dao
 public interface SprintDao {
 
-    @Query("SELECT * FROM sprints")
+    @Query("SELECT * FROM sprints ORDER BY start_time DESC")
     Flowable<List<SprintEntity>> getRoutes();
 
     @Query("SELECT * FROM sprints WHERE sprints.sprint_id = :id")
