@@ -115,7 +115,7 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
     }
 
     @Override
-    public void onRunClick(int position) {
-        presenter.onRunClick(position);
+    public void onRunClick(long id) {
+        presenter.onRunClick(id);
     }
 }

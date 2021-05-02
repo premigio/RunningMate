@@ -52,18 +52,11 @@ public class RunListPresenter {
             this.onViewAttached();
     }
 
-    public void onRunClick(int position) {
+    public void onRunClick(long id) {
 
         if (view.get() != null) {
-            view.get().showModelToast(position);
+            view.get().showModelToast(id);
         }
     }
-
-    private void workWithClick(int position) {
-
-    }
-
-
-
 
 }

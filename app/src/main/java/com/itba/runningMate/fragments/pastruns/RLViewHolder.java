@@ -12,8 +12,11 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static androidx.recyclerview.widget.RecyclerView.NO_ID;
+
 class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private OnRunClickListener listener;
+    private long id = NO_ID;
 
 
     public RLViewHolder(@NonNull View itemView) {
@@ -26,6 +29,7 @@ class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListen
         if (model == null) return;
 
         TextView title, distance, time;
+        id = model.getUid();
 
         title = itemView.findViewById(R.id.run_list_card_title);
         distance = itemView.findViewById(R.id.run_list_distance_content);
@@ -44,7 +48,8 @@ class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        listener.onRunClick(getBindingAdapterPosition());
+        //todo: hacer que se lea el getItemId() del adapter
+        listener.onRunClick(id);
     }
 
     public void setOnClickListener(OnRunClickListener listener){
