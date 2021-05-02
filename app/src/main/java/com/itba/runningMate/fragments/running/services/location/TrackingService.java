@@ -171,6 +171,9 @@ public class TrackingService extends Service {
 
     private void handleLocationUpdate(@NonNull LocationResult locationResult) {
         Location location = locationResult.getLastLocation();
+        if (lastLocation != null && areEqualLocations(lastLocation.latitude, lastLocation.longitude, location.getLatitude(), location.getLongitude())) {
+            return;
+        }
         lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
         if (isTracking) {
             trackedLocations.add(lastLocation);
@@ -236,12 +239,12 @@ public class TrackingService extends Service {
         }
     }
 
-    public long getStartTimeMillis() {
-        return startTimeMillis;
+    private boolean areEqualLocations(double latitudeA, double longitudeA, double latitudeB, double longitudeB) {
+        return Double.compare(latitudeA, latitudeB) == 0 && Double.compare(longitudeA, longitudeB) == 0;
     }
 
-    public long getEndTimeMillis() {
-        return endTimeMillis;
+    public long getStartTimeMillis() {
+        return startTimeMillis;
     }
 
     public float getElapsedDistance() {

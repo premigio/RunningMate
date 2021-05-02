@@ -8,13 +8,15 @@ import com.itba.runningMate.fragments.running.repository.LandingStateStorage;
 import com.itba.runningMate.fragments.running.services.location.OnTrackingUpdateListener;
 import com.itba.runningMate.fragments.running.services.location.Tracker;
 import com.itba.runningMate.repository.sprint.SprintRepository;
-import com.itba.runningMate.utils.sprint.SprintMetrics;
 
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class RunningPresenter implements OnTrackingUpdateListener {
+
+    private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
 
     private final WeakReference<RunningView> view;
     private final LandingStateStorage stateStorage;
@@ -106,15 +108,15 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         } else {
             if (isTrackerAttached && tracker.isTracking()) {
                 tracker.stopTracking();
-                float distKm = SprintMetrics.calculateDistance(tracker.querySprint().getLocations());
-                long timeMillis = tracker.queryEndTime() - tracker.queryStartTime();
+                float distKm = tracker.queryDistance();
+                long timeMillis = tracker.queryElapsedTime();
                 sprintRepository.insertSprint(new Sprint()
                         .startTime(new Date(tracker.queryStartTime()))
-                        .elapsedTime(tracker.queryEndTime() - tracker.queryStartTime())
+                        .elapsedTime(timeMillis)
                         .route(tracker.querySprint().getLocations())
                         .distance(distKm)
-                        .pace(SprintMetrics.calculatePace(distKm, timeMillis))
-                        .velocity(SprintMetrics.calculateVelocity(distKm, timeMillis))
+                        .pace(tracker.queryPace())
+                        .velocity(tracker.queryVelocity())
                 );
             }
         }
@@ -182,7 +184,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         if (view.get() == null) {
             return;
         }
-        view.get().updateDistanceTextView(String.format("%.2f", elapsedDistance));
+        view.get().updateDistanceTextView(twoDecimalPlacesFormatter.format(elapsedDistance));
     }
 
     @Override
@@ -191,10 +193,6 @@ public class RunningPresenter implements OnTrackingUpdateListener {
             return;
         }
         view.get().updatePaceTextView(hmsTimeFormatter(pace));
-    }
-
-    private boolean compareLocations(double latitudeA, double longitudeA, double latitudeB, double longitudeB) {
-        return Double.compare(latitudeA, latitudeB) == 0 && Double.compare(longitudeA, longitudeB) == 0;
     }
 
     @SuppressLint("DefaultLocale")

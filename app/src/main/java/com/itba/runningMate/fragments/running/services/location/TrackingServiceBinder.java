@@ -5,6 +5,7 @@ import android.os.Binder;
 import androidx.lifecycle.LiveData;
 
 import com.itba.runningMate.fragments.running.model.Route;
+import com.itba.runningMate.utils.sprint.SprintMetrics;
 
 public class TrackingServiceBinder extends Binder implements Tracker {
 
@@ -44,11 +45,6 @@ public class TrackingServiceBinder extends Binder implements Tracker {
     }
 
     @Override
-    public long queryEndTime() {
-        return trackingService.getEndTimeMillis();
-    }
-
-    @Override
     public float queryDistance() {
         return trackingService.getElapsedDistance();
     }
@@ -61,5 +57,10 @@ public class TrackingServiceBinder extends Binder implements Tracker {
     @Override
     public long queryPace() {
         return trackingService.getPace();
+    }
+
+    @Override
+    public float queryVelocity() {
+        return SprintMetrics.calculateVelocity(trackingService.getElapsedDistance(), trackingService.getElapsedMillis());
     }
 }

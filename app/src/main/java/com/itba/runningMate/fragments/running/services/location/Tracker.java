@@ -12,13 +12,13 @@ public interface Tracker {
 
     long queryStartTime();
 
-    long queryEndTime();
-
     float queryDistance();
 
     long queryElapsedTime();
 
     long queryPace();
+
+    float queryVelocity();
 
     boolean isTracking();
 
