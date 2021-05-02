@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.pastruns;
+package com.itba.runningMate.fragments.pastruns.ui;
 
 import com.itba.runningMate.domain.Sprint;
 

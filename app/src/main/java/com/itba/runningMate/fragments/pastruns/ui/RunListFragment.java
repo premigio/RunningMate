@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.pastruns;
+package com.itba.runningMate.fragments.pastruns.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.Toast;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.SprintDb;
 import com.itba.runningMate.domain.Sprint;
+import com.itba.runningMate.fragments.pastruns.OnRunClickListener;
+import com.itba.runningMate.fragments.pastruns.RecyclerViewRunListAdapter;
 import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;

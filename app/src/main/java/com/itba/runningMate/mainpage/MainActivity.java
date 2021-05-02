@@ -8,7 +8,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.itba.runningMate.R;
-import com.itba.runningMate.fragments.pastruns.RunListFragment;
+import com.itba.runningMate.fragments.pastruns.ui.RunListFragment;
 import com.itba.runningMate.fragments.running.ui.RunningFragment;
 import com.itba.runningMate.mainpage.adapters.ViewPagerAdapter;
 
