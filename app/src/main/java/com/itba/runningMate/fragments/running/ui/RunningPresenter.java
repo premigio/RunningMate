@@ -141,6 +141,19 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         }
     }
 
+    public void onStartStopButtonClick() {
+        if (view == null || !isTrackerAttached) {
+            return;
+        }
+        if (tracker.isTracking()) {
+            stopRun();
+            view.get().showStartSprintButton();
+        } else {
+            startRun();
+            view.get().showStopSprintButton();
+        }
+    }
+
     @Override
     public void onLocationUpdate(double latitude, double longitude) {
         if (isTrackerAttached && tracker.isTracking() && view.get() != null) {

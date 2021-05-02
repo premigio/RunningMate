@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +30,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.button.MaterialButton;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.SprintDb;
@@ -52,8 +52,9 @@ import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
 
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
-    private Button startButton;
-    private Button stopButton;
+    // todo: save presenter and saveinstance fragment
+
+    private MaterialButton startStopButton;
     private TextView stopWatch;
     private TextView distance;
     private TextView pace;
@@ -88,14 +89,12 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         mapView.getMapAsync(this);
 
 
-        startButton = view.findViewById(R.id.button_landing_start);
-        stopButton = view.findViewById(R.id.button_landing_stop);
+        startStopButton = view.findViewById(R.id.button_start_stop);
         distance = view.findViewById(R.id.distance);
         pace = view.findViewById(R.id.pace);
         stopWatch = view.findViewById(R.id.stopwatch);
 
-        startButton.setOnClickListener(l -> startTracking());
-        stopButton.setOnClickListener(l -> stopTracking());
+        startStopButton.setOnClickListener(l -> presenter.onStartStopButtonClick());
     }
 
     public void createPresenter() {
@@ -167,7 +166,6 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
                     grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 presenter.onRequestLocationPermissionResult(true);
-                return;
             } else {
                 presenter.onRequestLocationPermissionResult(false);
                 showLocationPermissionNotGrantedError();
@@ -190,12 +188,16 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         }
     }
 
-    private void startTracking() {
-        presenter.startRun();
+    @Override
+    public void showStopSprintButton() {
+        startStopButton.setText(R.string.button_running_stop);
+        startStopButton.setIconResource(R.drawable.ic_pause);
     }
 
-    private void stopTracking() {
-        presenter.stopRun();
+    @Override
+    public void showStartSprintButton() {
+        startStopButton.setText(R.string.button_running_start);
+        startStopButton.setIconResource(R.drawable.ic_play);
     }
 
     @Override

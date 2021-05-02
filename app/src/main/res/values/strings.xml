@@ -12,8 +12,15 @@
         Without location permission enabled we can not track your run.
         You can always change location permissions from system settings.
     </string>
-    <string name="button_landing_start">Start</string>
-    <string name="button_landing_stop">Stop</string>
+
+    <string name="button_running_start">Start</string>
+    <string name="button_running_stop">Stop</string>
+    <string name="text_view_running_pace_label">Pace</string>
+    <string name="text_view_running_stopwatch_label">Time</string>
+    <string name="text_view_running_distance_label">Distance (Km)</string>
+    <string name="text_view_running_initial_time">00:00:00</string>
+    <string name="text_view_running_initial_distance">0.00</string>
+    <string name="text_view_running_initial_pace">00:00</string>
 
     <string name="run">Run</string>
     <string name="past">Past Runs</string>

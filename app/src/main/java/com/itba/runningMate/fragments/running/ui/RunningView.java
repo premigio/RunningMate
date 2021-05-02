@@ -31,4 +31,8 @@ public interface RunningView {
     void showLocationPermissionNotGrantedError();
 
     void showLocationPermissionRationale();
+
+    void showStopSprintButton();
+
+    void showStartSprintButton();
 }
