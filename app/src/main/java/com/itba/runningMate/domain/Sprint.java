@@ -10,13 +10,12 @@ public class Sprint {
     private int uid;
     private List<LatLng> route;
     private Date startTime;
-    private Date endTime;
     /* km */
     private float distance;
     /* km/h */
     private float velocity;
     private long pace;
-    private long time;
+    private long elapsedTime;
 
     public Sprint() {
     }
@@ -54,23 +53,6 @@ public class Sprint {
 
     public Date getStartTime() {
         return startTime;
-    }
-
-    public Sprint endTime(Date endTime) {
-        this.endTime = endTime;
-        return this;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public long getElapsedMillis() {
-        return endTime.getTime() - startTime.getTime();
     }
 
     public Sprint distance(float distance) {
@@ -112,16 +94,16 @@ public class Sprint {
         this.pace = pace;
     }
 
-    public Sprint time(long time) {
-        this.time = time;
+    public Sprint elapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
         return this;
     }
 
-    public long getTime() {
-        return time;
+    public long getElapsedTime() {
+        return elapsedTime;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setElapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
     }
 }

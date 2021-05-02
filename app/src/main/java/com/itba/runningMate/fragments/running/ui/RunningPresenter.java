@@ -110,8 +110,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
                 long timeMillis = tracker.queryEndTime() - tracker.queryStartTime();
                 sprintRepository.insertSprint(new Sprint()
                         .startTime(new Date(tracker.queryStartTime()))
-                        .endTime(new Date(tracker.queryEndTime()))
-                        .time(tracker.queryEndTime() - tracker.queryStartTime())
+                        .elapsedTime(tracker.queryEndTime() - tracker.queryStartTime())
                         .route(tracker.querySprint().getLocations())
                         .distance(distKm)
                         .pace(SprintMetrics.calculatePace(distKm, timeMillis))

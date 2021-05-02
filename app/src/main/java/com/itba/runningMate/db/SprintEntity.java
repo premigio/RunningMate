@@ -22,8 +22,8 @@ public class SprintEntity {
     @ColumnInfo(name = "start_time")
     public Date startTime;
 
-    @ColumnInfo(name = "end_time")
-    public Date endTime;
+    @ColumnInfo(name = "elapsed_time")
+    public long elapsedTime;
 
     @ColumnInfo(name = "distance")
     private float distance;
@@ -76,17 +76,17 @@ public class SprintEntity {
         this.startTime = startTime;
     }
 
-    public SprintEntity endTime(Date endTime) {
-        this.endTime = endTime;
+    public SprintEntity elapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
         return this;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public long getElapsedTime() {
+        return elapsedTime;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setElapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
     }
 
     public SprintEntity distance(float distance) {
