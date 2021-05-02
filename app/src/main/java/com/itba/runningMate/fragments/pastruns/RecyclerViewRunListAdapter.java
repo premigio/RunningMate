@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.itba.runningMate.R;
+import com.itba.runningMate.domain.Sprint;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -13,19 +14,21 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static androidx.recyclerview.widget.RecyclerView.NO_ID;
+
 public class RecyclerViewRunListAdapter extends RecyclerView.Adapter<RLViewHolder> {
 
-    private final List<DummyRView> runList;
+    private final List<Sprint> currentRunList;
     private WeakReference<OnRunClickListener> listener;
 
     public RecyclerViewRunListAdapter() {
-        runList = new ArrayList<>();
+        currentRunList = new ArrayList<>();
     }
 
-    public void update(List<DummyRView> runList) {
-        this.runList.clear();
+    public void update(List<Sprint> runList) {
+        this.currentRunList.clear();
         if (runList != null) {
-            this.runList.addAll(runList);
+            this.currentRunList.addAll(runList);
         }
         notifyDataSetChanged();
     }
@@ -48,14 +51,24 @@ public class RecyclerViewRunListAdapter extends RecyclerView.Adapter<RLViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RLViewHolder holder, int position) {
-        holder.bind(runList.get(position));
+        holder.bind(currentRunList.get(position));
         holder.setOnClickListener(listener.get());
     }
 
+    @Override
+    public long getItemId(int position) {
+        if (currentRunList == null) {
+            return NO_ID;
+        }
+
+        Sprint pos = currentRunList.get(position);
+
+        return pos == null? NO_ID : pos.getUid();
+    }
 
     @Override
     public int getItemCount() {
-        return runList.size();
+        return currentRunList.size();
     }
 
 }

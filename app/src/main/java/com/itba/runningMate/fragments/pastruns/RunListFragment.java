@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.itba.runningMate.R;
+import com.itba.runningMate.db.SprintDb;
+import com.itba.runningMate.domain.Sprint;
+import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
+import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
+import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.util.List;
 
@@ -42,7 +47,7 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
         return inflater.inflate(R.layout.fragment_past_runs, container, false);
     }
 
-    private void setUpRecyclerView(View view){
+    private void setUpRecyclerView(View view) {
 
         recyclerView = view.findViewById(R.id.old_maps_recycler_view);
 
@@ -60,7 +65,7 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
 
     private void setUpRefreshLayout(View view) {
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_old_runs);
-        swipeRefreshLayout.setOnRefreshListener(() ->{
+        swipeRefreshLayout.setOnRefreshListener(() -> {
             presenter.refreshAction();
             swipeRefreshLayout.setRefreshing(false);
         });
@@ -70,7 +75,13 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new RunListPresenter(this);
+        SchedulerProvider sp = new AndroidSchedulerProvider();
+
+        presenter = new RunListPresenter(sp,
+                new SprintRepositoryImpl(SprintDb.getInstance(
+                        this.getActivity().getApplicationContext()).SprintDao(),
+                        sp),
+                this);
 
         setUpRecyclerView(view);
         setUpRefreshLayout(view);
@@ -91,19 +102,16 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
 
 
     @Override
-    public void updateOldRuns(List<DummyRView> list){
+    public void updateOldRuns(List<Sprint> list) {
         rvRunListAdapter.update(list);
         rvRunListAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void showModelToast(DummyRView model){
+    public void showModelToast(long modelId) {
         Toast.makeText(this.getContext(),
-                        "Title = "
-                                + model.getTitle()
-                                + "\n Content = "
-                                + model.getContent(),
-                        Toast.LENGTH_SHORT).show();
+                "modelIdClicked = " + modelId,
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override

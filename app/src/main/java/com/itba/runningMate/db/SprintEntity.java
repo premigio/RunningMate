@@ -14,7 +14,7 @@ public class SprintEntity {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "sprint_id")
-    public int uid;
+    public long uid;
 
     @ColumnInfo(name = "route")
     public List<LatLng> route;
@@ -37,12 +37,12 @@ public class SprintEntity {
     public SprintEntity() {
     }
 
-    public SprintEntity uid(int uid) {
+    public SprintEntity uid(long uid) {
         this.uid = uid;
         return this;
     }
 
-    public int getUid() {
+    public long getUid() {
         return uid;
     }
 

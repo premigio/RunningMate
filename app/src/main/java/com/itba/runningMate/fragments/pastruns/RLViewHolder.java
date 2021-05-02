@@ -4,6 +4,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.itba.runningMate.R;
+import com.itba.runningMate.domain.Sprint;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,17 +21,24 @@ class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListen
         itemView.setOnClickListener(this);
     }
 
-    public void bind(DummyRView model){
+    public void bind(Sprint model){
 
         if (model == null) return;
 
-        TextView title, content;
+        TextView title, distance, time;
 
         title = itemView.findViewById(R.id.run_list_card_title);
-        content = itemView.findViewById(R.id.run_list_distance_content);
+        distance = itemView.findViewById(R.id.run_list_distance_content);
+        time = itemView.findViewById(R.id.run_list_time_run);
 
-        title.setText(model.getTitle());
-        content.setText(model.getTitle());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
+
+
+        title.setText(itemView.getContext().getString(R.string.past_title,dateFormat.format(model.getStartTime())));
+        distance.setText(itemView.getContext().getString(R.string.distance_string,model.getDistance()));
+        time.setText(timeFormat.format(model.getStartTime()));
+
 
     }
 
