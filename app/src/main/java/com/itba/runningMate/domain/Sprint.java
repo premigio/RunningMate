@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Sprint {
 
-    private int uid;
+    private long uid;
     private List<LatLng> route;
     private Date startTime;
     /* km */
@@ -20,12 +20,12 @@ public class Sprint {
     public Sprint() {
     }
 
-    public Sprint uid(int uid) {
+    public Sprint uid(long uid) {
         this.uid = uid;
         return this;
     }
 
-    public int getUid() {
+    public long getUid() {
         return uid;
     }
 

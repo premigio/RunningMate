@@ -8,7 +8,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.itba.runningMate.R;
-import com.itba.runningMate.fragments.history.PastRunsFragment;
+import com.itba.runningMate.fragments.pastruns.RunListFragment;
 import com.itba.runningMate.fragments.running.ui.RunningFragment;
 import com.itba.runningMate.mainpage.adapters.ViewPagerAdapter;
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                 new ViewPagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
         adapter.addFragment(getString(R.string.run), new RunningFragment());
-        adapter.addFragment(getString(R.string.past), new PastRunsFragment());
+        adapter.addFragment(getString(R.string.past), new RunListFragment());
         ViewPager vp = findViewById(R.id.viewPager);
         vp.setAdapter(adapter);
         TabLayout tb = findViewById(R.id.tabLayout);
