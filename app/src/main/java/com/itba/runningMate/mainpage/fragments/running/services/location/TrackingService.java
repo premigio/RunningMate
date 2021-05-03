@@ -82,11 +82,6 @@ public class TrackingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TrackingService.class.getName(), " => Tracking service started");
-        trackedLocations = new LinkedList<>();
-        elapsedMillis = 0L;
-        elapsedDistance = 0f;
-        pace = 0L;
         isTracking = false;
         notificationManager = NotificationManagerCompat.from(this);
         serviceHandlerThread = new HandlerThread(HANDLER_THREAD_NAME, Process.THREAD_PRIORITY_BACKGROUND);
@@ -105,9 +100,14 @@ public class TrackingService extends Service {
 
     public void startTracking() {
         startForegroundService();
-        isTracking = true;
+        trackedLocations = new LinkedList<>();
+        if (lastLocation != null) {
+            trackedLocations.add(lastLocation);
+        }
         elapsedMillis = 0L;
         elapsedDistance = 0F;
+        pace = 0L;
+        isTracking = true;
         startTimeMillis = System.currentTimeMillis();
         serviceHandler.post(this::stopWatch);
     }
