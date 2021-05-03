@@ -33,6 +33,9 @@
     // Toasts
     <string name="toast_error_sprint_save">Could not save run</string>
 
+    // Notifications
+    <string name="notification_tracking_service">Hey I\'am tracking your run</string>
+
     <string name="date_title">%1$s</string>
     <string name="speed_title">Speed</string>
     <string name="speed_value">%1$.1f km/h</string>
