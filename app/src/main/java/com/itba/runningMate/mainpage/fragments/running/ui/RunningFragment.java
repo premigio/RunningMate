@@ -356,8 +356,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     public void launchSprintActivity(long sprintId) {
         Uri uri = new Uri.Builder().scheme("runningmate")
                 .authority("sprint")
-                .appendPath("view")
-                .appendQueryParameter("sprintId", String.valueOf(sprintId)).build();
+                .appendQueryParameter("sprint-id", String.valueOf(sprintId)).build();
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 

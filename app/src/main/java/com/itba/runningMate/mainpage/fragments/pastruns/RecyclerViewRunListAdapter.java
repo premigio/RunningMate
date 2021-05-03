@@ -39,7 +39,7 @@ public class RecyclerViewRunListAdapter extends RecyclerView.Adapter<RLViewHolde
 
     @Override
     public int getItemViewType(final int position) {
-        return R.layout.old_map_rv_row;
+        return R.layout.item_past_run;
     }
 
     @NonNull

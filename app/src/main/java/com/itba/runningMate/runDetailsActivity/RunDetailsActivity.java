@@ -36,7 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 
     private static final int PADDING = 5; // padding de los puntos en el mapa
-    private static final String SPRINT_ID = "sprintid";
+    private static final String SPRINT_ID = "sprint-id";
     private static SimpleDateFormat paceFormatter = new SimpleDateFormat("mm ss", Locale.getDefault());
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
     private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
@@ -50,7 +50,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sprint_description_layout);
+        setContentView(R.layout.activity_sprint_details);
 
         long id;
 
@@ -128,7 +128,6 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
                 .color(Color.BLUE)
                 .width(8f)
                 .addAll(route));
-
     }
 
     private void setRunDetailsLabel(Sprint sprint) {
@@ -150,7 +149,6 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         time = findViewById(R.id.run_description_elapsed_time_content);
         Date timeValue = SprintConverters.fromTimestamp(sprint.getElapsedTime());
         time.setText(getString(R.string.time_elapsed_value, timeFormat.format(timeValue)));
-
     }
 
     private void setMapCenter(List<LatLng> route) {
