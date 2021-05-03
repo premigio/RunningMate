@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -35,7 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 
-    private static final int PADDING = 5; // padding de los puntos en el mapa
+    private static final int PADDING = 20; // padding de los puntos en el mapa
     private static final String SPRINT_ID = "sprint-id";
     private static SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
@@ -73,6 +74,11 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         //Creo el botón para volver
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        Button deleteButton = findViewById(R.id.delete_button_sprint);
+        deleteButton.setOnClickListener(view ->{
+            presenter.deleteSprint();
+        });
 
     }
 
@@ -118,6 +124,11 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         setRunDetailsLabel(sprint);
         setMapPath(sprint.getRoute());
         setMapCenter(sprint.getRoute());
+    }
+
+    @Override
+    public void endActivity() {
+        finish();
     }
 
     private void setMapPath(List<LatLng> route) {

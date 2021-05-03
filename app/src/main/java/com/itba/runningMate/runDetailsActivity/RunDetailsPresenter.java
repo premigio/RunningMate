@@ -6,6 +6,7 @@ import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
 
+import io.reactivex.Completable;
 import io.reactivex.disposables.Disposable;
 
 public class RunDetailsPresenter {
@@ -43,5 +44,18 @@ public class RunDetailsPresenter {
 
     public void onViewDetached() {
         disposable.dispose();
+    }
+
+    public void deleteSprint() {
+        disposable = Completable.fromAction(()->repo.deleteSprint(item_id))
+                .subscribeOn(sp.computation())
+                .observeOn(sp.ui())
+                .subscribe(this::finishSprint,this::onRunListError);
+    }
+
+    private void finishSprint() {
+        if (view != null && view.get() != null) {
+            view.get().endActivity();
+        }
     }
 }

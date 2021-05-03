@@ -148,6 +148,15 @@
 
 
         </GridLayout>
+        <Button
+            android:id="@+id/delete_button_sprint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/delete_button"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:text="@string/delete_sprint"/>
     </LinearLayout>
 
     <com.google.android.gms.maps.MapView
