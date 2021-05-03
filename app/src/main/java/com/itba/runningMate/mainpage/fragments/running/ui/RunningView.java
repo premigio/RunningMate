@@ -6,6 +6,8 @@ public interface RunningView {
 
     void showRoute(Route route);
 
+    void removeRoutes();
+
     void showLocation(double latitude, double longitude);
 
     void updateDistanceTextView(String elapsedDistance);
@@ -35,4 +37,8 @@ public interface RunningView {
     void showStopSprintButton();
 
     void showStartSprintButton();
+
+    void showSaveSprintError();
+
+    void launchSprintActivity(long sprintId);
 }

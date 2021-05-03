@@ -30,12 +30,8 @@ public class SprintRepositoryImpl implements SprintRepository {
     }
 
     @Override
-    public void insertSprint(Sprint sprint) {
-        sprintDao.insertRoute(SprintMapper.toEntity(sprint))
-                .onErrorComplete()
-                .observeOn(scheduler.ui())
-                .subscribeOn(scheduler.io())
-                .subscribe();
+    public Single<Long> insertSprint(Sprint sprint) {
+        return sprintDao.insertRoute(SprintMapper.toEntity(sprint));
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,16 +65,6 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     private GoogleMap googleMap;
 
     private RunningPresenter presenter;
-    private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
-        if (i == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION
-                || i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            presenter.freeCamera();
-        }
-    };
-    private final GoogleMap.OnMyLocationButtonClickListener mapMyLocationButtonListener = () -> {
-        presenter.centerCamera();
-        return true;
-    };
 
     @Nullable
     @Override
@@ -97,19 +89,12 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         startStopButton.setOnClickListener(l -> presenter.onStartStopButtonClick());
     }
 
-    public void createPresenter() {
-        /*presenter = (LandingPresenter) getLastNonConfigurationInstance();
-        if (presenter == null) {*/
-        // todo: 'this.getActivity().getSharedPreferences' fijate que onda si hay leak
-        final SharedPreferences preferences = this.getActivity().getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
-        final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
-        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
-        final SprintRepository sprintRepository = new SprintRepositoryImpl(
-                SprintDb.getInstance(this.getActivity().getApplicationContext()).SprintDao(),
-                schedulerProvider);
-        presenter = new RunningPresenter(stateStorage, sprintRepository, this);
-        /*}*/
-    }
+    private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
+        if (i == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION
+                || i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            presenter.freeCamera();
+        }
+    };
 
     @Override
     public void onLowMemory() {
@@ -211,9 +196,23 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
                 .addAll(route.getLocations()));
     }
 
-    @Override
-    public void showLocation(double latitude, double longitude) {
-        showLocation(latitude, longitude, MY_LOCATION_ZOOM);
+    private final GoogleMap.OnMyLocationButtonClickListener mapMyLocationButtonListener = () -> {
+        presenter.centerCamera();
+        return true;
+    };
+
+    public void createPresenter() {
+        /*presenter = (LandingPresenter) getLastNonConfigurationInstance();
+        if (presenter == null) {*/
+        // todo: 'this.getActivity().getSharedPreferences' fijate que onda si hay leak
+        final SharedPreferences preferences = this.getActivity().getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
+        final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
+        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
+        final SprintRepository sprintRepository = new SprintRepositoryImpl(
+                SprintDb.getInstance(this.getActivity().getApplicationContext()).SprintDao(),
+                schedulerProvider);
+        presenter = new RunningPresenter(stateStorage, sprintRepository, schedulerProvider, this);
+        /*}*/
     }
 
     @Override
@@ -240,6 +239,16 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     @Override
     public void updatePaceTextView(String pace) {
         this.pace.setText(pace);
+    }
+
+    @Override
+    public void removeRoutes() {
+        googleMap.clear();
+    }
+
+    @Override
+    public void showLocation(double latitude, double longitude) {
+        showLocation(latitude, longitude, MY_LOCATION_ZOOM);
     }
 
     @Override
@@ -317,7 +326,6 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        /* todo: remove observers o fijarse si se hace solo */
         presenter.onTrackingServiceDetached();
     }
 
@@ -337,6 +345,20 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     public void onSaveInstanceState(@NonNull Bundle outState) {
         // todo: bundle vs shared preferences onsavedInstance vs ondestory para guardar datos
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void showSaveSprintError() {
+        Toast.makeText(this.getActivity(), getText(R.string.toast_error_sprint_save), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void launchSprintActivity(long sprintId) {
+        Uri uri = new Uri.Builder().scheme("runningmate")
+                .authority("sprint")
+                .appendPath("view")
+                .appendQueryParameter("sprintId", String.valueOf(sprintId)).build();
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
 }

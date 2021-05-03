@@ -13,7 +13,7 @@ public interface SprintRepository {
 
     Single<Sprint> getSprint(final long uid);
 
-    void insertSprint(Sprint sprint);
+    Single<Long> insertSprint(Sprint sprint);
 
     void deleteSprint(Sprint sprint);
 }

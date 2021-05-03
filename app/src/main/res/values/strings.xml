@@ -29,8 +29,10 @@
     <string name="distance_string">%1$.1f km</string>
     <string name="time">15:50</string>
     <string name="walking_icon_desc">Walking Icon</string>
-    
-    
+
+    // Toasts
+    <string name="toast_error_sprint_save">Could not save run</string>
+
     <string name="date_title">%1$s</string>
     <string name="speed_title">Speed</string>
     <string name="speed_value">%1$.1f km/h</string>
