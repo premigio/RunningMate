@@ -37,7 +37,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     private static final int PADDING = 5; // padding de los puntos en el mapa
     private static final String SPRINT_ID = "sprint-id";
-    private static SimpleDateFormat paceFormatter = new SimpleDateFormat("mm ss", Locale.getDefault());
+    private static SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
     private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
 

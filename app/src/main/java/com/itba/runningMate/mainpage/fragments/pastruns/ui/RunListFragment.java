@@ -122,9 +122,9 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
     @Override
     public void callSprintDetails(long id) {
         Uri.Builder uriBuilder = new Uri.Builder()
-                .scheme("app")
-                .encodedAuthority("sprint_detail")
-                .appendQueryParameter("sprintid",Long.toString(id));
+                .scheme("runningmate")
+                .encodedAuthority("sprint")
+                .appendQueryParameter("sprint-id",Long.toString(id));
         startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
     }
 
