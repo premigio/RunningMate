@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.adapters;
+package com.itba.runningMate.mainpage.activityAdapters;
 
 import java.util.ArrayList;
 import java.util.List;

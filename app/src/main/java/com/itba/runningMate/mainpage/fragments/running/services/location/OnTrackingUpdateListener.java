@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.running.services.location;
+package com.itba.runningMate.mainpage.fragments.running.services.location;
 
 public interface OnTrackingUpdateListener {
 

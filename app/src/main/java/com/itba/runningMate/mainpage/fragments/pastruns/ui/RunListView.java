@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.pastruns.ui;
+package com.itba.runningMate.mainpage.fragments.pastruns.ui;
 
 import com.itba.runningMate.domain.Sprint;
 
@@ -8,4 +8,6 @@ public interface RunListView {
 
     void updateOldRuns(List<Sprint> list);
     void showModelToast(long modelId);
+
+    void callSprintDetails(long id);
 }

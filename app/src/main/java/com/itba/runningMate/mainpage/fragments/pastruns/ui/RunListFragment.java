@@ -1,5 +1,7 @@
-package com.itba.runningMate.fragments.pastruns.ui;
+package com.itba.runningMate.mainpage.fragments.pastruns.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,8 @@ import android.widget.Toast;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.SprintDb;
 import com.itba.runningMate.domain.Sprint;
-import com.itba.runningMate.fragments.pastruns.OnRunClickListener;
-import com.itba.runningMate.fragments.pastruns.RecyclerViewRunListAdapter;
+import com.itba.runningMate.mainpage.fragments.pastruns.OnRunClickListener;
+import com.itba.runningMate.mainpage.fragments.pastruns.RecyclerViewRunListAdapter;
 import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
@@ -26,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class RunListFragment extends Fragment implements RunListView, OnRunClickListener {
+
+    private static final String SPRINT_DETAILS_URL = "app://sprint_detail";
 
     private RunListPresenter presenter;
 
@@ -113,6 +117,15 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
         Toast.makeText(this.getContext(),
                 "modelIdClicked = " + modelId,
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void callSprintDetails(long id) {
+        Uri.Builder uriBuilder = new Uri.Builder()
+                .scheme("app")
+                .encodedAuthority("sprint_detail")
+                .appendQueryParameter("sprintid",Long.toString(id));
+        startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
     }
 
     @Override

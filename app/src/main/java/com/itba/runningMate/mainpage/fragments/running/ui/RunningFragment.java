@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.running.ui;
+package com.itba.runningMate.mainpage.fragments.running.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -34,11 +34,11 @@ import com.google.android.material.button.MaterialButton;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.SprintDb;
-import com.itba.runningMate.fragments.running.model.Route;
-import com.itba.runningMate.fragments.running.repository.LandingStateStorage;
-import com.itba.runningMate.fragments.running.repository.LandingStateStorageImpl;
-import com.itba.runningMate.fragments.running.services.location.Tracker;
-import com.itba.runningMate.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.mainpage.fragments.running.model.Route;
+import com.itba.runningMate.mainpage.fragments.running.repository.LandingStateStorage;
+import com.itba.runningMate.mainpage.fragments.running.repository.LandingStateStorageImpl;
+import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
+import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
 import com.itba.runningMate.repository.sprint.SprintRepository;
 import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;

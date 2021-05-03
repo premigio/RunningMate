@@ -25,7 +25,7 @@ public class SprintRepositoryImpl implements SprintRepository {
     }
 
     @Override
-    public Single<Sprint> getSprint(int uid) {
+    public Single<Sprint> getSprint(long uid) {
         return sprintDao.getRoute(uid).map(SprintMapper::toModel);
     }
 

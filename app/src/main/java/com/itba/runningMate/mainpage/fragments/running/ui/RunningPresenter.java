@@ -1,12 +1,12 @@
-package com.itba.runningMate.fragments.running.ui;
+package com.itba.runningMate.mainpage.fragments.running.ui;
 
 import android.annotation.SuppressLint;
 
 import com.itba.runningMate.domain.Sprint;
-import com.itba.runningMate.fragments.running.model.Route;
-import com.itba.runningMate.fragments.running.repository.LandingStateStorage;
-import com.itba.runningMate.fragments.running.services.location.OnTrackingUpdateListener;
-import com.itba.runningMate.fragments.running.services.location.Tracker;
+import com.itba.runningMate.mainpage.fragments.running.model.Route;
+import com.itba.runningMate.mainpage.fragments.running.repository.LandingStateStorage;
+import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingUpdateListener;
+import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.repository.sprint.SprintRepository;
 
 import java.lang.ref.WeakReference;

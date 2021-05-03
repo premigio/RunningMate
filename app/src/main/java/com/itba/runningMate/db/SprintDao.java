@@ -18,7 +18,7 @@ public interface SprintDao {
     Flowable<List<SprintEntity>> getRoutes();
 
     @Query("SELECT * FROM sprints WHERE sprints.sprint_id = :id")
-    Single<SprintEntity> getRoute(final int id);
+    Single<SprintEntity> getRoute(final long id);
 
     @Insert
     Completable insertRoute(SprintEntity route);

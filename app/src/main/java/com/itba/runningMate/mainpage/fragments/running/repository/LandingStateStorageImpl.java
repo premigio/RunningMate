@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.running.repository;
+package com.itba.runningMate.mainpage.fragments.running.repository;
 
 import android.content.SharedPreferences;
 

@@ -1,6 +1,6 @@
-package com.itba.runningMate.fragments.running.ui;
+package com.itba.runningMate.mainpage.fragments.running.ui;
 
-import com.itba.runningMate.fragments.running.model.Route;
+import com.itba.runningMate.mainpage.fragments.running.model.Route;
 
 public interface RunningView {
 

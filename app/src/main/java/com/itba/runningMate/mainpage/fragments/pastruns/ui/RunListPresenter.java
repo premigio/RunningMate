@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.pastruns.ui;
+package com.itba.runningMate.mainpage.fragments.pastruns.ui;
 
 import com.itba.runningMate.domain.Sprint;
 import com.itba.runningMate.repository.sprint.SprintRepository;
@@ -41,7 +41,7 @@ public class RunListPresenter {
     }
 
     public void receivedRunList(List<Sprint> sprints){
-        if (view.get() != null) {
+        if (view != null && view.get() != null) {
             view.get().updateOldRuns(sprints);
         }
     }
@@ -51,8 +51,8 @@ public class RunListPresenter {
     }
 
     public void onRunClick(long id) {
-        if (view.get() != null) {
-            view.get().showModelToast(id);
+        if (view != null && view.get() != null) {
+            view.get().callSprintDetails(id);
         }
     }
 }

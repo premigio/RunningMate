@@ -29,4 +29,14 @@
     <string name="distance_string">%1$.1f km</string>
     <string name="time">15:50</string>
     <string name="walking_icon_desc">Walking Icon</string>
+    
+    
+    <string name="date_title">%1$s</string>
+    <string name="speed_title">Speed</string>
+    <string name="speed_value">%1$.1f km/h</string>
+    <string name="pace_title">Pace</string>
+    <string name="pace_value">%1$s</string>
+    <string name="distance_title">Distance</string>
+    <string name="time_elapsed_title">Run Time</string>
+    <string name="time_elapsed_value">%1$s min</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.itba.runningMate.fragments.running.services.location;
+package com.itba.runningMate.mainpage.fragments.running.services.location;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -26,7 +26,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
-import com.itba.runningMate.domain.Sprint;
 import com.itba.runningMate.mainpage.MainActivity;
 import com.itba.runningMate.utils.sprint.SprintMetrics;
 

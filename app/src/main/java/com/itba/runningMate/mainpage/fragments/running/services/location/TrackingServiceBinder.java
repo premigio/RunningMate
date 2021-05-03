@@ -1,10 +1,8 @@
-package com.itba.runningMate.fragments.running.services.location;
+package com.itba.runningMate.mainpage.fragments.running.services.location;
 
 import android.os.Binder;
 
-import androidx.lifecycle.LiveData;
-
-import com.itba.runningMate.fragments.running.model.Route;
+import com.itba.runningMate.mainpage.fragments.running.model.Route;
 import com.itba.runningMate.utils.sprint.SprintMetrics;
 
 public class TrackingServiceBinder extends Binder implements Tracker {
