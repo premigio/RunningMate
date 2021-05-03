@@ -41,4 +41,6 @@
     <string name="distance_title">Distance</string>
     <string name="time_elapsed_title">Run Time</string>
     <string name="time_elapsed_value">%1$s min</string>
+    <string name="delete_sprint">Delete</string>
+
 </resources>

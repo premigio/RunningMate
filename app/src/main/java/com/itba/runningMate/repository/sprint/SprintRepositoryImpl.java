@@ -42,4 +42,13 @@ public class SprintRepositoryImpl implements SprintRepository {
                 .observeOn(scheduler.ui())
                 .subscribe();
     }
+
+
+    public void deleteSprint(long id) {
+        sprintDao.deleteRoute(id)
+                .onErrorComplete()
+                .subscribeOn(scheduler.io())
+                .observeOn(scheduler.ui())
+                .subscribe();;
+    }
 }

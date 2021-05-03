@@ -26,6 +26,9 @@ public interface SprintDao {
     @Delete
     Completable deleteRoute(SprintEntity route);
 
+    @Query("DELETE FROM sprints WHERE sprints.sprint_id = :id")
+    Completable deleteRoute(long id);
+
     // query por dia
 
     // query por tiempo

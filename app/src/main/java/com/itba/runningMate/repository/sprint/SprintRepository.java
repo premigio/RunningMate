@@ -16,4 +16,6 @@ public interface SprintRepository {
     Single<Long> insertSprint(Sprint sprint);
 
     void deleteSprint(Sprint sprint);
+
+    void deleteSprint(long sprintId);
 }
