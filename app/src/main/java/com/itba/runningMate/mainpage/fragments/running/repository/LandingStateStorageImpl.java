@@ -23,7 +23,7 @@ public class LandingStateStorageImpl implements LandingStateStorage {
         this.preferences = preferences;
         centerCamera = preferences.getBoolean(KEY_CENTER_CAMERA, true);
         if (preferences.contains(KEY_LOCATION_LATITUDE)) {
-            lastKnownLongitude = (double) preferences.getFloat(KEY_LOCATION_LATITUDE, (float) DEFAULT_LATITUDE);
+            lastKnownLatitude = (double) preferences.getFloat(KEY_LOCATION_LATITUDE, (float) DEFAULT_LATITUDE);
         }
         if (preferences.contains(KEY_LOCATION_LONGITUDE)) {
             lastKnownLongitude = (double) preferences.getFloat(KEY_LOCATION_LONGITUDE, (float) DEFAULT_LONGITUDE);

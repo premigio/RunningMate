@@ -152,6 +152,9 @@ public class RunningPresenter implements OnTrackingUpdateListener {
 
     public void centerCamera() {
         stateStorage.setCenterCamera(true);
+        if (stateStorage.hasLastKnownLocation()) {
+            view.get().showLocation(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude());
+        }
     }
 
     public void freeCamera() {
