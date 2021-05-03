@@ -112,21 +112,26 @@ public class RunningPresenter implements OnTrackingUpdateListener {
             tracker.stopTracking();
             float distKm = tracker.queryDistance();
             long timeMillis = tracker.queryElapsedTime();
-            disposable = sprintRepository.insertSprint(
-                    new Sprint()
-                            .startTime(new Date(tracker.queryStartTime()))
-                            .elapsedTime(timeMillis)
-                            .route(tracker.querySprint().getLocations())
-                            .distance(distKm)
-                            .pace(tracker.queryPace())
-                            .velocity(tracker.queryVelocity())
-            )
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.ui())
-                    .subscribe(this::onSprintSaved, this::onSprintSavedError);
+            Sprint sprint = new Sprint()
+                    .startTime(new Date(tracker.queryStartTime()))
+                    .elapsedTime(timeMillis)
+                    .route(tracker.querySprint().getLocations())
+                    .distance(distKm)
+                    .pace(tracker.queryPace())
+                    .velocity(tracker.queryVelocity());
+            saveSprint(sprint);
         }
         if (view.get() != null) {
             view.get().removeRoutes();
+        }
+    }
+
+    private void saveSprint(Sprint sprint) {
+        if (sprint.getDistance() > 0F) {
+            disposable = sprintRepository.insertSprint(sprint)
+                    .subscribeOn(schedulers.io())
+                    .observeOn(schedulers.ui())
+                    .subscribe(this::onSprintSaved, this::onSprintSavedError);
         }
     }
 
