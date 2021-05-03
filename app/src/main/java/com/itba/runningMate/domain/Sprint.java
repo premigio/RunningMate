@@ -7,25 +7,26 @@ import java.util.List;
 
 public class Sprint {
 
-    private int uid;
+    private long uid;
     private List<LatLng> route;
     private Date startTime;
-    private Date endTime;
+    /* km */
+    private float distance;
+    /* km/h */
+    private float velocity;
+    private long pace;
+    private long elapsedTime;
 
     public Sprint() {
     }
 
-    public Sprint uid(int uid) {
+    public Sprint uid(long uid) {
         this.uid = uid;
         return this;
     }
 
-    public int getUid() {
+    public long getUid() {
         return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
     }
 
     public Sprint route(List<LatLng> route) {
@@ -46,34 +47,63 @@ public class Sprint {
         return this;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Sprint endTime(Date endTime) {
-        this.endTime = endTime;
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public Sprint distance(float distance) {
+        this.distance = distance;
         return this;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public float getDistance() {
+        return distance;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setDistance(float distance) {
+        this.distance = distance;
     }
 
-    @Override
-    public String toString() {
-        return "Sprint{" +
-                "uid=" + uid +
-                ", route=" + route +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
+    public Sprint velocity(float velocity) {
+        this.velocity = velocity;
+        return this;
+    }
+
+    public float getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
+    }
+
+    public Sprint pace(long pace) {
+        this.pace = pace;
+        return this;
+    }
+
+    public long getPace() {
+        return pace;
+    }
+
+    public void setPace(long pace) {
+        this.pace = pace;
+    }
+
+    public Sprint elapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
+        return this;
+    }
+
+    public long getElapsedTime() {
+        return elapsedTime;
+    }
+
+    public void setElapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
     }
 }

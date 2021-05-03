@@ -14,7 +14,7 @@ public class SprintEntity {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "sprint_id")
-    public int uid;
+    public long uid;
 
     @ColumnInfo(name = "route")
     public List<LatLng> route;
@@ -22,21 +22,27 @@ public class SprintEntity {
     @ColumnInfo(name = "start_time")
     public Date startTime;
 
-    @ColumnInfo(name = "end_time")
-    public Date endTime;
+    @ColumnInfo(name = "elapsed_time")
+    public long elapsedTime;
 
-    /*@ColumnInfo(name = "kms")
-    public double kms;*/
+    @ColumnInfo(name = "distance")
+    private float distance;
+
+    @ColumnInfo(name = "velocity")
+    private float velocity;
+
+    @ColumnInfo(name = "pace")
+    private long pace;
 
     public SprintEntity() {
     }
 
-    public SprintEntity uid(int uid) {
+    public SprintEntity uid(long uid) {
         this.uid = uid;
         return this;
     }
 
-    public int getUid() {
+    public long getUid() {
         return uid;
     }
 
@@ -70,17 +76,55 @@ public class SprintEntity {
         this.startTime = startTime;
     }
 
-    public SprintEntity endTime(Date endTime) {
-        this.endTime = endTime;
+    public SprintEntity elapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
         return this;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public long getElapsedTime() {
+        return elapsedTime;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setElapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
     }
 
+    public SprintEntity distance(float distance) {
+        this.distance = distance;
+        return this;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public SprintEntity velocity(float velocity) {
+        this.velocity = velocity;
+        return this;
+    }
+
+    public float getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
+    }
+
+    public SprintEntity pace(long pace) {
+        this.pace = pace;
+        return this;
+    }
+
+    public long getPace() {
+        return pace;
+    }
+
+    public void setPace(long pace) {
+        this.pace = pace;
+    }
 }

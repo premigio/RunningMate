@@ -4,11 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.history.PastRunsFragment">
+    tools:context=".mainpage.fragments.pastruns.ui.RunListFragment">
 
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_old_runs"
             android:layout_width="match_parent"
@@ -22,10 +20,10 @@
                 android:id="@+id/old_maps_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="2dp"/>
+                android:padding="2dp"
+                />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-<!--    </RelativeLayout>-->
 
 </FrameLayout>

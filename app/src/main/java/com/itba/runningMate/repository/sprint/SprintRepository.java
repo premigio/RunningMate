@@ -9,11 +9,13 @@ import io.reactivex.Single;
 
 public interface SprintRepository {
 
-    Flowable<List<Sprint>> getRoutes();
+    Flowable<List<Sprint>> getSprint();
 
-    Single<Sprint> getRoute(final int uid);
+    Single<Sprint> getSprint(final long uid);
 
-    void insertRoute(Sprint route);
+    Single<Long> insertSprint(Sprint sprint);
 
-    void deleteRoute(Sprint route);
+    void deleteSprint(Sprint sprint);
+
+    void deleteSprint(long sprintId);
 }

@@ -14,17 +14,20 @@ import io.reactivex.Single;
 @Dao
 public interface SprintDao {
 
-    @Query("SELECT * FROM sprints")
+    @Query("SELECT * FROM sprints ORDER BY start_time DESC")
     Flowable<List<SprintEntity>> getRoutes();
 
     @Query("SELECT * FROM sprints WHERE sprints.sprint_id = :id")
-    Single<SprintEntity> getRoute(final int id);
+    Single<SprintEntity> getRoute(final long id);
 
     @Insert
-    Completable insertRoute(SprintEntity route);
+    Single<Long> insertRoute(SprintEntity route);
 
     @Delete
     Completable deleteRoute(SprintEntity route);
+
+    @Query("DELETE FROM sprints WHERE sprints.sprint_id = :id")
+    Completable deleteRoute(long id);
 
     // query por dia
 
