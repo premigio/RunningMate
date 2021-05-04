@@ -10,11 +10,11 @@ public interface RunningView {
 
     void showLocation(double latitude, double longitude);
 
-    void updateDistance(String elapsedDistance);
+    void updateDistance(float elapsedDistance);
 
-    void updateStopwatch(String elapsedTime);
+    void updateStopwatch(long elapsedTime);
 
-    void updatePace(String pace);
+    void updatePace(long pace);
 
     void showInitialMetrics();
 

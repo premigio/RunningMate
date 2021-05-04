@@ -33,7 +33,7 @@ public class TrackingServiceBinder extends Binder implements Tracker {
         trackingService.setOnTrackingUpdateListener(listener);
     }
 
-    public void removeLocationUpdateListener() {
+    public void removeTrackingUpdateListener() {
         trackingService.removeLocationUpdateListener();
     }
 
