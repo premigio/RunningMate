@@ -142,8 +142,8 @@ public class TrackingService extends Service {
         Notification notification =
                 new NotificationCompat.Builder(this, Constants.NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID)
                         .setContentTitle(getText(R.string.app_name))
-                        .setContentText("Hey I'am using your location")
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setContentText(getText(R.string.notification_tracking_service))
+                        .setSmallIcon(R.drawable.ic_notification)
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(false)
                         .setOngoing(true)

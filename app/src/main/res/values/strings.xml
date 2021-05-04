@@ -29,9 +29,18 @@
     <string name="distance_string">%1$.1f km</string>
     <string name="time">15:50</string>
     <string name="walking_icon_desc">Walking Icon</string>
+    <string name="empty_list">You still have not gone running. \n You can do it!</string>
+
+    //Alert Box for deleting sprint
+    <string name="sprint_delete_message">Are you sure you want to remove this run?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 
     // Toasts
     <string name="toast_error_sprint_save">Could not save run</string>
+
+    // Notifications
+    <string name="notification_tracking_service">Hey I\'am tracking your run</string>
 
     <string name="date_title">%1$s</string>
     <string name="speed_title">Speed</string>

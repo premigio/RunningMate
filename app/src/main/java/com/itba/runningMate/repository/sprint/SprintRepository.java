@@ -11,6 +11,8 @@ public interface SprintRepository {
 
     Flowable<List<Sprint>> getSprint();
 
+    Flowable<List<Sprint>> getSprintNoMap();
+
     Single<Sprint> getSprint(final long uid);
 
     Single<Long> insertSprint(Sprint sprint);
