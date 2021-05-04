@@ -31,6 +31,11 @@
     <string name="walking_icon_desc">Walking Icon</string>
     <string name="empty_list">You still have not gone running. \n You can do it!</string>
 
+    //Alert Box for deleting sprint
+    <string name="sprint_delete_message">Are you sure you want to remove this run?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+
     // Toasts
     <string name="toast_error_sprint_save">Could not save run</string>
 
