@@ -4,7 +4,6 @@ public class Constants {
 
     public static final String APPLICATION_PACKAGE = "com.itba.runningMate";
 
-    // TODO: encapsular dentro de una clase Notifications
     /* Notifications */
     public static final String NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID = "LocationServiceChannel";
     public static final String NOTIFICATION_LOCATION_SERVICE_CHANNEL_NAME = "Location Service Channel";
