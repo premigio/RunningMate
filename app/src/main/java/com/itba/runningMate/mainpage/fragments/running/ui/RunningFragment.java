@@ -91,7 +91,10 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         pace = view.findViewById(R.id.pace);
         stopWatch = view.findViewById(R.id.stopwatch);
 
-        startStopButton.setOnClickListener(l -> presenter.onStartStopButtonClick());
+        startStopButton.setOnLongClickListener(l -> {
+            presenter.onStartStopButtonClick();
+            return true;
+        });
     }
 
     private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
@@ -210,7 +213,6 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     public void createPresenter() {
         /*presenter = (LandingPresenter) getLastNonConfigurationInstance();
         if (presenter == null) {*/
-        // todo: 'this.getActivity().getSharedPreferences' fijate que onda si hay leak
         final SharedPreferences preferences = this.getActivity().getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
         final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
         final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
