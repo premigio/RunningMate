@@ -227,18 +227,25 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     }
 
     @Override
-    public void updateDistanceTextView(String elapsedDistance) {
+    public void updateDistance(String elapsedDistance) {
         distance.setText(elapsedDistance);
     }
 
     @Override
-    public void updateStopwatchTextView(String elapsedTime) {
+    public void updateStopwatch(String elapsedTime) {
         stopWatch.setText(elapsedTime);
     }
 
     @Override
-    public void updatePaceTextView(String pace) {
+    public void updatePace(String pace) {
         this.pace.setText(pace);
+    }
+
+    @Override
+    public void showInitialMetrics() {
+        pace.setText(R.string.text_view_running_initial_pace);
+        distance.setText(R.string.text_view_running_initial_distance);
+        stopWatch.setText(R.string.text_view_running_initial_time);
     }
 
     @Override

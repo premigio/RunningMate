@@ -87,6 +87,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
                 onPaceUpdate(tracker.queryPace());
                 onDistanceUpdate(tracker.queryDistance());
                 onStopWatchUpdate(tracker.queryElapsedTime());
+                view.get().showStopSprintButton();
             }
         }
     }
@@ -123,6 +124,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         }
         if (view.get() != null) {
             view.get().removeRoutes();
+            view.get().showInitialMetrics();
         }
     }
 
@@ -207,7 +209,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         if (view.get() == null) {
             return;
         }
-        view.get().updateStopwatchTextView(hmsTimeFormatter(elapsedTime));
+        view.get().updateStopwatch(hmsTimeFormatter(elapsedTime));
     }
 
     @Override
@@ -215,7 +217,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         if (view.get() == null) {
             return;
         }
-        view.get().updateDistanceTextView(twoDecimalPlacesFormatter.format(elapsedDistance));
+        view.get().updateDistance(twoDecimalPlacesFormatter.format(elapsedDistance));
     }
 
     @Override
@@ -223,7 +225,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         if (view.get() == null) {
             return;
         }
-        view.get().updatePaceTextView(hmsTimeFormatter(pace));
+        view.get().updatePace(hmsTimeFormatter(pace));
     }
 
     @SuppressLint("DefaultLocale")
