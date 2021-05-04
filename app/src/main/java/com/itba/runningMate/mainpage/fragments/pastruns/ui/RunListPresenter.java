@@ -25,7 +25,7 @@ public class RunListPresenter {
     }
 
     public void onViewAttached() {
-        disposable = repo.getSprint()
+        disposable = repo.getSprintNoMap()
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
                 .subscribe(this::receivedRunList,this::onRunListError);

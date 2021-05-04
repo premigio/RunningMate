@@ -29,6 +29,9 @@ public interface SprintDao {
     @Query("DELETE FROM sprints WHERE sprints.sprint_id = :id")
     Completable deleteRoute(long id);
 
+    @Query("SELECT sprint_id, start_time, elapsed_time, distance, velocity, pace FROM sprints ORDER BY start_time DESC")
+    Flowable<List<SprintEntity>> getRoutesNoMap();
+
     // query por dia
 
     // query por tiempo

@@ -25,6 +25,11 @@ public class SprintRepositoryImpl implements SprintRepository {
     }
 
     @Override
+    public Flowable<List<Sprint>> getSprintNoMap() {
+        return sprintDao.getRoutesNoMap().map(SprintMapper::toModel);
+    }
+
+    @Override
     public Single<Sprint> getSprint(long uid) {
         return sprintDao.getRoute(uid).map(SprintMapper::toModel);
     }
