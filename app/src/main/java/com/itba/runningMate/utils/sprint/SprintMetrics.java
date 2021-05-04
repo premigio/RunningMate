@@ -31,7 +31,7 @@ public class SprintMetrics {
         float[] aux = new float[1];
         Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, aux);
         float distance = aux[0] / 1000f;
-        return Math.round(distance * 100.0) / 100.0f;
+        return Math.round(distance * 10000.0) / 10000.0f;
     }
 
     /* Km/H */

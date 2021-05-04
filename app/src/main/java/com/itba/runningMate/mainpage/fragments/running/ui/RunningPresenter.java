@@ -1,7 +1,5 @@
 package com.itba.runningMate.mainpage.fragments.running.ui;
 
-import android.annotation.SuppressLint;
-
 import com.itba.runningMate.domain.Sprint;
 import com.itba.runningMate.mainpage.fragments.running.model.Route;
 import com.itba.runningMate.mainpage.fragments.running.repository.LandingStateStorage;
@@ -11,20 +9,16 @@ import com.itba.runningMate.repository.sprint.SprintRepository;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
-import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
 
 public class RunningPresenter implements OnTrackingUpdateListener {
 
-    private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
-
     private final WeakReference<RunningView> view;
     private final LandingStateStorage stateStorage;
     private final SprintRepository sprintRepository;
-    private SchedulerProvider schedulers;
+    private final SchedulerProvider schedulers;
 
     private Tracker tracker;
     private boolean isTrackerAttached;
@@ -54,6 +48,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
 
     public void onViewDetached() {
         stateStorage.persistState();
+        tracker.removeTrackingUpdateListener();
         if (view.get() != null) {
             view.get().detachTrackingService();
         }
@@ -87,12 +82,12 @@ public class RunningPresenter implements OnTrackingUpdateListener {
                 onPaceUpdate(tracker.queryPace());
                 onDistanceUpdate(tracker.queryDistance());
                 onStopWatchUpdate(tracker.queryElapsedTime());
+                view.get().showStopSprintButton();
             }
         }
     }
 
     public void onTrackingServiceDetached() {
-        tracker.removeLocationUpdateListener();
         this.tracker = null;
         this.isTrackerAttached = false;
     }
@@ -123,6 +118,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         }
         if (view.get() != null) {
             view.get().removeRoutes();
+            view.get().showInitialMetrics();
         }
     }
 
@@ -207,7 +203,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         if (view.get() == null) {
             return;
         }
-        view.get().updateStopwatchTextView(hmsTimeFormatter(elapsedTime));
+        view.get().updateStopwatch(elapsedTime);
     }
 
     @Override
@@ -215,7 +211,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         if (view.get() == null) {
             return;
         }
-        view.get().updateDistanceTextView(twoDecimalPlacesFormatter.format(elapsedDistance));
+        view.get().updateDistance(elapsedDistance);
     }
 
     @Override
@@ -223,17 +219,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         if (view.get() == null) {
             return;
         }
-        view.get().updatePaceTextView(hmsTimeFormatter(pace));
-    }
-
-    @SuppressLint("DefaultLocale")
-    private String hmsTimeFormatter(long millis) {
-        return String.format(
-                "%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-        );
+        view.get().updatePace(pace);
     }
 
 }

@@ -46,6 +46,9 @@ import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
+import java.text.DecimalFormat;
+import java.util.concurrent.TimeUnit;
+
 import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
 import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
 import static com.itba.runningMate.Constants.DEFAULT_ZOOM;
@@ -55,6 +58,8 @@ import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
     // todo: save presenter and saveinstance fragment
+
+    private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
 
     private MaterialButton startStopButton;
     private TextView stopWatch;
@@ -86,7 +91,10 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         pace = view.findViewById(R.id.pace);
         stopWatch = view.findViewById(R.id.stopwatch);
 
-        startStopButton.setOnClickListener(l -> presenter.onStartStopButtonClick());
+        startStopButton.setOnLongClickListener(l -> {
+            presenter.onStartStopButtonClick();
+            return true;
+        });
     }
 
     private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
@@ -161,6 +169,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     @Override
     public void detachTrackingService() {
         this.getActivity().unbindService(this);
+        presenter.onTrackingServiceDetached();
     }
 
     public void requestLocationPermission() {
@@ -204,7 +213,6 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     public void createPresenter() {
         /*presenter = (LandingPresenter) getLastNonConfigurationInstance();
         if (presenter == null) {*/
-        // todo: 'this.getActivity().getSharedPreferences' fijate que onda si hay leak
         final SharedPreferences preferences = this.getActivity().getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
         final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
         final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
@@ -227,18 +235,25 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     }
 
     @Override
-    public void updateDistanceTextView(String elapsedDistance) {
-        distance.setText(elapsedDistance);
+    public void updateDistance(float elapsedDistance) {
+        distance.setText(twoDecimalPlacesFormatter.format(elapsedDistance));
     }
 
     @Override
-    public void updateStopwatchTextView(String elapsedTime) {
-        stopWatch.setText(elapsedTime);
+    public void updateStopwatch(long elapsedTime) {
+        stopWatch.setText(hmsTimeFormatter(elapsedTime));
     }
 
     @Override
-    public void updatePaceTextView(String pace) {
-        this.pace.setText(pace);
+    public void updatePace(long pace) {
+        this.pace.setText(hmsTimeFormatter(pace));
+    }
+
+    @Override
+    public void showInitialMetrics() {
+        pace.setText(R.string.text_view_running_initial_pace);
+        distance.setText(R.string.text_view_running_initial_distance);
+        stopWatch.setText(R.string.text_view_running_initial_time);
     }
 
     @Override
@@ -358,6 +373,16 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
                 .authority("sprint")
                 .appendQueryParameter("sprint-id", String.valueOf(sprintId)).build();
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    }
+
+    @SuppressLint("DefaultLocale")
+    private String hmsTimeFormatter(long millis) {
+        return String.format(
+                "%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+        );
     }
 
 }
