@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.itba.runningMate.R;
@@ -36,6 +37,7 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     RecyclerViewRunListAdapter rvRunListAdapter;
+    TextView emptyMessage;
 
     public RunListFragment() {
         // Required empty public constructor
@@ -89,6 +91,7 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
                         sp),
                 this);
 
+        emptyMessage = view.findViewById(R.id.empty_run_list);
         setUpRecyclerView(view);
         setUpRefreshLayout(view);
 
@@ -110,6 +113,14 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
     @Override
     public void updateOldRuns(List<Sprint> list) {
         rvRunListAdapter.update(list);
+        if (list == null || list.isEmpty()) {
+            emptyMessage.setVisibility(View.VISIBLE);
+//            recyclerView.setVisibility(View.GONE);
+        }
+        else {
+            emptyMessage.setVisibility(View.GONE);
+//            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

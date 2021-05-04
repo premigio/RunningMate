@@ -1,10 +1,12 @@
 package com.itba.runningMate.runDetailsActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -32,6 +34,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
@@ -76,9 +79,16 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         Button deleteButton = findViewById(R.id.delete_button_sprint);
-        deleteButton.setOnClickListener(view ->{
-            presenter.deleteSprint();
-        });
+        deleteButton.setOnClickListener(this::deleteConfirmationMessage);
+
+    }
+
+    private void deleteConfirmationMessage(View view) {
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(view.getContext());
+        alertBox.setMessage(R.string.sprint_delete_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.deleteSprint())
+                .setNegativeButton(R.string.no,(dialog, which) -> {})
+                .show();
 
     }
 
