@@ -32,6 +32,8 @@ import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static com.itba.runningMate.Constants.LOCATION_UPDATE_FASTEST_INTERVAL;
 import static com.itba.runningMate.Constants.LOCATION_UPDATE_INTERVAL;
 import static com.itba.runningMate.Constants.STOP_WATCH_UPDATE_INTERVAL;
@@ -55,7 +57,8 @@ public class TrackingService extends Service {
     private LatLng lastLocation;
     private List<LatLng> trackedLocations;
     private float elapsedDistance;
-    private long startTimeMillis = 0L;
+    private long startTimeMillis;
+    private long lastTimeUpdateMillis;
     private long elapsedMillis;
     private long pace;
 
@@ -89,6 +92,7 @@ public class TrackingService extends Service {
         serviceHandler = new Handler(serviceHandlerThread.getLooper());
         mainHandler = new Handler(Looper.getMainLooper());
         initLocationUpdates();
+        Timber.i("Tracking service is up");
     }
 
     @Override
@@ -96,6 +100,7 @@ public class TrackingService extends Service {
         super.onDestroy();
         fusedLocationClient.removeLocationUpdates(locationCallback);
         serviceHandlerThread.quit();
+        Timber.i("Tracking service is down");
     }
 
     public void startTracking() {
@@ -105,6 +110,7 @@ public class TrackingService extends Service {
             trackedLocations.add(lastLocation);
         }
         elapsedMillis = 0L;
+        lastTimeUpdateMillis = 0L;
         elapsedDistance = 0F;
         pace = 0L;
         isTracking = true;
@@ -239,7 +245,15 @@ public class TrackingService extends Service {
     private void stopWatch() {
         if (isTracking && isSendingTrackingUpdates) {
             elapsedMillis = System.currentTimeMillis() - startTimeMillis;
-            mainHandler.post(() -> callbackStopWatchUpdate(elapsedMillis));
+
+            /*
+                lastTimeUpdateMillis is the time of the last time update,
+                we just want to send updates when a second has elapsed
+            */
+            if (elapsedMillis >= lastTimeUpdateMillis + 1000L) {
+                mainHandler.post(() -> callbackStopWatchUpdate(elapsedMillis));
+                lastTimeUpdateMillis += 1000L;
+            }
             serviceHandler.postDelayed(this::stopWatch, STOP_WATCH_UPDATE_INTERVAL);
         }
     }
