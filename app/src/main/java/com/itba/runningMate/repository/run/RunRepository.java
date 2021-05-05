@@ -15,6 +15,8 @@ public interface RunRepository {
 
     Single<Run> getRun(final long uid);
 
+    Single<Run> getRunMetrics(final long uid);
+
     Single<Long> insertRun(Run run);
 
     void deleteRun(Run run);

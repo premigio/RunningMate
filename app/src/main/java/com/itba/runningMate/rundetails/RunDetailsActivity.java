@@ -9,6 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,8 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
-import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.db.RunConverters;
+import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
@@ -29,12 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 
@@ -62,8 +62,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
             Uri uri = intent.getData();
             String runIdString = uri.getQueryParameter(RUN_ID);
             id = Long.parseLong(runIdString, 10);
-        }
-        else { //todo: mejorar error
+        } else { //todo: mejorar error
             id = 1;
         }
 
@@ -130,15 +129,19 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
-    public void bindRunDetails(Run run) {
+    public void bindRunMetrics(Run run) {
         setRunDetailsLabel(run);
-        setMapPath(run.getRoute());
-        setMapCenter(run.getRoute());
     }
 
     @Override
     public void endActivity() {
         finish();
+    }
+
+    @Override
+    public void bindRunRoute(Run run) {
+        setMapPath(run.getRoute());
+        setMapCenter(run.getRoute());
     }
 
     private void setMapPath(List<LatLng> route) {
@@ -188,6 +191,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        presenter.onMapAttached();
     }
 
     @Override

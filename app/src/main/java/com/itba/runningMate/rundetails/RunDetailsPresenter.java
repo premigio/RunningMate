@@ -7,55 +7,74 @@ import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 import java.lang.ref.WeakReference;
 
 import io.reactivex.Completable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
+import timber.log.Timber;
 
 public class RunDetailsPresenter {
 
     private final WeakReference<RunDetailsView> view;
     private final RunRepository repo;
     private final SchedulerProvider sp;
-    private final long item_id;
+    private final long itemId;
 
-    private Disposable disposable;
+    private final CompositeDisposable disposables;
 
-    public RunDetailsPresenter(RunDetailsView view, RunRepository repo, SchedulerProvider sp, long item_id) {
+    public RunDetailsPresenter(RunDetailsView view, RunRepository repo, SchedulerProvider sp, long itemId) {
         this.view = new WeakReference<>(view);
         this.repo = repo;
         this.sp = sp;
-        this.item_id = item_id;
+        this.itemId = itemId;
+        this.disposables = new CompositeDisposable();
     }
 
     public void onViewAttached() {
-        disposable = repo.getRun(item_id)
+        disposables.add(repo.getRunMetrics(itemId)
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::receivedRunList, this::onRunListError);
+                .subscribe(this::receivedRunMetrics, this::onReceivedRunError));
     }
 
-    private void receivedRunList(Run run) {
+    private void receivedRunMetrics(Run run) {
         if (view.get() != null) {
-            view.get().bindRunDetails(run);
+            view.get().bindRunMetrics(run);
         }
     }
 
-    private void onRunListError(Throwable throwable) {
-        //TODO: mensajito
+    public void onMapAttached() {
+        disposables.add(repo.getRun(itemId)
+                .subscribeOn(sp.computation())
+                .observeOn(sp.ui())
+                .subscribe(this::onReceivedRun, this::onReceivedRunError));
+    }
+
+    private void onReceivedRunError(Throwable throwable) {
+        Timber.d("Failed to retrieve run route from db for run-id: %l", itemId);
+    }
+
+    private void onReceivedRun(Run run) {
+        if (view.get() != null) {
+            view.get().bindRunRoute(run);
+        }
     }
 
     public void onViewDetached() {
-        disposable.dispose();
+        disposables.dispose();
     }
 
     public void deleteRun() {
-        disposable = Completable.fromAction(() -> repo.deleteRun(item_id))
+        disposables.add(Completable.fromAction(() -> repo.deleteRun(itemId))
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::endRunDetail, this::onRunListError);
+                .subscribe(this::endRunDetail, this::onEndRunError));
     }
 
     private void endRunDetail() {
         if (view.get() != null) {
             view.get().endActivity();
         }
+    }
+
+    private void onEndRunError(Throwable throwable) {
+        Timber.d("Failed to delete run from db for run-id: %l", itemId);
     }
 }

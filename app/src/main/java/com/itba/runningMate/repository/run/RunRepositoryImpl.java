@@ -26,7 +26,12 @@ public class RunRepositoryImpl implements RunRepository {
 
     @Override
     public Flowable<List<Run>> getRunLazy() {
-        return runDao.getRoutesNoMap().map(RunMapper::toModel);
+        return runDao.getRoutesLazy().map(RunMapper::toModel);
+    }
+
+    @Override
+    public Single<Run> getRunMetrics(long uid) {
+        return runDao.getRouteMetrics(uid).map(RunMapper::toModel);
     }
 
     @Override

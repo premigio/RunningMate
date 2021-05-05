@@ -26,13 +26,13 @@ public class RunEntity {
     public long elapsedTime;
 
     @ColumnInfo(name = "distance")
-    private float distance;
+    public float distance;
 
     @ColumnInfo(name = "velocity")
-    private float velocity;
+    public float velocity;
 
     @ColumnInfo(name = "pace")
-    private long pace;
+    public long pace;
 
     public RunEntity() {
     }
