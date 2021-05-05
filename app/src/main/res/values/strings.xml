@@ -2,7 +2,7 @@
     // Running Mate App
     <string name="app_name">Running Mate</string>
 
-    // Landing Activity
+    // Running Fragment
     <string name="alertdialog_rationale_location_title">Location permission needed</string>
     <string name="alertdialog_rationale_location_message">
         Without location permission enabled we can not track your run.
@@ -12,10 +12,46 @@
         Without location permission enabled we can not track your run.
         You can always change location permissions from system settings.
     </string>
-    <string name="button_landing_start">Start</string>
-    <string name="button_landing_stop">Stop</string>
+
+    activity_login_et_password
+    <string name="button_running_start">Start</string>
+    <string name="button_running_stop">Stop</string>
+    <string name="text_view_running_pace_label">Pace</string>
+    <string name="text_view_running_stopwatch_label">Time</string>
+    <string name="text_view_running_distance_label">Distance (Km)</string>
+    <string name="text_view_running_initial_time">00:00:00</string>
+    <string name="text_view_running_initial_distance">0.00</string>
+    <string name="text_view_running_initial_pace">00\' 00\"</string>
+    <string name="stop_run_message">It seems that you still have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
 
     <string name="run">Run</string>
     <string name="past">Past Runs</string>
-    <string name="past_under">Old runs! Aca va el mapita, quizas algo mas, todo depende de nosotros</string>
+    <string name="past_title">Run on %1$s</string>
+    <string name="distance">5.4 km</string>
+    <string name="distance_string">%1$.1f km</string>
+    <string name="time">15:50</string>
+    <string name="walking_icon_desc">Walking Icon</string>
+    <string name="empty_list">You still have not gone running. \n You can do it!</string>
+
+    //Alert Box for deleting run
+    <string name="run_delete_message">Are you sure you want to remove this run?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+
+    // Toasts
+    <string name="toast_error_run_save">Could not save run</string>
+
+    // Notifications
+    <string name="notification_tracking_service">Hey I\'am tracking your run</string>
+
+    <string name="date_title">%1$s</string>
+    <string name="speed_title">Speed</string>
+    <string name="speed_value">%1$.1f km/h</string>
+    <string name="pace_title">Pace</string>
+    <string name="pace_value">%1$s</string>
+    <string name="distance_title">Distance</string>
+    <string name="time_elapsed_title">Run Time</string>
+    <string name="time_elapsed_value">%1$s min</string>
+    <string name="delete_run">Delete</string>
+
 </resources>
