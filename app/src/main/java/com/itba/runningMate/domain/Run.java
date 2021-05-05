@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Date;
 import java.util.List;
 
-public class Sprint {
+public class Run {
 
     private long uid;
     private List<LatLng> route;
@@ -17,10 +17,10 @@ public class Sprint {
     private long pace;
     private long elapsedTime;
 
-    public Sprint() {
+    public Run() {
     }
 
-    public Sprint uid(long uid) {
+    public Run uid(long uid) {
         this.uid = uid;
         return this;
     }
@@ -29,7 +29,7 @@ public class Sprint {
         return uid;
     }
 
-    public Sprint route(List<LatLng> route) {
+    public Run route(List<LatLng> route) {
         this.route = route;
         return this;
     }
@@ -42,7 +42,7 @@ public class Sprint {
         this.route = route;
     }
 
-    public Sprint startTime(Date startTime) {
+    public Run startTime(Date startTime) {
         this.startTime = startTime;
         return this;
     }
@@ -55,7 +55,7 @@ public class Sprint {
         return startTime;
     }
 
-    public Sprint distance(float distance) {
+    public Run distance(float distance) {
         this.distance = distance;
         return this;
     }
@@ -68,7 +68,7 @@ public class Sprint {
         this.distance = distance;
     }
 
-    public Sprint velocity(float velocity) {
+    public Run velocity(float velocity) {
         this.velocity = velocity;
         return this;
     }
@@ -81,7 +81,7 @@ public class Sprint {
         this.velocity = velocity;
     }
 
-    public Sprint pace(long pace) {
+    public Run pace(long pace) {
         this.pace = pace;
         return this;
     }
@@ -94,7 +94,7 @@ public class Sprint {
         this.pace = pace;
     }
 
-    public Sprint elapsedTime(long elapsedTime) {
+    public Run elapsedTime(long elapsedTime) {
         this.elapsedTime = elapsedTime;
         return this;
     }

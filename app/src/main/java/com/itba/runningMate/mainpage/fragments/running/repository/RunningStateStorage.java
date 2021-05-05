@@ -1,8 +1,8 @@
 package com.itba.runningMate.mainpage.fragments.running.repository;
 
-public interface LandingStateStorage {
+public interface RunningStateStorage {
 
-    String LANDING_STATE_PREFERENCES_FILE = "com.itba.runningMate.LANDING_STATE_PREFERENCES_FILE";
+    String LANDING_STATE_PREFERENCES_FILE = "PREF_RUNNING_MATE_RUNNING_STATE";
 
     boolean isCenterCamera();
 

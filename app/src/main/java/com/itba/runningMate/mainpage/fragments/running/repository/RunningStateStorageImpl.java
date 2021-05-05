@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
 import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
 
-public class LandingStateStorageImpl implements LandingStateStorage {
+public class RunningStateStorageImpl implements RunningStateStorage {
 
     public static final String KEY_CENTER_CAMERA = "is_camera_centered";
     public static final String KEY_LOCATION_LATITUDE = "location_lat";
@@ -19,7 +19,7 @@ public class LandingStateStorageImpl implements LandingStateStorage {
     private Double lastKnownLatitude;
     private Double lastKnownLongitude;
 
-    public LandingStateStorageImpl(final SharedPreferences preferences) {
+    public RunningStateStorageImpl(final SharedPreferences preferences) {
         this.preferences = preferences;
         centerCamera = preferences.getBoolean(KEY_CENTER_CAMERA, true);
         if (preferences.contains(KEY_LOCATION_LATITUDE)) {

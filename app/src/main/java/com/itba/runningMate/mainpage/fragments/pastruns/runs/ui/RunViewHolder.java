@@ -1,10 +1,11 @@
-package com.itba.runningMate.mainpage.fragments.pastruns;
+package com.itba.runningMate.mainpage.fragments.pastruns.runs.ui;
 
 import android.view.View;
 import android.widget.TextView;
 
 import com.itba.runningMate.R;
-import com.itba.runningMate.domain.Sprint;
+import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.mainpage.fragments.pastruns.runs.ui.OnRunClickListener;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 
-class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+class RunViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
     private long id = NO_ID;
@@ -23,12 +24,12 @@ class RLViewHolder extends RecyclerView.ViewHolder implements View.OnClickListen
     private WeakReference<OnRunClickListener> listener;
 
 
-    public RLViewHolder(@NonNull View itemView) {
+    public RunViewHolder(@NonNull View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
     }
 
-    public void bind(Sprint model) {
+    public void bind(Run model) {
 
         if (model == null) return;
 

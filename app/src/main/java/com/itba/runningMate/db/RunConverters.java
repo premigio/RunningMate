@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class SprintConverters {
+public class RunConverters {
 
     private static final Gson gson = new Gson();
 

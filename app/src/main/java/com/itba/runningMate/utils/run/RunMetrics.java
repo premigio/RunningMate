@@ -1,4 +1,4 @@
-package com.itba.runningMate.utils.sprint;
+package com.itba.runningMate.utils.run;
 
 import android.location.Location;
 
@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-public class SprintMetrics {
+public class RunMetrics {
 
     /* Km */
     public static float calculateDistance(List<LatLng> locations) {

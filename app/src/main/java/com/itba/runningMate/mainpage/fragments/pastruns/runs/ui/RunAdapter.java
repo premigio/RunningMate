@@ -1,11 +1,11 @@
-package com.itba.runningMate.mainpage.fragments.pastruns;
+package com.itba.runningMate.mainpage.fragments.pastruns.runs.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.itba.runningMate.R;
-import com.itba.runningMate.domain.Sprint;
+import com.itba.runningMate.domain.Run;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -16,16 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 
-public class RecyclerViewRunListAdapter extends RecyclerView.Adapter<RLViewHolder> {
+public class RunAdapter extends RecyclerView.Adapter<RunViewHolder> {
 
-    private final List<Sprint> currentRunList;
+    private final List<Run> currentRunList;
     private WeakReference<OnRunClickListener> listener;
 
-    public RecyclerViewRunListAdapter() {
+    public RunAdapter() {
         currentRunList = new ArrayList<>();
     }
 
-    public void update(List<Sprint> runList) {
+    public void update(List<Run> runList) {
         this.currentRunList.clear();
         if (runList != null) {
             this.currentRunList.addAll(runList);
@@ -39,18 +39,18 @@ public class RecyclerViewRunListAdapter extends RecyclerView.Adapter<RLViewHolde
 
     @Override
     public int getItemViewType(final int position) {
-        return R.layout.item_past_run;
+        return R.layout.item_run;
     }
 
     @NonNull
     @Override
-    public RLViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RunViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-        return new RLViewHolder(view);
+        return new RunViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RLViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RunViewHolder holder, int position) {
         if (listener == null) {
             return;
         }
@@ -60,11 +60,11 @@ public class RecyclerViewRunListAdapter extends RecyclerView.Adapter<RLViewHolde
 
     @Override
     public long getItemId(int position) {
-        if (currentRunList == null) {
+        if (currentRunList == null || currentRunList.isEmpty()) {
             return NO_ID;
         }
 
-        Sprint pos = currentRunList.get(position);
+        Run pos = currentRunList.get(position);
 
         return pos == null? NO_ID : pos.getUid();
     }

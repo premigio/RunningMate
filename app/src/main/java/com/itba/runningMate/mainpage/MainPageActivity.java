@@ -8,13 +8,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.itba.runningMate.R;
-import com.itba.runningMate.mainpage.fragments.pastruns.ui.RunListFragment;
+import com.itba.runningMate.mainpage.fragments.pastruns.ui.PastRunsFragment;
 import com.itba.runningMate.mainpage.fragments.running.ui.RunningFragment;
-import com.itba.runningMate.mainpage.activityAdapters.ViewPagerAdapter;
+import com.itba.runningMate.mainpage.adapters.ViewPagerAdapter;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
-public class MainActivity extends AppCompatActivity {
+public class MainPageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                 new ViewPagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
         adapter.addFragment(getString(R.string.run), new RunningFragment());
-        adapter.addFragment(getString(R.string.past), new RunListFragment());
+        adapter.addFragment(getString(R.string.past), new PastRunsFragment());
         ViewPager vp = findViewById(R.id.viewPager);
         vp.setAdapter(adapter);
         TabLayout tb = findViewById(R.id.tabLayout);

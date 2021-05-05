@@ -8,7 +8,7 @@ public interface Tracker {
 
     void stopTracking();
 
-    Route querySprint();
+    Route queryRoute();
 
     long queryStartTime();
 

@@ -3,7 +3,7 @@ package com.itba.runningMate.mainpage.fragments.running.services.location;
 import android.os.Binder;
 
 import com.itba.runningMate.mainpage.fragments.running.model.Route;
-import com.itba.runningMate.utils.sprint.SprintMetrics;
+import com.itba.runningMate.utils.run.RunMetrics;
 
 public class TrackingServiceBinder extends Binder implements Tracker {
 
@@ -13,7 +13,7 @@ public class TrackingServiceBinder extends Binder implements Tracker {
         this.trackingService = trackingService;
     }
 
-    public Route querySprint() {
+    public Route queryRoute() {
         return new Route().addLatLngsToRoute(trackingService.getTrackedLocations());
     }
 
@@ -59,6 +59,6 @@ public class TrackingServiceBinder extends Binder implements Tracker {
 
     @Override
     public float queryVelocity() {
-        return SprintMetrics.calculateVelocity(trackingService.getElapsedDistance(), trackingService.getElapsedMillis());
+        return RunMetrics.calculateVelocity(trackingService.getElapsedDistance(), trackingService.getElapsedMillis());
     }
 }

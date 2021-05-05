@@ -12,25 +12,25 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 @Dao
-public interface SprintDao {
+public interface RunDao {
 
-    @Query("SELECT * FROM sprints ORDER BY start_time DESC")
-    Flowable<List<SprintEntity>> getRoutes();
+    @Query("SELECT * FROM runs ORDER BY start_time DESC")
+    Flowable<List<RunEntity>> getRoutes();
 
-    @Query("SELECT * FROM sprints WHERE sprints.sprint_id = :id")
-    Single<SprintEntity> getRoute(final long id);
+    @Query("SELECT * FROM runs WHERE runs.run_id = :id")
+    Single<RunEntity> getRoute(final long id);
 
     @Insert
-    Single<Long> insertRoute(SprintEntity route);
+    Single<Long> insertRoute(RunEntity route);
 
     @Delete
-    Completable deleteRoute(SprintEntity route);
+    Completable deleteRoute(RunEntity route);
 
-    @Query("DELETE FROM sprints WHERE sprints.sprint_id = :id")
+    @Query("DELETE FROM runs WHERE runs.run_id = :id")
     Completable deleteRoute(long id);
 
-    @Query("SELECT sprint_id, start_time, elapsed_time, distance, velocity, pace FROM sprints ORDER BY start_time DESC")
-    Flowable<List<SprintEntity>> getRoutesNoMap();
+    @Query("SELECT run_id, start_time, elapsed_time, distance, velocity, pace FROM runs ORDER BY start_time DESC")
+    Flowable<List<RunEntity>> getRoutesNoMap();
 
     // query por dia
 

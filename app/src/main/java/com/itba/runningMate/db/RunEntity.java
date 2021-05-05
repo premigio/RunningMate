@@ -9,11 +9,11 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Date;
 import java.util.List;
 
-@Entity(tableName = "sprints")
-public class SprintEntity {
+@Entity(tableName = "runs")
+public class RunEntity {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "sprint_id")
+    @ColumnInfo(name = "run_id")
     public long uid;
 
     @ColumnInfo(name = "route")
@@ -34,10 +34,10 @@ public class SprintEntity {
     @ColumnInfo(name = "pace")
     private long pace;
 
-    public SprintEntity() {
+    public RunEntity() {
     }
 
-    public SprintEntity uid(long uid) {
+    public RunEntity uid(long uid) {
         this.uid = uid;
         return this;
     }
@@ -50,7 +50,7 @@ public class SprintEntity {
         this.uid = uid;
     }
 
-    public SprintEntity route(List<LatLng> route) {
+    public RunEntity route(List<LatLng> route) {
         this.route = route;
         return this;
     }
@@ -63,7 +63,7 @@ public class SprintEntity {
         this.route = route;
     }
 
-    public SprintEntity startTime(Date startTime) {
+    public RunEntity startTime(Date startTime) {
         this.startTime = startTime;
         return this;
     }
@@ -76,7 +76,7 @@ public class SprintEntity {
         this.startTime = startTime;
     }
 
-    public SprintEntity elapsedTime(long elapsedTime) {
+    public RunEntity elapsedTime(long elapsedTime) {
         this.elapsedTime = elapsedTime;
         return this;
     }
@@ -89,7 +89,7 @@ public class SprintEntity {
         this.elapsedTime = elapsedTime;
     }
 
-    public SprintEntity distance(float distance) {
+    public RunEntity distance(float distance) {
         this.distance = distance;
         return this;
     }
@@ -102,7 +102,7 @@ public class SprintEntity {
         this.distance = distance;
     }
 
-    public SprintEntity velocity(float velocity) {
+    public RunEntity velocity(float velocity) {
         this.velocity = velocity;
         return this;
     }
@@ -115,7 +115,7 @@ public class SprintEntity {
         this.velocity = velocity;
     }
 
-    public SprintEntity pace(long pace) {
+    public RunEntity pace(long pace) {
         this.pace = pace;
         return this;
     }

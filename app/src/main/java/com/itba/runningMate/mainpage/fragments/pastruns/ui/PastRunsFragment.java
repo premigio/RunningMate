@@ -10,11 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.itba.runningMate.R;
-import com.itba.runningMate.db.SprintDb;
-import com.itba.runningMate.domain.Sprint;
-import com.itba.runningMate.mainpage.fragments.pastruns.OnRunClickListener;
-import com.itba.runningMate.mainpage.fragments.pastruns.RecyclerViewRunListAdapter;
-import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
+import com.itba.runningMate.db.RunDb;
+import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.mainpage.fragments.pastruns.runs.ui.OnRunClickListener;
+import com.itba.runningMate.mainpage.fragments.pastruns.runs.ui.RunAdapter;
+import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
@@ -28,18 +28,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class RunListFragment extends Fragment implements RunListView, OnRunClickListener {
+public class PastRunsFragment extends Fragment implements PastRunsView, OnRunClickListener {
 
-    private static final String SPRINT_DETAILS_URL = "app://sprint_detail";
-
-    private RunListPresenter presenter;
+    private static final String RUN_DETAILS_URL = "app://run_detail";
+    RunAdapter rvRunListAdapter;
 
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
-    RecyclerViewRunListAdapter rvRunListAdapter;
+    private PastRunsPresenter presenter;
     TextView emptyMessage;
 
-    public RunListFragment() {
+    public PastRunsFragment() {
         // Required empty public constructor
     }
 
@@ -66,7 +65,7 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        rvRunListAdapter = new RecyclerViewRunListAdapter();
+        rvRunListAdapter = new RunAdapter();
         rvRunListAdapter.setClickListener(this);
         recyclerView.setAdapter(rvRunListAdapter);
     }
@@ -85,9 +84,9 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
 
         SchedulerProvider sp = new AndroidSchedulerProvider();
 
-        presenter = new RunListPresenter(sp,
-                new SprintRepositoryImpl(SprintDb.getInstance(
-                        this.getActivity().getApplicationContext()).SprintDao(),
+        presenter = new PastRunsPresenter(sp,
+                new RunRepositoryImpl(RunDb.getInstance(
+                        this.getActivity().getApplicationContext()).RunDao(),
                         sp),
                 this);
 
@@ -111,13 +110,12 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
 
 
     @Override
-    public void updateOldRuns(List<Sprint> list) {
+    public void updateOldRuns(List<Run> list) {
         rvRunListAdapter.update(list);
         if (list == null || list.isEmpty()) {
             emptyMessage.setVisibility(View.VISIBLE);
 //            recyclerView.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             emptyMessage.setVisibility(View.GONE);
 //            recyclerView.setVisibility(View.VISIBLE);
         }
@@ -131,11 +129,11 @@ public class RunListFragment extends Fragment implements RunListView, OnRunClick
     }
 
     @Override
-    public void callSprintDetails(long id) {
+    public void launchRunDetails(long id) {
         Uri.Builder uriBuilder = new Uri.Builder()
                 .scheme("runningmate")
-                .encodedAuthority("sprint")
-                .appendQueryParameter("sprint-id",Long.toString(id));
+                .encodedAuthority("run")
+                .appendQueryParameter("run-id", Long.toString(id));
         startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
     }
 

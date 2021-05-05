@@ -1,7 +1,7 @@
-package com.itba.runningMate.runDetailsActivity;
+package com.itba.runningMate.rundetails;
 
-import com.itba.runningMate.domain.Sprint;
-import com.itba.runningMate.repository.sprint.SprintRepository;
+import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
@@ -12,13 +12,13 @@ import io.reactivex.disposables.Disposable;
 public class RunDetailsPresenter {
 
     private final WeakReference<RunDetailsView> view;
-    private final SprintRepository repo;
+    private final RunRepository repo;
     private final SchedulerProvider sp;
     private final long item_id;
 
     private Disposable disposable;
 
-    public RunDetailsPresenter(RunDetailsView view, SprintRepository repo, SchedulerProvider sp, long item_id) {
+    public RunDetailsPresenter(RunDetailsView view, RunRepository repo, SchedulerProvider sp, long item_id) {
         this.view = new WeakReference<>(view);
         this.repo = repo;
         this.sp = sp;
@@ -26,15 +26,15 @@ public class RunDetailsPresenter {
     }
 
     public void onViewAttached() {
-        disposable = repo.getSprint(item_id)
+        disposable = repo.getRun(item_id)
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::receivedRunList,this::onRunListError);
+                .subscribe(this::receivedRunList, this::onRunListError);
     }
 
-    private void receivedRunList(Sprint sprint) {
-        if (view != null && view.get() != null) {
-            view.get().bindRunDetails(sprint);
+    private void receivedRunList(Run run) {
+        if (view.get() != null) {
+            view.get().bindRunDetails(run);
         }
     }
 
@@ -46,15 +46,15 @@ public class RunDetailsPresenter {
         disposable.dispose();
     }
 
-    public void deleteSprint() {
-        disposable = Completable.fromAction(()->repo.deleteSprint(item_id))
+    public void deleteRun() {
+        disposable = Completable.fromAction(() -> repo.deleteRun(item_id))
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::finishSprint,this::onRunListError);
+                .subscribe(this::endRunDetail, this::onRunListError);
     }
 
-    private void finishSprint() {
-        if (view != null && view.get() != null) {
+    private void endRunDetail() {
+        if (view.get() != null) {
             view.get().endActivity();
         }
     }

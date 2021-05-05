@@ -1,6 +1,5 @@
-package com.itba.runningMate.runDetailsActivity;
+package com.itba.runningMate.rundetails;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -19,10 +18,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
-import com.itba.runningMate.db.SprintConverters;
-import com.itba.runningMate.db.SprintDb;
-import com.itba.runningMate.domain.Sprint;
-import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
+import com.itba.runningMate.db.RunDb;
+import com.itba.runningMate.db.RunConverters;
+import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
@@ -40,7 +39,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 
     private static final int PADDING = 20; // padding de los puntos en el mapa
-    private static final String SPRINT_ID = "sprint-id";
+    private static final String RUN_ID = "run-id";
     private static SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
     private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
@@ -54,15 +53,15 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sprint_details);
+        setContentView(R.layout.activity_run_details);
 
         long id;
 
         Intent intent = getIntent();
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             Uri uri = intent.getData();
-            String sprintIdString = uri.getQueryParameter(SPRINT_ID);
-            id = Long.parseLong(sprintIdString, 10);
+            String runIdString = uri.getQueryParameter(RUN_ID);
+            id = Long.parseLong(runIdString, 10);
         }
         else { //todo: mejorar error
             id = 1;
@@ -78,16 +77,17 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Button deleteButton = findViewById(R.id.delete_button_sprint);
+        Button deleteButton = findViewById(R.id.delete_button_run);
         deleteButton.setOnClickListener(this::deleteConfirmationMessage);
 
     }
 
     private void deleteConfirmationMessage(View view) {
         AlertDialog.Builder alertBox = new AlertDialog.Builder(view.getContext());
-        alertBox.setMessage(R.string.sprint_delete_message)
-                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.deleteSprint())
-                .setNegativeButton(R.string.no,(dialog, which) -> {})
+        alertBox.setMessage(R.string.run_delete_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.deleteRun())
+                .setNegativeButton(R.string.no, (dialog, which) -> {
+                })
                 .show();
 
     }
@@ -119,21 +119,21 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         mapView.onStop();
     }
 
-    private void createPresenter(long sprintId) {
+    private void createPresenter(long runId) {
 
         SchedulerProvider sp = new AndroidSchedulerProvider();
 
         presenter = new RunDetailsPresenter(this,
-                new SprintRepositoryImpl(SprintDb.getInstance(
-                        getApplicationContext()).SprintDao(),
-                        sp), sp, sprintId);
+                new RunRepositoryImpl(RunDb.getInstance(
+                        getApplicationContext()).RunDao(),
+                        sp), sp, runId);
     }
 
     @Override
-    public void bindRunDetails(Sprint sprint) {
-        setRunDetailsLabel(sprint);
-        setMapPath(sprint.getRoute());
-        setMapCenter(sprint.getRoute());
+    public void bindRunDetails(Run run) {
+        setRunDetailsLabel(run);
+        setMapPath(run.getRoute());
+        setMapCenter(run.getRoute());
     }
 
     @Override
@@ -151,24 +151,24 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
                 .addAll(route));
     }
 
-    private void setRunDetailsLabel(Sprint sprint) {
+    private void setRunDetailsLabel(Run run) {
         TextView date, time, speed, pace, distance;
 
         speed = findViewById(R.id.run_description_speed_content);
-        speed.setText(getString(R.string.speed_value, sprint.getVelocity()));
+        speed.setText(getString(R.string.speed_value, run.getVelocity()));
 
         pace = findViewById(R.id.run_description_pace_content);
-        Date paceValue = SprintConverters.fromTimestamp(sprint.getPace());
+        Date paceValue = RunConverters.fromTimestamp(run.getPace());
         pace.setText(getString(R.string.pace_value, paceFormatter.format(paceValue)));
 
         distance = findViewById(R.id.run_description_distance_content);
-        distance.setText(getString(R.string.distance_string, sprint.getDistance()));
+        distance.setText(getString(R.string.distance_string, run.getDistance()));
 
         date = findViewById(R.id.run_description_start_time);
-        date.setText(getString(R.string.date_title, dateFormat.format(sprint.getStartTime())));
+        date.setText(getString(R.string.date_title, dateFormat.format(run.getStartTime())));
 
         time = findViewById(R.id.run_description_elapsed_time_content);
-        Date timeValue = SprintConverters.fromTimestamp(sprint.getElapsedTime());
+        Date timeValue = RunConverters.fromTimestamp(run.getElapsedTime());
         time.setText(getString(R.string.time_elapsed_value, timeFormat.format(timeValue)));
     }
 
