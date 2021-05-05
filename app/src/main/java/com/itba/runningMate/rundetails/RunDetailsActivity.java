@@ -148,12 +148,10 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         if (route == null || route.isEmpty()) {
             return;
         }
-        if (!route.isEmpty()) {
-            googleMap.addPolyline(new PolylineOptions()
-                    .color(Color.BLUE)
-                    .width(8f)
-                    .addAll(route));
-        }
+        googleMap.addPolyline(new PolylineOptions()
+                .color(Color.BLUE)
+                .width(8f)
+                .addAll(route));
     }
 
     private void setRunDetailsLabel(Run run) {

@@ -176,9 +176,9 @@ public class RunningPresenter implements OnTrackingUpdateListener {
             return;
         }
         if (tracker.isTracking()) {
-            if(tracker.queryDistance() < DISTANCE_EPSILON) {
+            if (tracker.queryDistance() < DISTANCE_EPSILON) {
                 view.get().showStopConfirm();
-            }else {
+            } else {
                 stopRun();
             }
         } else {

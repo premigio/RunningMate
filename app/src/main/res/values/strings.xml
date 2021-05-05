@@ -22,7 +22,7 @@
     <string name="text_view_running_initial_time">00:00:00</string>
     <string name="text_view_running_initial_distance">0.00</string>
     <string name="text_view_running_initial_pace">00\' 00\"</string>
-    <string name="stop_run_message">It seems that you still have not begun running. \n Are you sure you want to stop? \n Your data will not be saved.</string>
+    <string name="stop_run_message">It seems that you still have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
 
     <string name="run">Run</string>
     <string name="past">Past Runs</string>
