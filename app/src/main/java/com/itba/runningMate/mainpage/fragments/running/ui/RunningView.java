@@ -43,4 +43,6 @@ public interface RunningView {
     void showSaveRunError();
 
     void launchRunActivity(long runId);
+
+    void showStopConfirm();
 }

@@ -15,6 +15,7 @@ import io.reactivex.disposables.Disposable;
 
 public class RunningPresenter implements OnTrackingUpdateListener {
 
+    private static final double DISTANCE_EPSILON = 0.1;
     private final WeakReference<RunningView> view;
     private final RunningStateStorage stateStorage;
     private final RunRepository runRepository;
@@ -119,6 +120,7 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         if (view.get() != null) {
             view.get().removeRoutes();
             view.get().showInitialMetrics();
+            view.get().showStartRunButton();
         }
     }
 
@@ -174,8 +176,11 @@ public class RunningPresenter implements OnTrackingUpdateListener {
             return;
         }
         if (tracker.isTracking()) {
-            stopRun();
-            view.get().showStartRunButton();
+            if(tracker.queryDistance() < DISTANCE_EPSILON) {
+                view.get().showStopConfirm();
+            }else {
+                stopRun();
+            }
         } else {
             startRun();
             view.get().showStopRunButton();

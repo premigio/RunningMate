@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.button.MaterialButton;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
+import com.itba.runningMate.db.RunConverters;
 import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.mainpage.fragments.running.model.Route;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
@@ -47,6 +48,8 @@ import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
@@ -60,7 +63,7 @@ import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
     // todo: save presenter and saveinstance fragment
-
+    private static final SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
     private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
 
     private MaterialButton startStopButton;
@@ -245,7 +248,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
     @Override
     public void updatePace(long pace) {
-        this.pace.setText(hmsTimeFormatter(pace));
+        this.pace.setText(paceFormatter.format(RunConverters.fromTimestamp(pace)));
     }
 
     @Override
@@ -382,6 +385,15 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
                 TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
                 TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
         );
+    }
+
+    @Override
+    public void showStopConfirm() {
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(this.getActivity());
+        alertBox.setMessage(R.string.stop_run_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.stopRun())
+                .setNegativeButton(R.string.no, (dialog, which) -> {})
+                .show();
     }
 
 }
