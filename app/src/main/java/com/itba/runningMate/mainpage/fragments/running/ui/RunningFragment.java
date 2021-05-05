@@ -93,10 +93,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         pace = view.findViewById(R.id.pace);
         stopWatch = view.findViewById(R.id.stopwatch);
 
-        startStopButton.setOnLongClickListener(l -> {
-            presenter.onStartStopButtonClick();
-            return true;
-        });
+        startStopButton.setOnClickListener(l -> presenter.onStartStopButtonClick());
     }
 
     private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
