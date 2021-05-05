@@ -145,10 +145,12 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         if (route == null || route.isEmpty()) {
             return;
         }
-        googleMap.addPolyline(new PolylineOptions()
-                .color(Color.BLUE)
-                .width(8f)
-                .addAll(route));
+        if (!route.isEmpty()) {
+            googleMap.addPolyline(new PolylineOptions()
+                    .color(Color.BLUE)
+                    .width(8f)
+                    .addAll(route));
+        }
     }
 
     private void setRunDetailsLabel(Run run) {
@@ -173,6 +175,8 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     private void setMapCenter(List<LatLng> route) {
+
+        if (route == null || route.isEmpty()) return;
 
         LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
         for (LatLng point : route) {
