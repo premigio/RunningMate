@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="title_color">#FF000000</color>
     <color name="delete_button">#C23232</color>
+    // todo que sea el mismo que el del boton
 </resources>

@@ -35,19 +35,24 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.button.MaterialButton;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
-import com.itba.runningMate.db.SprintDb;
+import com.itba.runningMate.db.RunConverters;
+import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.mainpage.fragments.running.model.Route;
-import com.itba.runningMate.mainpage.fragments.running.repository.LandingStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.repository.LandingStateStorageImpl;
+import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
+import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorageImpl;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
-import com.itba.runningMate.repository.sprint.SprintRepository;
-import com.itba.runningMate.repository.sprint.SprintRepositoryImpl;
+import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import timber.log.Timber;
 
 import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
 import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
@@ -58,7 +63,7 @@ import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
     // todo: save presenter and saveinstance fragment
-
+    private static final SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
     private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
 
     private MaterialButton startStopButton;
@@ -91,10 +96,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         pace = view.findViewById(R.id.pace);
         stopWatch = view.findViewById(R.id.stopwatch);
 
-        startStopButton.setOnLongClickListener(l -> {
-            presenter.onStartStopButtonClick();
-            return true;
-        });
+        startStopButton.setOnClickListener(l -> presenter.onStartStopButtonClick());
     }
 
     private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
@@ -183,13 +185,13 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     }
 
     @Override
-    public void showStopSprintButton() {
+    public void showStopRunButton() {
         startStopButton.setText(R.string.button_running_stop);
         startStopButton.setIconResource(R.drawable.ic_pause);
     }
 
     @Override
-    public void showStartSprintButton() {
+    public void showStartRunButton() {
         startStopButton.setText(R.string.button_running_start);
         startStopButton.setIconResource(R.drawable.ic_play);
     }
@@ -213,13 +215,13 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     public void createPresenter() {
         /*presenter = (LandingPresenter) getLastNonConfigurationInstance();
         if (presenter == null) {*/
-        final SharedPreferences preferences = this.getActivity().getSharedPreferences(LandingStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
-        final LandingStateStorage stateStorage = new LandingStateStorageImpl(preferences);
+        final SharedPreferences preferences = this.getActivity().getSharedPreferences(RunningStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
+        final RunningStateStorage stateStorage = new RunningStateStorageImpl(preferences);
         final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
-        final SprintRepository sprintRepository = new SprintRepositoryImpl(
-                SprintDb.getInstance(this.getActivity().getApplicationContext()).SprintDao(),
+        final RunRepository runRepository = new RunRepositoryImpl(
+                RunDb.getInstance(this.getActivity().getApplicationContext()).RunDao(),
                 schedulerProvider);
-        presenter = new RunningPresenter(stateStorage, sprintRepository, schedulerProvider, this);
+        presenter = new RunningPresenter(stateStorage, runRepository, schedulerProvider, this);
         /*}*/
     }
 
@@ -246,7 +248,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
     @Override
     public void updatePace(long pace) {
-        this.pace.setText(hmsTimeFormatter(pace));
+        this.pace.setText(paceFormatter.format(RunConverters.fromTimestamp(pace)));
     }
 
     @Override
@@ -282,7 +284,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
             googleMap.setOnMyLocationButtonClickListener(mapMyLocationButtonListener);
             googleMap.getUiSettings().setCompassEnabled(true);
         } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
+            Timber.e("Exception: %s", e.getMessage());
         }
     }
 
@@ -296,7 +298,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
+            Timber.e("Exception: %s", e.getMessage());
         }
     }
 
@@ -310,7 +312,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
             googleMap.setMyLocationEnabled(false);
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
+            Timber.e("Exception: %s", e.getMessage());
         }
     }
 
@@ -363,15 +365,15 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     }
 
     @Override
-    public void showSaveSprintError() {
-        Toast.makeText(this.getActivity(), getText(R.string.toast_error_sprint_save), Toast.LENGTH_LONG).show();
+    public void showSaveRunError() {
+        Toast.makeText(this.getActivity(), getText(R.string.toast_error_run_save), Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void launchSprintActivity(long sprintId) {
+    public void launchRunActivity(long runId) {
         Uri uri = new Uri.Builder().scheme("runningmate")
-                .authority("sprint")
-                .appendQueryParameter("sprint-id", String.valueOf(sprintId)).build();
+                .authority("run")
+                .appendQueryParameter("run-id", String.valueOf(runId)).build();
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
@@ -383,6 +385,15 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
                 TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
                 TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
         );
+    }
+
+    @Override
+    public void showStopConfirm() {
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(this.getActivity());
+        alertBox.setMessage(R.string.stop_run_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.stopRun())
+                .setNegativeButton(R.string.no, (dialog, which) -> {})
+                .show();
     }
 
 }

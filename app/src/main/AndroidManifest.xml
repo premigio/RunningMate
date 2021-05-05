@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RunningMate">
 
-        <activity android:name=".mainpage.MainActivity">
+        <activity android:name=".mainpage.MainPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +29,7 @@
             </intent-filter>
         </activity> <!-- Recommended for Android 9 (API level 28) and lower. -->
 
-        <activity android:name=".runDetailsActivity.RunDetailsActivity">
+        <activity android:name=".rundetails.RunDetailsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -37,7 +37,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="sprint"
+                    android:host="run"
                     android:scheme="runningmate" />
             </intent-filter>
         </activity>

@@ -25,8 +25,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
-import com.itba.runningMate.mainpage.MainActivity;
-import com.itba.runningMate.utils.sprint.SprintMetrics;
+import com.itba.runningMate.mainpage.MainPageActivity;
+import com.itba.runningMate.utils.run.RunMetrics;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -147,7 +147,7 @@ public class TrackingService extends Service {
     }
 
     private void startForegroundService() {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, MainPageActivity.class);
         /*
             Agregar una accion al notificationIntent para decirle a nuestra landing activity que
             hacer. Tambien podes usar el paramentro flag del pendingIntnet para agreagar mas data
@@ -158,9 +158,8 @@ public class TrackingService extends Service {
 
         Notification notification =
                 new NotificationCompat.Builder(this, Constants.NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID)
-                        .setContentTitle(getText(R.string.app_name))
                         .setContentText(getText(R.string.notification_tracking_service))
-                        .setSmallIcon(R.drawable.ic_notification)
+                        .setSmallIcon(R.drawable.ic_stat_notify_tracking_service)
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(false)
                         .setOngoing(true)
@@ -191,8 +190,8 @@ public class TrackingService extends Service {
             trackedLocations.add(lastLocation);
             if (trackedLocations.size() >= 2) {
                 LatLng prev = trackedLocations.get(trackedLocations.size() - 2);
-                elapsedDistance += SprintMetrics.calculateDistance(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude());
-                pace = SprintMetrics.calculatePace(elapsedDistance, elapsedMillis);
+                elapsedDistance += RunMetrics.calculateDistance(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude());
+                pace = RunMetrics.calculatePace(elapsedDistance, elapsedMillis);
                 callbackDistanceUpdate(elapsedDistance);
                 callbackPaceUpdate(pace);
             }

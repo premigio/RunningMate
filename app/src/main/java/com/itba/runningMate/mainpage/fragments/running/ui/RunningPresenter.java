@@ -1,11 +1,11 @@
 package com.itba.runningMate.mainpage.fragments.running.ui;
 
-import com.itba.runningMate.domain.Sprint;
+import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.running.model.Route;
-import com.itba.runningMate.mainpage.fragments.running.repository.LandingStateStorage;
+import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
 import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingUpdateListener;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
-import com.itba.runningMate.repository.sprint.SprintRepository;
+import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
@@ -15,23 +15,24 @@ import io.reactivex.disposables.Disposable;
 
 public class RunningPresenter implements OnTrackingUpdateListener {
 
+    private static final double DISTANCE_EPSILON = 0.1;
     private final WeakReference<RunningView> view;
-    private final LandingStateStorage stateStorage;
-    private final SprintRepository sprintRepository;
+    private final RunningStateStorage stateStorage;
+    private final RunRepository runRepository;
     private final SchedulerProvider schedulers;
 
     private Tracker tracker;
     private boolean isTrackerAttached;
     private Disposable disposable;
 
-    public RunningPresenter(final LandingStateStorage stateStorage,
-                            final SprintRepository sprintRepository,
+    public RunningPresenter(final RunningStateStorage stateStorage,
+                            final RunRepository runRepository,
                             final SchedulerProvider schedulers,
                             final RunningView view) {
         this.isTrackerAttached = false;
         this.view = new WeakReference<>(view);
         this.stateStorage = stateStorage;
-        this.sprintRepository = sprintRepository;
+        this.runRepository = runRepository;
         this.schedulers = schedulers;
     }
 
@@ -75,14 +76,14 @@ public class RunningPresenter implements OnTrackingUpdateListener {
         tracker.setOnTrackingUpdateListener(this);
         if (tracker.isTracking() && view.get() != null) {
             // recuperamos la ruta y actualizamos LastKnownLocation
-            Route route = tracker.querySprint();
+            Route route = tracker.queryRoute();
             if (!route.isEmpty()) {
                 stateStorage.setLastKnownLocation(route.getLastLatitude(), route.getLastLongitude());
                 view.get().showRoute(route);
                 onPaceUpdate(tracker.queryPace());
                 onDistanceUpdate(tracker.queryDistance());
                 onStopWatchUpdate(tracker.queryElapsedTime());
-                view.get().showStopSprintButton();
+                view.get().showStopRunButton();
             }
         }
     }
@@ -107,43 +108,44 @@ public class RunningPresenter implements OnTrackingUpdateListener {
             tracker.stopTracking();
             float distKm = tracker.queryDistance();
             long timeMillis = tracker.queryElapsedTime();
-            Sprint sprint = new Sprint()
+            Run run = new Run()
                     .startTime(new Date(tracker.queryStartTime()))
                     .elapsedTime(timeMillis)
-                    .route(tracker.querySprint().getLocations())
+                    .route(tracker.queryRoute().getLocations())
                     .distance(distKm)
                     .pace(tracker.queryPace())
                     .velocity(tracker.queryVelocity());
-            saveSprint(sprint);
+            saveRun(run);
         }
         if (view.get() != null) {
             view.get().removeRoutes();
             view.get().showInitialMetrics();
+            view.get().showStartRunButton();
         }
     }
 
-    private void saveSprint(Sprint sprint) {
-        if (sprint.getDistance() > 0F) {
-            disposable = sprintRepository.insertSprint(sprint)
+    private void saveRun(Run run) {
+        if (run.getDistance() > 0F) {
+            disposable = runRepository.insertRun(run)
                     .subscribeOn(schedulers.io())
                     .observeOn(schedulers.ui())
-                    .subscribe(this::onSprintSaved, this::onSprintSavedError);
+                    .subscribe(this::onRunSaved, this::onRunSavedError);
         }
     }
 
-    private void onSprintSaved(final long sprintId) {
+    private void onRunSaved(final long runId) {
         if (view.get() == null) {
             return;
         }
-        view.get().launchSprintActivity(sprintId);
+        view.get().launchRunActivity(runId);
         disposable.dispose();
     }
 
-    private void onSprintSavedError(final Throwable e) {
+    private void onRunSavedError(final Throwable e) {
         if (view.get() == null) {
             return;
         }
-        view.get().showSaveSprintError();
+        view.get().showSaveRunError();
     }
 
     public void centerCamera() {
@@ -174,11 +176,14 @@ public class RunningPresenter implements OnTrackingUpdateListener {
             return;
         }
         if (tracker.isTracking()) {
-            stopRun();
-            view.get().showStartSprintButton();
+            if (tracker.queryDistance() < DISTANCE_EPSILON) {
+                view.get().showStopConfirm();
+            } else {
+                stopRun();
+            }
         } else {
             startRun();
-            view.get().showStopSprintButton();
+            view.get().showStopRunButton();
         }
     }
 

@@ -36,11 +36,13 @@ public interface RunningView {
 
     void showLocationPermissionRationale();
 
-    void showStopSprintButton();
+    void showStopRunButton();
 
-    void showStartSprintButton();
+    void showStartRunButton();
 
-    void showSaveSprintError();
+    void showSaveRunError();
 
-    void launchSprintActivity(long sprintId);
+    void launchRunActivity(long runId);
+
+    void showStopConfirm();
 }
