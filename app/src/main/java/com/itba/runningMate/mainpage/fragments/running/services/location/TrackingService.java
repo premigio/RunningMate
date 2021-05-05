@@ -158,9 +158,8 @@ public class TrackingService extends Service {
 
         Notification notification =
                 new NotificationCompat.Builder(this, Constants.NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID)
-                        .setContentTitle(getText(R.string.app_name))
                         .setContentText(getText(R.string.notification_tracking_service))
-                        .setSmallIcon(R.drawable.ic_runningmate_logo)
+                        .setSmallIcon(R.drawable.ic_stat_notify_tracking_service)
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(false)
                         .setOngoing(true)
