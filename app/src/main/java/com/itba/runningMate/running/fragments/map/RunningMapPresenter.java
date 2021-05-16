@@ -1,21 +1,26 @@
-package com.itba.runningMate.mainpage.fragments.running.ui;
+package com.itba.runningMate.running.fragments.map;
 
+import com.itba.runningMate.mainpage.fragments.running.model.Route;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
 import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingLocationUpdateListener;
+import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingUpdateListener;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 
 import java.lang.ref.WeakReference;
 
-public class RunningPresenter implements OnTrackingLocationUpdateListener {
+import io.reactivex.disposables.Disposable;
 
-    private final WeakReference<RunningView> view;
+public class RunningMapPresenter implements OnTrackingLocationUpdateListener {
+
+    private final WeakReference<RunningMapView> view;
     private final RunningStateStorage stateStorage;
 
     private Tracker tracker;
     private boolean isTrackerAttached;
+    private Disposable disposable;
 
-    public RunningPresenter(final RunningStateStorage stateStorage,
-                            final RunningView view) {
+    public RunningMapPresenter(final RunningStateStorage stateStorage,
+                               final RunningMapView view) {
         this.isTrackerAttached = false;
         this.view = new WeakReference<>(view);
         this.stateStorage = stateStorage;
@@ -25,11 +30,7 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
         if (view.get() == null) {
             return;
         }
-        if (!view.get().areLocationPermissionGranted()) {
-            view.get().requestLocationPermission();
-        } else {
-            view.get().launchAndAttachTrackingService();
-        }
+        view.get().attachTrackingService();
     }
 
     public void onViewDetached() {
@@ -44,13 +45,9 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
         if (view.get() == null) {
             return;
         }
-        if (view.get().areLocationPermissionGranted()) {
-            view.get().mapEnableMyLocation();
-            if (stateStorage.hasLastKnownLocation()) {
-                view.get().showLocation(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude());
-            }
+        if (stateStorage.hasLastKnownLocation()) {
+            view.get().showLocation(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude());
         } else {
-            view.get().mapDisableMyLocation();
             view.get().showDefaultLocation();
         }
     }
@@ -59,21 +56,19 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
         this.tracker = tracker;
         this.isTrackerAttached = true;
         tracker.setOnTrackingLocationUpdateListener(this);
+        if (tracker.isTracking() && view.get() != null) {
+            // recuperamos la ruta y actualizamos LastKnownLocation
+            Route route = tracker.queryRoute();
+            if (!route.isEmpty()) {
+                stateStorage.setLastKnownLocation(route.getLastLatitude(), route.getLastLongitude());
+                view.get().showRoute(route);
+            }
+        }
     }
 
     public void onTrackingServiceDetached() {
         this.tracker = null;
         this.isTrackerAttached = false;
-    }
-
-    private void startRun() {
-        if (view.get() != null && !view.get().areLocationPermissionGranted()) {
-            view.get().requestLocationPermission();
-        } else {
-            if (isTrackerAttached && !tracker.isTracking()) {
-                tracker.startTracking();
-            }
-        }
     }
 
     public void centerCamera() {
@@ -87,32 +82,17 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
         stateStorage.setCenterCamera(false);
     }
 
-    void onRequestLocationPermissionResult(boolean grantedPermission) {
-        if (view.get() == null) {
-            return;
-        }
-        if (grantedPermission) {
-            view.get().launchAndAttachTrackingService();
-            onMapAttached();
-        } else {
-            view.get().showLocationPermissionNotGrantedError();
-        }
-    }
-
-    public void onStartButtonClick() {
-        if (view.get() == null || !isTrackerAttached) {
-            return;
-        }
-        startRun();
-        view.get().launchRunningActivity();
-    }
-
     @Override
     public void onLocationUpdate(double latitude, double longitude) {
-        if (view.get() == null || !isTrackerAttached) {
-            return;
+        if (isTrackerAttached && tracker.isTracking() && view.get() != null) {
+            if (stateStorage.hasLastKnownLocation()) {
+                Route route = new Route()
+                        .addToRoute(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude())
+                        .addToRoute(latitude, longitude);
+                view.get().showRoute(route);
+            }
         }
-        if (stateStorage.isCenterCamera()) {
+        if (stateStorage.isCenterCamera() && view.get() != null) {
             view.get().showLocation(latitude, longitude);
         }
         stateStorage.setLastKnownLocation(latitude, longitude);

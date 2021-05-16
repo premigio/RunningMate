@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Theme.RunningMate" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/mate_color</item>
-        <item name="colorPrimaryVariant">@color/our_orange</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/md_blue_grey_800_alpha</item>
+        <item name="colorPrimaryVariant">@color/md_blue_grey_800</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
@@ -16,8 +16,10 @@
 
     <style name="TabMenuStyle" parent="TextAppearance.Design.Tab">
 
+        <item name="android:fontFamily">@font/cairo_semibold</item>
+        <item name="fontFamily">@font/cairo_semibold</item>
         <item name="android:textSize">10sp</item>
-        <item name="backgroundColor">@color/mate_color</item>
+        <item name="backgroundColor">@color/md_blue_grey_800_alpha</item>
         <item name="tabTextColor">@color/white</item>
 
     </style>

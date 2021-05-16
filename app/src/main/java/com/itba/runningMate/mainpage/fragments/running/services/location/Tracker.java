@@ -24,5 +24,13 @@ public interface Tracker {
 
     void setOnTrackingUpdateListener(OnTrackingUpdateListener listener);
 
-    void removeTrackingUpdateListener();
+    void setOnTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener);
+
+    void setTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener);
+
+    void removeTrackingUpdateListener(OnTrackingUpdateListener listener);
+
+    void removeTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener);
+
+    void removeTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener);
 }

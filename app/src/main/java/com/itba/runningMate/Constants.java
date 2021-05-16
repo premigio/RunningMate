@@ -22,6 +22,6 @@ public class Constants {
     /* Tracking Service */
     public static final int LOCATION_UPDATE_INTERVAL = 5000;
     public static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
-    public static final long STOP_WATCH_UPDATE_INTERVAL = 100L;
+    public static final long STOP_WATCH_UPDATE_INTERVAL = 200L;
 
 }

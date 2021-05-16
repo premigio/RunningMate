@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- https://itnext.io/4-steps-to-android-dot-tabitem-dadeeef44f51 -->
+    <com.google.android.material.tabs.TabLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:tabBackground="@drawable/background_amber_dot_3dp"
+        app:tabGravity="center"
+        app:tabIndicator="@drawable/background_tab_indicator"
+        app:tabIndicatorColor="@android:color/holo_red_dark"
+        app:tabIndicatorGravity="center"
+        app:tabMaxWidth="12dp" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

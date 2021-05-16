@@ -33,8 +33,29 @@ public class TrackingServiceBinder extends Binder implements Tracker {
         trackingService.setOnTrackingUpdateListener(listener);
     }
 
-    public void removeTrackingUpdateListener() {
-        trackingService.removeLocationUpdateListener();
+    @Override
+    public void setOnTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
+        trackingService.setOnTrackingLocationUpdateListener(listener);
+    }
+
+    @Override
+    public void setTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
+        trackingService.setOnTrackingMetricsUpdateListener(listener);
+    }
+
+    @Override
+    public void removeTrackingUpdateListener(OnTrackingUpdateListener listener) {
+        trackingService.removeTrackingUpdateListener(listener);
+    }
+
+    @Override
+    public void removeTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
+        trackingService.removeTrackingLocationUpdateListener(listener);
+    }
+
+    @Override
+    public void removeTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
+        trackingService.removeTrackingMetricsUpdateListener(listener);
     }
 
     @Override
