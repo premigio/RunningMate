@@ -13,7 +13,7 @@
         You can always change location permissions from system settings.
     </string>
 
-    activity_login_et_password
+    // Running Metrics Fragment
     <string name="button_running_start">Start</string>
     <string name="button_running_stop">Stop</string>
     <string name="text_view_running_pace_label">Pace</string>
@@ -22,6 +22,8 @@
     <string name="text_view_running_initial_time">00:00:00</string>
     <string name="text_view_running_initial_distance">0.00</string>
     <string name="text_view_running_initial_pace">00\' 00\"</string>
+    <string name="text_view_running_calories_label">Calories (Kcal)</string>
+    <string name="text_view_running_initial_calories">0</string>
     <string name="stop_run_message">It seems that you still have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
 
     <string name="run">Run</string>

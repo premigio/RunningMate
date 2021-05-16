@@ -44,4 +44,12 @@ public class RunMetrics {
         return (long) (distanceKm != 0F ? (timeMillis / distanceKm) : 0L);
     }
 
+    public static int calculateCalories(float distanceKm, float weightKg) {
+        /*
+         * https://fitness.stackexchange.com/questions/15608/energy-expenditure-calories-burned-equation-for-running/25564#25564
+         * calories burned = distance run (kilometres) x weight of runner (kilograms) x 1.036
+         * */
+        return Math.round(distanceKm * weightKg * 1.036f);
+    }
+
 }

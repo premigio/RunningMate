@@ -8,6 +8,8 @@ public interface RunningMetricsView {
 
     void updateDistance(float elapsedDistance);
 
+    void updateCalories(int calories);
+
     void updateStopwatch(long elapsedTime);
 
     void updatePace(long pace);

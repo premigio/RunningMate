@@ -16,6 +16,7 @@ public class Run {
     private float velocity;
     private long pace;
     private long elapsedTime;
+    private int calories;
 
     public Run() {
     }
@@ -105,5 +106,18 @@ public class Run {
 
     public void setElapsedTime(long elapsedTime) {
         this.elapsedTime = elapsedTime;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public Run calories(int calories) {
+        this.calories = calories;
+        return this;
     }
 }

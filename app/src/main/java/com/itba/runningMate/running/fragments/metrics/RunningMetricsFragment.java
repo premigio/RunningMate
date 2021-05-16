@@ -48,6 +48,7 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
     private FloatingActionButton stopButton;
     private TextView stopWatch;
     private TextView distance;
+    private TextView calories;
     private TextView pace;
 
     private RunningMetricsPresenter presenter;
@@ -65,6 +66,7 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
         stopButton = view.findViewById(R.id.pause_stop);
         distance = view.findViewById(R.id.distance);
         pace = view.findViewById(R.id.pace);
+        calories = view.findViewById(R.id.calories);
         stopWatch = view.findViewById(R.id.stopwatch);
 
         setUpStopBtn();
@@ -148,6 +150,11 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
     }
 
     @Override
+    public void updateCalories(int calories) {
+        this.calories.setText(String.valueOf(calories));
+    }
+
+    @Override
     public void updateStopwatch(long elapsedTime) {
         stopWatch.setText(hmsTimeFormatter(elapsedTime));
     }
@@ -162,6 +169,7 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
         pace.setText(R.string.text_view_running_initial_pace);
         distance.setText(R.string.text_view_running_initial_distance);
         stopWatch.setText(R.string.text_view_running_initial_time);
+        calories.setText(R.string.text_view_running_initial_calories);
     }
 
     @Override

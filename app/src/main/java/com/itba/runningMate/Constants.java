@@ -4,6 +4,9 @@ public class Constants {
 
     public static final String APPLICATION_PACKAGE = "com.itba.runningMate";
 
+    /* TODO:  */
+    public static final float WEIGHT = 76.5F;
+
     /* Notifications */
     public static final String NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID = "LocationServiceChannel";
     public static final String NOTIFICATION_LOCATION_SERVICE_CHANNEL_NAME = "Location Service Channel";

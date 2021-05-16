@@ -1,11 +1,12 @@
 package com.itba.runningMate.running.fragments.metrics;
 
+import com.itba.runningMate.Constants;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
 import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingUpdateListener;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.utils.run.RunMetrics;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
@@ -79,7 +80,8 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
                     .route(tracker.queryRoute().getLocations())
                     .distance(distKm)
                     .pace(tracker.queryPace())
-                    .velocity(tracker.queryVelocity());
+                    .velocity(tracker.queryVelocity())
+                    .calories(RunMetrics.calculateCalories(distKm, Constants.WEIGHT));
             saveRun(run);
         }
         if (view.get() != null) {
@@ -101,6 +103,7 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
             return;
         }
         view.get().updateDistance(elapsedDistance);
+        view.get().updateCalories(RunMetrics.calculateCalories(elapsedDistance, Constants.WEIGHT));
     }
 
     @Override

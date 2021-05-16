@@ -117,5 +117,4 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
         }
         stateStorage.setLastKnownLocation(latitude, longitude);
     }
-
 }
