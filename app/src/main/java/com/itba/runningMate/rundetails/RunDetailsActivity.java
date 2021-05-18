@@ -1,6 +1,8 @@
 package com.itba.runningMate.rundetails;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,12 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,9 +32,13 @@ import com.itba.runningMate.db.RunConverters;
 import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepositoryImpl;
+import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +49,8 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     private static final int PADDING = 20; // padding de los puntos en el mapa
     private static final String RUN_ID = "run-id";
     private static SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+    private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d", Locale.getDefault());
     private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
 
 
@@ -50,6 +59,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     private RunDetailsPresenter presenter;
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +78,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
         createPresenter(id);
 
-        mapView = findViewById(R.id.map_detail_run);
+        mapView = findViewById(R.id.run_detail_map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
@@ -76,15 +86,18 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Button deleteButton = findViewById(R.id.delete_button_run);
-        deleteButton.setOnClickListener(this::deleteConfirmationMessage);
+        Button deleteBtn = findViewById(R.id.btn_run_detail_delete);
+        deleteBtn.setOnClickListener(this::deleteConfirmationMessage);
+
+        Button shareBtn = findViewById(R.id.btn_run_detail_share);
+        shareBtn.setOnClickListener(v -> presenter.onShareButtonClick());
 
     }
 
     private void deleteConfirmationMessage(View view) {
         AlertDialog.Builder alertBox = new AlertDialog.Builder(view.getContext());
         alertBox.setMessage(R.string.run_delete_message)
-                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.deleteRun())
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.onDeleteButtonClick())
                 .setNegativeButton(R.string.no, (dialog, which) -> {
                 })
                 .show();
@@ -155,24 +168,27 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     private void setRunDetailsLabel(Run run) {
-        TextView date, time, speed, pace, distance;
+        TextView startDate, startTime, elapsedTtime, speed, pace, distance;
 
-        speed = findViewById(R.id.run_description_speed_content);
-        speed.setText(getString(R.string.speed_value, run.getVelocity()));
+        speed = findViewById(R.id.speed);
+        speed.setText(twoDecimalPlacesFormatter.format(run.getVelocity()));
 
-        pace = findViewById(R.id.run_description_pace_content);
+        pace = findViewById(R.id.pace);
         Date paceValue = RunConverters.fromTimestamp(run.getPace());
-        pace.setText(getString(R.string.pace_value, paceFormatter.format(paceValue)));
+        pace.setText(paceFormatter.format(paceValue));
 
-        distance = findViewById(R.id.run_description_distance_content);
-        distance.setText(getString(R.string.distance_string, run.getDistance()));
+        distance = findViewById(R.id.distance);
+        distance.setText(twoDecimalPlacesFormatter.format(run.getDistance()));
 
-        date = findViewById(R.id.run_description_start_time);
-        date.setText(getString(R.string.date_title, dateFormat.format(run.getStartTime())));
+        startDate = findViewById(R.id.run_detail_start_date);
+        startDate.setText(dateFormat.format(run.getStartTime()));
 
-        time = findViewById(R.id.run_description_elapsed_time_content);
+        startTime = findViewById(R.id.run_detail_start_time);
+        startTime.setText(timeFormat.format(run.getStartTime()));
+
+        elapsedTtime = findViewById(R.id.stopwatch);
         Date timeValue = RunConverters.fromTimestamp(run.getElapsedTime());
-        time.setText(getString(R.string.time_elapsed_value, timeFormat.format(timeValue)));
+        elapsedTtime.setText(timeFormat.format(timeValue));
     }
 
     private void setMapCenter(List<LatLng> route) {
@@ -209,4 +225,41 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void startShareMetricsIntent() {
+        Bitmap bitmap = ImageProcessing.createBitmapFromView(
+                findViewById(R.id.run_detail_metrics),
+                400,
+                300
+        );
+        Uri uri = getImageUriToShare(bitmap);
+        shareImageIntent(uri, bitmap);
+    }
+
+    public void shareImageIntent(Uri uri, Bitmap bitmap) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.putExtra(Intent.EXTRA_TEXT, R.string.app_name);
+        intent.setType("image/png");
+        startActivity(Intent.createChooser(intent, "Share Via"));
+    }
+
+    private Uri getImageUriToShare(Bitmap bitmap) {
+        File imageFolder = new File(getCacheDir(), "images");
+        Uri uri = null;
+        try {
+            imageFolder.mkdirs();
+            File file = new File(imageFolder, "runningMate.png");
+            FileOutputStream outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            uri = FileProvider.getUriForFile(this, "com.itba.runningMate.rundetails", file);
+        } catch (Exception e) {
+            Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show();
+        }
+        return uri;
+    }
+
 }

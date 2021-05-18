@@ -10,4 +10,7 @@ public interface RunDetailsView {
 
     void endActivity();
 
+    void startShareMetricsIntent();
+
+
 }

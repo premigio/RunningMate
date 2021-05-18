@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/old_run_row_ll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,13 +12,15 @@
 
     <ImageView
         android:id="@+id/row_data_iv_rv"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="2dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/walking_icon_desc"
         android:paddingTop="10dp"
         android:src="@drawable/ic_walking_icon"
-        app:layout_constraintLeft_toLeftOf="@+id/old_run_row_ll"/>
+        app:layout_constraintBottom_toBottomOf="@id/row_data_ll_rv"
+        app:layout_constraintEnd_toStartOf="@id/row_data_ll_rv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/row_data_ll_rv" />
 
     <LinearLayout
         android:id="@+id/row_data_ll_rv"

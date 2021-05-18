@@ -1,9 +1,19 @@
 package com.itba.runningMate.rundetails;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
+
+import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
 import io.reactivex.Completable;
@@ -31,10 +41,10 @@ public class RunDetailsPresenter {
         disposables.add(repo.getRunMetrics(itemId)
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::receivedRunMetrics, this::onReceivedRunError));
+                .subscribe(this::onReceivedRunMetrics, this::onReceivedRunMetricsError));
     }
 
-    private void receivedRunMetrics(Run run) {
+    private void onReceivedRunMetrics(Run run) {
         if (view.get() != null) {
             view.get().bindRunMetrics(run);
         }
@@ -44,10 +54,10 @@ public class RunDetailsPresenter {
         disposables.add(repo.getRun(itemId)
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::onReceivedRun, this::onReceivedRunError));
+                .subscribe(this::onReceivedRun, this::onReceivedRunMetricsError));
     }
 
-    private void onReceivedRunError(Throwable throwable) {
+    private void onReceivedRunMetricsError(Throwable throwable) {
         Timber.d("Failed to retrieve run route from db for run-id: %l", itemId);
     }
 
@@ -61,20 +71,28 @@ public class RunDetailsPresenter {
         disposables.dispose();
     }
 
-    public void deleteRun() {
+    public void onDeleteButtonClick() {
         disposables.add(Completable.fromAction(() -> repo.deleteRun(itemId))
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::endRunDetail, this::onEndRunError));
+                .subscribe(this::onRunDeleted, this::onRunDeleteError));
     }
 
-    private void endRunDetail() {
+    public void onShareButtonClick() {
+        if (view.get() == null) {
+            return;
+        }
+        view.get().startShareMetricsIntent();
+    }
+
+    private void onRunDeleted() {
         if (view.get() != null) {
             view.get().endActivity();
         }
     }
 
-    private void onEndRunError(Throwable throwable) {
+    private void onRunDeleteError(Throwable throwable) {
         Timber.d("Failed to delete run from db for run-id: %l", itemId);
     }
+
 }

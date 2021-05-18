@@ -199,6 +199,7 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
                 .authority("run")
                 .appendQueryParameter("run-id", String.valueOf(runId)).build();
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        this.getActivity().finish();
     }
 
     @SuppressLint("DefaultLocale")

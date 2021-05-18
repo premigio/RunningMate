@@ -24,7 +24,7 @@
     <string name="text_view_running_initial_pace">00\' 00\"</string>
     <string name="text_view_running_calories_label">Calories (Kcal)</string>
     <string name="text_view_running_initial_calories">0</string>
-    <string name="stop_run_message">It seems that you still have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
+    <string name="stop_run_message">It seems that you have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
 
     <string name="run">Run</string>
     <string name="past">Past Runs</string>
@@ -46,14 +46,28 @@
     // Notifications
     <string name="notification_tracking_service">Hey I\'am tracking your run</string>
 
-    <string name="date_title">%1$s</string>
-    <string name="speed_title">Speed</string>
-    <string name="speed_value">%1$.1f km/h</string>
-    <string name="pace_title">Pace</string>
-    <string name="pace_value">%1$s</string>
-    <string name="distance_title">Distance</string>
-    <string name="time_elapsed_title">Run Time</string>
-    <string name="time_elapsed_value">%1$s min</string>
-    <string name="delete_run">Delete</string>
+    // Run Details Fragment
+    <string name="text_view_run_details_pace_label">Pace</string>
+    <string name="text_view_run_details_stopwatch_label">Time</string>
+    <string name="text_view_run_details_distance_label">Distance (Km)</string>
+    <string name="text_view_run_details_initial_time">00:00:00</string>
+    <string name="text_view_run_details_initial_distance">0.00</string>
+    <string name="text_view_run_details_initial_pace">00\' 00\"</string>
+    <string name="text_view_run_details_calories_label">Calories (Kcal)</string>
+    <string name="text_view_run_details_initial_calories">0</string>
+    <string name="text_view_run_details_speed_label">Speed (Km/h)</string>
+    <string name="text_view_run_details_initial_speed">0.00</string>
+    <string name="btn_run_details_delete">Delete</string>
+    <string name="btn_run_details_share">Share</string>
+
+    <!--    <string name="date_title">%1$s</string>-->
+    <!--    <string name="speed_title">Speed</string>-->
+    <!--    <string name="speed_value">%1$.1f km/h</string>-->
+    <!--    <string name="pace_title">Pace</string>-->
+    <!--    <string name="pace_value">%1$s</string>-->
+    <!--    <string name="distance_title">Distance</string>-->
+    <!--    <string name="time_elapsed_title">Run Time</string>-->
+    <!--    <string name="time_elapsed_value">%1$s min</string>-->
+    <!--    <string name="delete_run">Delete</string>-->
 
 </resources>
