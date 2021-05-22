@@ -27,7 +27,7 @@
         android:padding="5dp"
         android:text="Sabado 14 de Mayo"
         android:textColor="@color/md_white_1000"
-        android:textSize="32sp"
+        android:textSize="26sp"
         android:textStyle="bold"
         android:typeface="sans"
         app:layout_constraintEnd_toEndOf="parent"

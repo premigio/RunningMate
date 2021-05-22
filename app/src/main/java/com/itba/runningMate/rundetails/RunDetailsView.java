@@ -1,5 +1,8 @@
 package com.itba.runningMate.rundetails;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 import com.itba.runningMate.domain.Run;
 
 public interface RunDetailsView {
@@ -10,7 +13,11 @@ public interface RunDetailsView {
 
     void endActivity();
 
-    void startShareMetricsIntent();
+    void shareImageIntent(Uri uri, Bitmap bitmap);
+
+    Bitmap getMetricsImage();
+
+    void showShareRunError();
 
 
 }

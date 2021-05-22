@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,11 +32,10 @@ import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.ImageProcessing;
+import com.itba.runningMate.utils.file.CacheFileProviderImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -135,10 +133,12 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
         SchedulerProvider sp = new AndroidSchedulerProvider();
 
-        presenter = new RunDetailsPresenter(this,
-                new RunRepositoryImpl(RunDb.getInstance(
-                        getApplicationContext()).RunDao(),
-                        sp), sp, runId);
+        presenter = new RunDetailsPresenter(
+                new CacheFileProviderImpl(this),
+                new RunRepositoryImpl(RunDb.getInstance(getApplicationContext()).RunDao(), sp),
+                sp,
+                runId,
+                this);
     }
 
     @Override
@@ -226,40 +226,25 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void startShareMetricsIntent() {
-        Bitmap bitmap = ImageProcessing.createBitmapFromView(
-                findViewById(R.id.run_detail_metrics),
-                400,
-                300
-        );
-        Uri uri = getImageUriToShare(bitmap);
-        shareImageIntent(uri, bitmap);
-    }
-
     public void shareImageIntent(Uri uri, Bitmap bitmap) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.putExtra(Intent.EXTRA_TEXT, R.string.app_name);
         intent.setType("image/png");
         startActivity(Intent.createChooser(intent, "Share Via"));
     }
 
-    private Uri getImageUriToShare(Bitmap bitmap) {
-        File imageFolder = new File(getCacheDir(), "images");
-        Uri uri = null;
-        try {
-            imageFolder.mkdirs();
-            File file = new File(imageFolder, "runningMate.png");
-            FileOutputStream outputStream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
-            outputStream.flush();
-            outputStream.close();
-            uri = FileProvider.getUriForFile(this, "com.itba.runningMate.rundetails", file);
-        } catch (Exception e) {
-            Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show();
-        }
-        return uri;
+    @Override
+    public Bitmap getMetricsImage() {
+        return ImageProcessing.createBitmapFromView(
+                findViewById(R.id.run_detail_metrics),
+                400,
+                300
+        );
+    }
+
+    @Override
+    public void showShareRunError() {
+        Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show();
     }
 
 }

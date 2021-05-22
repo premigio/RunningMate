@@ -2,14 +2,10 @@ package com.itba.runningMate.rundetails;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.widget.Toast;
 
-import androidx.core.content.FileProvider;
-
-import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.ImageProcessing;
+import com.itba.runningMate.utils.file.CacheFileProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.io.File;
@@ -25,12 +21,18 @@ public class RunDetailsPresenter {
     private final WeakReference<RunDetailsView> view;
     private final RunRepository repo;
     private final SchedulerProvider sp;
+    private final CacheFileProvider cacheFileProvider;
     private final long itemId;
 
     private final CompositeDisposable disposables;
 
-    public RunDetailsPresenter(RunDetailsView view, RunRepository repo, SchedulerProvider sp, long itemId) {
+    public RunDetailsPresenter(final CacheFileProvider cacheFileProvider,
+                               final RunRepository repo,
+                               final SchedulerProvider sp,
+                               final long itemId,
+                               final RunDetailsView view) {
         this.view = new WeakReference<>(view);
+        this.cacheFileProvider = cacheFileProvider;
         this.repo = repo;
         this.sp = sp;
         this.itemId = itemId;
@@ -82,7 +84,19 @@ public class RunDetailsPresenter {
         if (view.get() == null) {
             return;
         }
-        view.get().startShareMetricsIntent();
+        Bitmap bitmap = view.get().getMetricsImage();
+        File image = cacheFileProvider.getFile("runningmate-run-metrics.png");
+        Uri uri = null;
+        try {
+            FileOutputStream outputStream = new FileOutputStream(image);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            uri = cacheFileProvider.getUriForFile(image);
+        } catch (Exception e) {
+            view.get().showShareRunError();
+        }
+        view.get().shareImageIntent(uri, bitmap);
     }
 
     private void onRunDeleted() {
