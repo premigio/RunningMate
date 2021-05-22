@@ -1,6 +1,7 @@
 package com.itba.runningMate.mainpage.fragments.running.model;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.itba.runningMate.utils.Tuple;
 
 import java.util.Collection;
 import java.util.LinkedList;
