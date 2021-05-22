@@ -3,6 +3,7 @@ package com.itba.runningMate.rundetails;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.file.CacheFileProvider;
@@ -11,10 +12,16 @@ import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
+import java.util.Date;
 
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
+
+import static com.itba.runningMate.utils.Formatters.dateFormat;
+import static com.itba.runningMate.utils.Formatters.paceFormatter;
+import static com.itba.runningMate.utils.Formatters.timeFormat;
+import static com.itba.runningMate.utils.Formatters.twoDecimalPlacesFormatter;
 
 public class RunDetailsPresenter {
 
@@ -47,9 +54,15 @@ public class RunDetailsPresenter {
     }
 
     private void onReceivedRunMetrics(Run run) {
-        if (view.get() != null) {
-            view.get().bindRunMetrics(run);
+        if (view.get() == null) {
+            return;
         }
+        view.get().showSpeed(twoDecimalPlacesFormatter.format(run.getVelocity()));
+        view.get().showPace(paceFormatter.format(new Date(run.getPace())));
+        view.get().showDistance(twoDecimalPlacesFormatter.format(run.getDistance()));
+        view.get().showStartDate(dateFormat.format(run.getStartTime()));
+        view.get().showStartTime(timeFormat.format(run.getStartTime()));
+        view.get().showElapsedTime(timeFormat.format(new Date(run.getElapsedTime())));
     }
 
     public void onMapAttached() {
@@ -65,7 +78,7 @@ public class RunDetailsPresenter {
 
     private void onReceivedRun(Run run) {
         if (view.get() != null) {
-            view.get().bindRunRoute(run);
+            view.get().showRoute(Route.from(run.getRoute()));
         }
     }
 

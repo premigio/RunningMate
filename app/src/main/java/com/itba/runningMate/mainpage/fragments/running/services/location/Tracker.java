@@ -1,6 +1,6 @@
 package com.itba.runningMate.mainpage.fragments.running.services.location;
 
-import com.itba.runningMate.mainpage.fragments.running.model.Route;
+import com.itba.runningMate.domain.Route;
 
 public interface Tracker {
 

@@ -23,7 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
-import com.itba.runningMate.mainpage.fragments.running.model.Route;
+import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorageImpl;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;

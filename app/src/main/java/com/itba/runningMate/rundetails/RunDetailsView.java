@@ -3,13 +3,23 @@ package com.itba.runningMate.rundetails;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.domain.Route;
 
 public interface RunDetailsView {
 
-    void bindRunMetrics(Run run);
+    void showRoute(Route route);
 
-    void bindRunRoute(Run run);
+    void showSpeed(String speed);
+
+    void showPace(String pace);
+
+    void showDistance(String distance);
+
+    void showStartDate(String startDate);
+
+    void showStartTime(String startTime);
+
+    void showElapsedTime(String elapsedTime);
 
     void endActivity();
 

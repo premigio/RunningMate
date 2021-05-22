@@ -2,7 +2,7 @@ package com.itba.runningMate.mainpage.fragments.running.services.location;
 
 import android.os.Binder;
 
-import com.itba.runningMate.mainpage.fragments.running.model.Route;
+import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.utils.run.RunMetrics;
 
 public class TrackingServiceBinder extends Binder implements Tracker {
