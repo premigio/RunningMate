@@ -27,33 +27,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
-import com.itba.runningMate.db.RunConverters;
 import com.itba.runningMate.db.RunDb;
-import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.file.CacheFileProviderImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 
     private static final int PADDING = 20; // padding de los puntos en el mapa
     private static final String RUN_ID = "run-id";
-    private static SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
-    private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d", Locale.getDefault());
-    private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
 
 
     private GoogleMap googleMap;
     private MapView mapView;
+    private TextView startDate, startTime, elapsedTtime, speed, pace, distance;
+
     private RunDetailsPresenter presenter;
 
 
@@ -79,6 +72,14 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         mapView = findViewById(R.id.run_detail_map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        speed = findViewById(R.id.speed);
+        pace = findViewById(R.id.pace);
+        distance = findViewById(R.id.distance);
+        startDate = findViewById(R.id.run_detail_start_date);
+        startTime = findViewById(R.id.run_detail_start_time);
+        elapsedTtime = findViewById(R.id.stopwatch);
+
 
         //Creo el botón para volver
         ActionBar actionBar = getSupportActionBar();
@@ -142,19 +143,44 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
-    public void bindRunMetrics(Run run) {
-        setRunDetailsLabel(run);
-    }
-
-    @Override
     public void endActivity() {
         finish();
     }
 
     @Override
-    public void bindRunRoute(Run run) {
-        setMapPath(run.getRoute());
-        setMapCenter(run.getRoute());
+    public void showSpeed(String speed) {
+        this.speed.setText(speed);
+    }
+
+    @Override
+    public void showPace(String pace) {
+        this.pace.setText(pace);
+    }
+
+    @Override
+    public void showDistance(String distance) {
+        this.distance.setText(distance);
+    }
+
+    @Override
+    public void showStartDate(String startDate) {
+        this.startDate.setText(startDate);
+    }
+
+    @Override
+    public void showStartTime(String startTime) {
+        this.startTime.setText(startTime);
+    }
+
+    @Override
+    public void showElapsedTime(String elapsedTime) {
+        this.elapsedTtime.setText(elapsedTime);
+    }
+
+    @Override
+    public void showRoute(Route route) {
+        setMapPath(route.getLocations());
+        setMapCenter(route.getLocations());
     }
 
     private void setMapPath(List<LatLng> route) {
@@ -165,30 +191,6 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
                 .color(Color.BLUE)
                 .width(8f)
                 .addAll(route));
-    }
-
-    private void setRunDetailsLabel(Run run) {
-        TextView startDate, startTime, elapsedTtime, speed, pace, distance;
-
-        speed = findViewById(R.id.speed);
-        speed.setText(twoDecimalPlacesFormatter.format(run.getVelocity()));
-
-        pace = findViewById(R.id.pace);
-        Date paceValue = RunConverters.fromTimestamp(run.getPace());
-        pace.setText(paceFormatter.format(paceValue));
-
-        distance = findViewById(R.id.distance);
-        distance.setText(twoDecimalPlacesFormatter.format(run.getDistance()));
-
-        startDate = findViewById(R.id.run_detail_start_date);
-        startDate.setText(dateFormat.format(run.getStartTime()));
-
-        startTime = findViewById(R.id.run_detail_start_time);
-        startTime.setText(timeFormat.format(run.getStartTime()));
-
-        elapsedTtime = findViewById(R.id.stopwatch);
-        Date timeValue = RunConverters.fromTimestamp(run.getElapsedTime());
-        elapsedTtime.setText(timeFormat.format(timeValue));
     }
 
     private void setMapCenter(List<LatLng> route) {

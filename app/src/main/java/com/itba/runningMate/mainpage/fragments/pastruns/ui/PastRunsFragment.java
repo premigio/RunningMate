@@ -7,7 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.RunDb;
@@ -19,14 +26,6 @@ import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class PastRunsFragment extends Fragment implements PastRunsView, OnRunClickListener {
 
@@ -108,24 +107,19 @@ public class PastRunsFragment extends Fragment implements PastRunsView, OnRunCli
         presenter.onViewDetached();
     }
 
-
     @Override
-    public void updateOldRuns(List<Run> list) {
+    public void updatePastRuns(List<Run> list) {
         rvRunListAdapter.update(list);
-        if (list == null || list.isEmpty()) {
-            emptyMessage.setVisibility(View.VISIBLE);
-//            recyclerView.setVisibility(View.GONE);
-        } else {
-            emptyMessage.setVisibility(View.GONE);
-//            recyclerView.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
-    public void showModelToast(long modelId) {
-        Toast.makeText(this.getContext(),
-                "modelIdClicked = " + modelId,
-                Toast.LENGTH_SHORT).show();
+    public void showNoPastRunsMessage() {
+        emptyMessage.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoPastRunsMessage() {
+        emptyMessage.setVisibility(View.GONE);
     }
 
     @Override

@@ -5,9 +5,11 @@ import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
+import java.util.LinkedList;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
+import timber.log.Timber;
 
 public class PastRunsPresenter {
 
@@ -33,7 +35,10 @@ public class PastRunsPresenter {
     }
 
     private void onRunListError(final Throwable err) {
-        //TODO mostrar un mensaje tipo toast que hubo un error
+        Timber.d("Failed to retrieve runs from db");
+        if (view.get() != null) {
+            view.get().showNoPastRunsMessage();
+        }
     }
 
     public void onViewDetached() {
@@ -41,8 +46,15 @@ public class PastRunsPresenter {
     }
 
     public void receivedRunList(List<Run> runs) {
-        if (view.get() != null) {
-            view.get().updateOldRuns(runs);
+        if (view.get() == null) {
+            return;
+        }
+        if (runs == null || runs.isEmpty()) {
+            view.get().showNoPastRunsMessage();
+            view.get().updatePastRuns(new LinkedList<>());
+        } else {
+            view.get().hideNoPastRunsMessage();
+            view.get().updatePastRuns(runs);
         }
     }
 

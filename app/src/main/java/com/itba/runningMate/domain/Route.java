@@ -1,6 +1,7 @@
-package com.itba.runningMate.mainpage.fragments.running.model;
+package com.itba.runningMate.domain;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.itba.runningMate.utils.Tuple;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -12,6 +13,12 @@ public class Route {
 
     public Route() {
         locations = new LinkedList<>();
+    }
+
+    public static Route from(List<LatLng> latLngs) {
+        Route route = new Route();
+        route.addLatLngsToRoute(latLngs);
+        return route;
     }
 
     public List<LatLng> getLocations() {

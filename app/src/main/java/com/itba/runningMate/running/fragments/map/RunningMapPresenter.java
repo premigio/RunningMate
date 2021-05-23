@@ -1,9 +1,8 @@
 package com.itba.runningMate.running.fragments.map;
 
-import com.itba.runningMate.mainpage.fragments.running.model.Route;
+import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
 import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingLocationUpdateListener;
-import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingUpdateListener;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 
 import java.lang.ref.WeakReference;

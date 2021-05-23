@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface PastRunsView {
 
-    void updateOldRuns(List<Run> list);
+    void updatePastRuns(List<Run> list);
 
-    void showModelToast(long modelId);
+    void showNoPastRunsMessage();
+
+    void hideNoPastRunsMessage();
 
     void launchRunDetails(long id);
 }
