@@ -66,16 +66,6 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
         this.isTrackerAttached = false;
     }
 
-    private void startRun() {
-        if (view.get() != null && !view.get().areLocationPermissionGranted()) {
-            view.get().requestLocationPermission();
-        } else {
-            if (isTrackerAttached && !tracker.isTracking()) {
-                tracker.startTracking();
-            }
-        }
-    }
-
     public void centerCamera() {
         stateStorage.setCenterCamera(true);
         if (stateStorage.hasLastKnownLocation()) {
@@ -100,11 +90,17 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
     }
 
     public void onStartButtonClick() {
-        if (view.get() == null || !isTrackerAttached) {
+        if (view.get() == null) {
             return;
         }
-        startRun();
-        view.get().launchRunningActivity();
+        if (!view.get().areLocationPermissionGranted()) {
+            view.get().requestLocationPermission();
+        } else {
+            if (isTrackerAttached && !tracker.isTracking()) {
+                tracker.startTracking();
+                view.get().launchRunningActivity();
+            }
+        }
     }
 
     @Override

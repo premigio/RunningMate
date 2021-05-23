@@ -27,7 +27,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
@@ -239,7 +238,8 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         new AlertDialog.Builder(getActivity())
                 .setTitle(getText(R.string.alertdialog_denied_location_title))
                 .setMessage(getText(R.string.alertdialog_denied_location_message))
-                .setPositiveButton("ok", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton("Dismiss", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Settings", (dialog, id) -> startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
                 .create().show();
     }
 
