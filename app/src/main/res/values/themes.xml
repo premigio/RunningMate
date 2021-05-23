@@ -19,6 +19,7 @@
         <!-- Font Family -->
         <item name="android:fontFamily">@font/cairo_semibold</item>
         <item name="fontFamily">@font/cairo_semibold</item>
+        <item name="android:screenOrientation">portrait</item>
     </style>
 
     <style name="TabMenuStyle" parent="TextAppearance.Design.Tab">
