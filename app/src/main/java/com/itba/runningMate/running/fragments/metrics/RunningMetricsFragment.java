@@ -1,0 +1,224 @@
+package com.itba.runningMate.running.fragments.metrics;
+
+import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.itba.runningMate.R;
+import com.itba.runningMate.db.RunConverters;
+import com.itba.runningMate.db.RunDb;
+import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
+import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorageImpl;
+import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
+import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.repository.run.RunRepositoryImpl;
+import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
+import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+public class RunningMetricsFragment extends Fragment implements RunningMetricsView, ServiceConnection {
+
+    // todo: save presenter and saveinstance fragment
+    private static final SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
+    private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
+
+    private FloatingActionButton stopButton;
+    private TextView stopWatch;
+    private TextView distance;
+    private TextView calories;
+    private TextView pace;
+
+    private RunningMetricsPresenter presenter;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_running_metrics, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        createPresenter();
+
+        stopButton = view.findViewById(R.id.pause_stop);
+        distance = view.findViewById(R.id.distance);
+        pace = view.findViewById(R.id.pace);
+        calories = view.findViewById(R.id.calories);
+        stopWatch = view.findViewById(R.id.stopwatch);
+
+        setUpStopBtn();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setUpStopBtn() {
+        stopButton.setOnLongClickListener(l -> {
+            presenter.onStartStopButtonClick();
+            return true;
+        });
+        stopButton.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                float x = (float) 1.25;
+                float y = (float) 1.25;
+                stopButton.setScaleX(x);
+                stopButton.setScaleY(y);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                float x = 1;
+                float y = 1;
+                stopButton.setScaleX(x);
+                stopButton.setScaleY(y);
+            }
+            return false;
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        presenter.onViewAttached();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        presenter.onViewDetached();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    public void attachTrackingService() {
+        Intent intent = new Intent(getActivity(), TrackingService.class);
+        this.getActivity().bindService(intent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void detachTrackingService() {
+        this.getActivity().unbindService(this);
+        presenter.onTrackingServiceDetached();
+    }
+
+    public void createPresenter() {
+        final SharedPreferences preferences = this.getActivity().getSharedPreferences(RunningStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
+        final RunningStateStorage stateStorage = new RunningStateStorageImpl(preferences);
+        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
+        final RunRepository runRepository = new RunRepositoryImpl(
+                RunDb.getInstance(this.getActivity().getApplicationContext()).RunDao(),
+                schedulerProvider);
+        presenter = new RunningMetricsPresenter(stateStorage, runRepository, schedulerProvider, this);
+    }
+
+    @Override
+    public void updateDistance(float elapsedDistance) {
+        distance.setText(twoDecimalPlacesFormatter.format(elapsedDistance));
+    }
+
+    @Override
+    public void updateCalories(int calories) {
+        this.calories.setText(String.valueOf(calories));
+    }
+
+    @Override
+    public void updateStopwatch(long elapsedTime) {
+        stopWatch.setText(hmsTimeFormatter(elapsedTime));
+    }
+
+    @Override
+    public void updatePace(long pace) {
+        this.pace.setText(paceFormatter.format(RunConverters.fromTimestamp(pace)));
+    }
+
+    @Override
+    public void showInitialMetrics() {
+        pace.setText(R.string.text_view_running_initial_pace);
+        distance.setText(R.string.text_view_running_initial_distance);
+        stopWatch.setText(R.string.text_view_running_initial_time);
+        calories.setText(R.string.text_view_running_initial_calories);
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        final Tracker tracker = (Tracker) service;
+        presenter.onTrackingServiceAttached(tracker);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        presenter.onTrackingServiceDetached();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void showSaveRunError() {
+        Toast.makeText(this.getActivity(), getText(R.string.toast_error_run_save), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void launchRunActivity(long runId) {
+        Uri uri = new Uri.Builder().scheme("runningmate")
+                .authority("run")
+                .appendQueryParameter("run-id", String.valueOf(runId)).build();
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        this.getActivity().finish();
+    }
+
+    @SuppressLint("DefaultLocale")
+    private String hmsTimeFormatter(long millis) {
+        return String.format(
+                "%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+        );
+    }
+
+    @Override
+    public void showStopConfirm() {
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(this.getActivity());
+        alertBox.setMessage(R.string.stop_run_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.stopRun())
+                .setNegativeButton(R.string.no, (dialog, which) -> {
+                })
+                .show();
+    }
+}

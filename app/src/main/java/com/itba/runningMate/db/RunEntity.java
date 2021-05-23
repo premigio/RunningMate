@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.itba.runningMate.domain.Run;
 
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,9 @@ public class RunEntity {
 
     @ColumnInfo(name = "pace")
     public long pace;
+
+    @ColumnInfo(name = "calories")
+    public int calories;
 
     public RunEntity() {
     }
@@ -126,5 +130,18 @@ public class RunEntity {
 
     public void setPace(long pace) {
         this.pace = pace;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public RunEntity calories(int calories) {
+        this.calories = calories;
+        return this;
     }
 }

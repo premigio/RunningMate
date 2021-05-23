@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.RunningMate" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/mate_color</item>
-        <item name="colorPrimaryVariant">@color/our_orange</item>
+        <item name="colorPrimary">@color/md_blue_grey_800_alpha</item>
+        <item name="colorPrimaryVariant">@color/md_blue_grey_800_alpha</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -12,16 +12,21 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
-<!--        &lt;!&ndash; hide the Window Title &ndash;&gt;-->
-<!--        <item name="android:windowActionBarOverlay">true</item>-->
-<!--        <item name="android:fitsSystemWindows">true</item>-->
-<!--        <item name="android:windowNoTitle">true</item>-->
+        <!--        &lt;!&ndash; hide the Window Title &ndash;&gt;-->
+        <!--        <item name="android:windowActionBarOverlay">true</item>-->
+        <!--        <item name="android:fitsSystemWindows">true</item>-->
+        <!--        <item name="android:windowNoTitle">true</item>-->
+        <!-- Font Family -->
+        <item name="android:fontFamily">@font/cairo_semibold</item>
+        <item name="fontFamily">@font/cairo_semibold</item>
     </style>
 
     <style name="TabMenuStyle" parent="TextAppearance.Design.Tab">
 
+        <item name="android:fontFamily">@font/cairo_semibold</item>
+        <item name="fontFamily">@font/cairo_semibold</item>
         <item name="android:textSize">10sp</item>
-        <item name="backgroundColor">@color/mate_color</item>
+        <item name="backgroundColor">@color/md_blue_grey_800_alpha</item>
         <item name="tabTextColor">@color/white</item>
 
     </style>

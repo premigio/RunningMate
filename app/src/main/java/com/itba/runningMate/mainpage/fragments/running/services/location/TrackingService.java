@@ -25,10 +25,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
-import com.itba.runningMate.mainpage.MainPageActivity;
+import com.itba.runningMate.running.RunningActivity;
+import com.itba.runningMate.utils.functional.Function;
 import com.itba.runningMate.utils.run.RunMetrics;
 
 import java.lang.ref.WeakReference;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,10 +51,10 @@ public class TrackingService extends Service {
     private Handler mainHandler;
 
     private FusedLocationProviderClient fusedLocationClient;
-    private WeakReference<OnTrackingUpdateListener> onTrackingUpdateListener;
+    private List<WeakReference<OnTrackingMetricsUpdateListener>> onTrackingMetricsUpdateListeners;
+    private List<WeakReference<OnTrackingLocationUpdateListener>> onTrackingLocationsUpdateListeners;
 
     private boolean isTracking;
-    private boolean isSendingTrackingUpdates;
 
     private LatLng lastLocation;
     private List<LatLng> trackedLocations;
@@ -84,8 +86,9 @@ public class TrackingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        onTrackingLocationsUpdateListeners = new LinkedList<>();
+        onTrackingMetricsUpdateListeners = new LinkedList<>();
         isTracking = false;
-        isSendingTrackingUpdates = false;
         notificationManager = NotificationManagerCompat.from(this);
         serviceHandlerThread = new HandlerThread(HANDLER_THREAD_NAME, Process.THREAD_PRIORITY_BACKGROUND);
         serviceHandlerThread.start();
@@ -115,9 +118,9 @@ public class TrackingService extends Service {
         pace = 0L;
         isTracking = true;
         startTimeMillis = System.currentTimeMillis();
-        if (isSendingTrackingUpdates) {
-            serviceHandler.post(this::stopWatch);
-        }
+//        if (areListeners(onTrackingMetricsUpdateListeners)) {
+        serviceHandler.post(this::stopWatch);
+//        }
     }
 
     public boolean isTracking() {
@@ -130,16 +133,67 @@ public class TrackingService extends Service {
     }
 
     public void setOnTrackingUpdateListener(OnTrackingUpdateListener listener) {
-        isSendingTrackingUpdates = true;
+        setOnTrackingLocationUpdateListener(listener);
+        setOnTrackingMetricsUpdateListener(listener);
+    }
+
+    public void setOnTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
+        onTrackingLocationsUpdateListeners.add(new WeakReference<>(listener));
+    }
+
+    public void setOnTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
+        onTrackingMetricsUpdateListeners.add(new WeakReference<>(listener));
         if (isTracking) {
             serviceHandler.post(this::stopWatch);
         }
-        onTrackingUpdateListener = new WeakReference<>(listener);
     }
 
-    public void removeLocationUpdateListener() {
-        isSendingTrackingUpdates = false;
-        onTrackingUpdateListener = null;
+    public void removeTrackingUpdateListener(OnTrackingUpdateListener listener) {
+        removeTrackingLocationUpdateListener(listener);
+        removeTrackingMetricsUpdateListener(listener);
+    }
+
+    public void removeTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
+        removeListeners(onTrackingLocationsUpdateListeners, listener);
+    }
+
+    public void removeTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
+        removeListeners(onTrackingMetricsUpdateListeners, listener);
+    }
+
+    private <T> void removeListeners(List<WeakReference<T>> listeners, T listener) {
+        Iterator<WeakReference<T>> iterator = listeners.iterator();
+        while (iterator.hasNext()) {
+            WeakReference<T> wr = iterator.next();
+            if (wr.get() == listener) {
+                iterator.remove();
+            }
+        }
+    }
+
+    private <T> boolean areListeners(List<WeakReference<T>> listeners) {
+        Iterator<WeakReference<T>> iterator = listeners.iterator();
+        while (iterator.hasNext()) {
+            WeakReference<T> wr = iterator.next();
+            if (wr.get() == null) {
+                iterator.remove();
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private <T> void callListeners(List<WeakReference<T>> listeners, Function<T> function) {
+        Iterator<WeakReference<T>> iterator = listeners.iterator();
+        while (iterator.hasNext()) {
+            WeakReference<T> wr = iterator.next();
+            if (wr.get() == null) {
+                iterator.remove();
+            } else {
+                function.apply(wr.get());
+            }
+        }
     }
 
     public List<LatLng> getTrackedLocations() {
@@ -147,7 +201,7 @@ public class TrackingService extends Service {
     }
 
     private void startForegroundService() {
-        Intent notificationIntent = new Intent(this, MainPageActivity.class);
+        Intent notificationIntent = new Intent(this, RunningActivity.class);
         /*
             Agregar una accion al notificationIntent para decirle a nuestra landing activity que
             hacer. Tambien podes usar el paramentro flag del pendingIntnet para agreagar mas data
@@ -170,10 +224,6 @@ public class TrackingService extends Service {
 
     private void stopForegroundService() {
         stopForeground(true);
-    }
-
-    private void toggleTrackingService() {
-        isTracking = !isTracking;
     }
 
     public LatLng getLastLocation() {
@@ -200,27 +250,19 @@ public class TrackingService extends Service {
     }
 
     private void callbackLocationUpdate(double latitude, double longitude) {
-        if (isSendingTrackingUpdates && onTrackingUpdateListener.get() != null) {
-            onTrackingUpdateListener.get().onLocationUpdate(latitude, longitude);
-        }
+        callListeners(onTrackingLocationsUpdateListeners, l -> l.onLocationUpdate(latitude, longitude));
     }
 
     private void callbackDistanceUpdate(float distance) {
-        if (isSendingTrackingUpdates && onTrackingUpdateListener.get() != null) {
-            onTrackingUpdateListener.get().onDistanceUpdate(distance);
-        }
+        callListeners(onTrackingMetricsUpdateListeners, l -> l.onDistanceUpdate(distance));
     }
 
     private void callbackPaceUpdate(long pace) {
-        if (isSendingTrackingUpdates && onTrackingUpdateListener.get() != null) {
-            onTrackingUpdateListener.get().onPaceUpdate(pace);
-        }
+        callListeners(onTrackingMetricsUpdateListeners, l -> l.onPaceUpdate(pace));
     }
 
     private void callbackStopWatchUpdate(long elapsedTime) {
-        if (isSendingTrackingUpdates && onTrackingUpdateListener.get() != null) {
-            onTrackingUpdateListener.get().onStopWatchUpdate(elapsedTime);
-        }
+        callListeners(onTrackingMetricsUpdateListeners, l -> l.onStopWatchUpdate(elapsedTime));
     }
 
     @SuppressLint("MissingPermission")
@@ -242,7 +284,7 @@ public class TrackingService extends Service {
     }
 
     private void stopWatch() {
-        if (isTracking && isSendingTrackingUpdates) {
+        if (isTracking && areListeners(onTrackingMetricsUpdateListeners)) {
             elapsedMillis = System.currentTimeMillis() - startTimeMillis;
 
             /*

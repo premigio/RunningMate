@@ -1,22 +1,8 @@
 package com.itba.runningMate.mainpage.fragments.running.ui;
 
-import com.itba.runningMate.mainpage.fragments.running.model.Route;
-
 public interface RunningView {
 
-    void showRoute(Route route);
-
-    void removeRoutes();
-
     void showLocation(double latitude, double longitude);
-
-    void updateDistance(float elapsedDistance);
-
-    void updateStopwatch(long elapsedTime);
-
-    void updatePace(long pace);
-
-    void showInitialMetrics();
 
     void showDefaultLocation();
 
@@ -36,13 +22,6 @@ public interface RunningView {
 
     void showLocationPermissionRationale();
 
-    void showStopRunButton();
+    void launchRunningActivity();
 
-    void showStartRunButton();
-
-    void showSaveRunError();
-
-    void launchRunActivity(long runId);
-
-    void showStopConfirm();
 }

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_blue_grey_800_alpha">
+
+    <TextView
+        android:id="@+id/stopwatch"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:ems="8"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_running_initial_time"
+        android:textColor="@color/white"
+        android:textSize="62sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintBottom_toTopOf="@+id/pause_stop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/distance" />
+
+    <TextView
+        android:id="@+id/stopwatch_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_running_stopwatch_label"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/stopwatch"
+        app:layout_constraintEnd_toEndOf="@+id/stopwatch"
+        app:layout_constraintStart_toStartOf="@+id/stopwatch" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="4"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_running_initial_distance"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/stopwatch"
+        app:layout_constraintEnd_toStartOf="@id/calories"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="56dp" />
+
+    <TextView
+        android:id="@+id/distance_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_running_distance_label"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/distance"
+        app:layout_constraintEnd_toEndOf="@+id/distance"
+        app:layout_constraintStart_toStartOf="@+id/distance" />
+
+    <TextView
+        android:id="@+id/calories"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_running_initial_calories"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintBottom_toBottomOf="@+id/distance"
+        app:layout_constraintEnd_toStartOf="@+id/pace"
+        app:layout_constraintStart_toEndOf="@+id/distance"
+        app:layout_constraintTop_toTopOf="@+id/distance" />
+
+    <TextView
+        android:id="@+id/pace_calories_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_running_calories_label"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/calories"
+        app:layout_constraintEnd_toEndOf="@+id/calories"
+        app:layout_constraintStart_toStartOf="@+id/calories" />
+
+    <TextView
+        android:id="@+id/pace"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_running_initial_pace"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/calories"
+        app:layout_constraintStart_toEndOf="@+id/calories"
+        app:layout_constraintTop_toTopOf="@+id/calories" />
+
+    <TextView
+        android:id="@+id/pace_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_running_pace_label"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/pace"
+        app:layout_constraintEnd_toEndOf="@+id/pace"
+        app:layout_constraintStart_toStartOf="@+id/pace" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pause_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="14dp"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="120dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stopwatch"
+        app:maxImageSize="60dp"
+        app:srcCompat="@drawable/ic_pause"
+        app:tint="@color/md_black_1000" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,37 +4,48 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.itba.runningMate.R;
 import com.itba.runningMate.mainpage.fragments.pastruns.ui.PastRunsFragment;
 import com.itba.runningMate.mainpage.fragments.running.ui.RunningFragment;
 import com.itba.runningMate.mainpage.adapters.ViewPagerAdapter;
 
-import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainPageActivity extends AppCompatActivity {
+
+    private List<String> titleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tab_menu);
+        setContentView(R.layout.activity_mainpage);
+
+        titleList = new LinkedList<>();
+        titleList.add(getString(R.string.run));
+        titleList.add(getString(R.string.past));
+
         setUpTabs();
     }
 
 
     //todo: Averiguar si hace falta guardarse la instancia de los fragmentos
     private void setUpTabs() {
-        ViewPagerAdapter adapter =
-                new ViewPagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+        adapter.addFragment(new RunningFragment());
+        adapter.addFragment(new PastRunsFragment());
 
-        adapter.addFragment(getString(R.string.run), new RunningFragment());
-        adapter.addFragment(getString(R.string.past), new PastRunsFragment());
-        ViewPager vp = findViewById(R.id.viewPager);
-        vp.setAdapter(adapter);
-        TabLayout tb = findViewById(R.id.tabLayout);
-        tb.setupWithViewPager(vp);
+        ViewPager2 viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> tab.setText(titleList.get(position))
+        ).attach();
     }
 
     @Override

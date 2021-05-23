@@ -16,7 +16,8 @@ public class RunMapper {
                 .elapsedTime(entity.getElapsedTime())
                 .distance(entity.getDistance())
                 .pace(entity.getPace())
-                .velocity(entity.getVelocity());
+                .velocity(entity.getVelocity())
+                .calories(entity.getCalories());
     }
 
     public static RunEntity toEntity(final Run model) {
@@ -27,7 +28,8 @@ public class RunMapper {
                 .elapsedTime(model.getElapsedTime())
                 .distance(model.getDistance())
                 .pace(model.getPace())
-                .velocity(model.getVelocity());
+                .velocity(model.getVelocity())
+                .calories(model.getCalories());
     }
 
     public static List<Run> toModel(final List<RunEntity> entities) {

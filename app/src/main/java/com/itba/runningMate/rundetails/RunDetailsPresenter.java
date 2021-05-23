@@ -1,9 +1,15 @@
 package com.itba.runningMate.rundetails;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.utils.file.CacheFileProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
 import io.reactivex.Completable;
@@ -15,12 +21,18 @@ public class RunDetailsPresenter {
     private final WeakReference<RunDetailsView> view;
     private final RunRepository repo;
     private final SchedulerProvider sp;
+    private final CacheFileProvider cacheFileProvider;
     private final long itemId;
 
     private final CompositeDisposable disposables;
 
-    public RunDetailsPresenter(RunDetailsView view, RunRepository repo, SchedulerProvider sp, long itemId) {
+    public RunDetailsPresenter(final CacheFileProvider cacheFileProvider,
+                               final RunRepository repo,
+                               final SchedulerProvider sp,
+                               final long itemId,
+                               final RunDetailsView view) {
         this.view = new WeakReference<>(view);
+        this.cacheFileProvider = cacheFileProvider;
         this.repo = repo;
         this.sp = sp;
         this.itemId = itemId;
@@ -31,10 +43,10 @@ public class RunDetailsPresenter {
         disposables.add(repo.getRunMetrics(itemId)
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::receivedRunMetrics, this::onReceivedRunError));
+                .subscribe(this::onReceivedRunMetrics, this::onReceivedRunMetricsError));
     }
 
-    private void receivedRunMetrics(Run run) {
+    private void onReceivedRunMetrics(Run run) {
         if (view.get() != null) {
             view.get().bindRunMetrics(run);
         }
@@ -44,10 +56,10 @@ public class RunDetailsPresenter {
         disposables.add(repo.getRun(itemId)
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::onReceivedRun, this::onReceivedRunError));
+                .subscribe(this::onReceivedRun, this::onReceivedRunMetricsError));
     }
 
-    private void onReceivedRunError(Throwable throwable) {
+    private void onReceivedRunMetricsError(Throwable throwable) {
         Timber.d("Failed to retrieve run route from db for run-id: %l", itemId);
     }
 
@@ -61,20 +73,40 @@ public class RunDetailsPresenter {
         disposables.dispose();
     }
 
-    public void deleteRun() {
+    public void onDeleteButtonClick() {
         disposables.add(Completable.fromAction(() -> repo.deleteRun(itemId))
                 .subscribeOn(sp.computation())
                 .observeOn(sp.ui())
-                .subscribe(this::endRunDetail, this::onEndRunError));
+                .subscribe(this::onRunDeleted, this::onRunDeleteError));
     }
 
-    private void endRunDetail() {
+    public void onShareButtonClick() {
+        if (view.get() == null) {
+            return;
+        }
+        Bitmap bitmap = view.get().getMetricsImage();
+        File image = cacheFileProvider.getFile("runningmate-run-metrics.png");
+        Uri uri = null;
+        try {
+            FileOutputStream outputStream = new FileOutputStream(image);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            uri = cacheFileProvider.getUriForFile(image);
+        } catch (Exception e) {
+            view.get().showShareRunError();
+        }
+        view.get().shareImageIntent(uri, bitmap);
+    }
+
+    private void onRunDeleted() {
         if (view.get() != null) {
             view.get().endActivity();
         }
     }
 
-    private void onEndRunError(Throwable throwable) {
+    private void onRunDeleteError(Throwable throwable) {
         Timber.d("Failed to delete run from db for run-id: %l", itemId);
     }
+
 }

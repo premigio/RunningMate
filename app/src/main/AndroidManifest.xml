@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -42,6 +43,33 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.itba.runningMate"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <!-- we intend to request content
+                URIs for the images/subdirectory
+                of your private file area -->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/paths" />
+        </provider>
+
+
+        <activity android:name=".running.RunningActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="running"
+                    android:scheme="runningmate" />
+            </intent-filter>
+        </activity>
+
         <!-- Required for Android 10 (API level 29) and higher. -->
         <service
             android:name=".mainpage.fragments.running.services.location.TrackingService"
@@ -52,7 +80,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+            android:value="AIzaSyBifC20BsyylNSgFMv4gG8u0BcwnnmmZFc" />
     </application>
 
 </manifest>

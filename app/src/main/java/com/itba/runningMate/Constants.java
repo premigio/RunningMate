@@ -4,6 +4,9 @@ public class Constants {
 
     public static final String APPLICATION_PACKAGE = "com.itba.runningMate";
 
+    /* TODO:  */
+    public static final float WEIGHT = 76.5F;
+
     /* Notifications */
     public static final String NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID = "LocationServiceChannel";
     public static final String NOTIFICATION_LOCATION_SERVICE_CHANNEL_NAME = "Location Service Channel";
@@ -22,6 +25,6 @@ public class Constants {
     /* Tracking Service */
     public static final int LOCATION_UPDATE_INTERVAL = 5000;
     public static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
-    public static final long STOP_WATCH_UPDATE_INTERVAL = 100L;
+    public static final long STOP_WATCH_UPDATE_INTERVAL = 200L;
 
 }
