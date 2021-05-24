@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.domain.Route;
+import com.itba.runningMate.map.MapInScrollView;
 import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.file.CacheFileProviderImpl;
@@ -44,7 +45,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
 
     private GoogleMap googleMap;
-    private MapView mapView;
+    private MapInScrollView mapView;
     private TextView startDate, startTime, elapsedTtime, speed, pace, distance;
 
     private RunDetailsPresenter presenter;
