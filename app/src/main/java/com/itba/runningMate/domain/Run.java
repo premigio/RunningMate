@@ -8,7 +8,7 @@ import java.util.List;
 public class Run {
 
     private long uid;
-    private List<LatLng> route;
+    private List<List<LatLng>> route;
     private Date startTime;
     /* km */
     private float distance;
@@ -30,16 +30,16 @@ public class Run {
         return uid;
     }
 
-    public Run route(List<LatLng> route) {
+    public Run route(List<List<LatLng>> route) {
         this.route = route;
         return this;
     }
 
-    public List<LatLng> getRoute() {
+    public List<List<LatLng>> getRoute() {
         return route;
     }
 
-    public void setRoute(List<LatLng> route) {
+    public void setRoute(List<List<LatLng>> route) {
         this.route = route;
     }
 

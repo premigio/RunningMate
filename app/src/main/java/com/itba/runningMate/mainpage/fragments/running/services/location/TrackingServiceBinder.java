@@ -29,6 +29,14 @@ public class TrackingServiceBinder extends Binder implements Tracker {
         trackingService.stopTracking();
     }
 
+    public void newLap() {
+        trackingService.newLap();
+    }
+
+    public void resumeTracking() {
+        trackingService.resumeTracking();
+    }
+
     public void setOnTrackingUpdateListener(OnTrackingUpdateListener listener) {
         trackingService.setOnTrackingUpdateListener(listener);
     }

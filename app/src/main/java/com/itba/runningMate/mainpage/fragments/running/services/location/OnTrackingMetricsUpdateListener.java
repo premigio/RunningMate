@@ -7,4 +7,5 @@ public interface OnTrackingMetricsUpdateListener {
     void onDistanceUpdate(float elapsedDistance);
 
     void onPaceUpdate(long pace);
+
 }

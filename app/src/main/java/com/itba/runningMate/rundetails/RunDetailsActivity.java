@@ -180,7 +180,9 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     @Override
     public void showRoute(Route route) {
-        setMapPath(route.getLocations());
+        for (List<LatLng> lap : route.getLocations()) {
+            setMapPath(lap);
+        }
         setMapCenter(route.getLocations());
     }
 
@@ -194,13 +196,14 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
                 .addAll(route));
     }
 
-    private void setMapCenter(List<LatLng> route) {
-
+    private void setMapCenter(List<List<LatLng>> route) {
         if (route == null || route.isEmpty()) return;
 
         LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-        for (LatLng point : route) {
-            boundsBuilder.include(point);
+        for (List<LatLng> lap : route) {
+            for (LatLng point : lap) {
+                boundsBuilder.include(point);
+            }
         }
         LatLngBounds bounds = boundsBuilder.build();
 

@@ -29,6 +29,8 @@ import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateSt
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
@@ -57,7 +59,7 @@ public class RunningMapFragment extends Fragment implements OnMapReadyCallback, 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mainpage_running_map, container, false);
+        return inflater.inflate(R.layout.fragment_running_map, container, false);
     }
 
     @Override
@@ -126,10 +128,12 @@ public class RunningMapFragment extends Fragment implements OnMapReadyCallback, 
         if (route.isEmpty()) {
             return;
         }
-        googleMap.addPolyline(new PolylineOptions()
-                .color(Color.BLUE)
-                .width(8f)
-                .addAll(route.getLocations()));
+        for (List<LatLng> lap : route.getLocations()) {
+            googleMap.addPolyline(new PolylineOptions()
+                    .color(Color.BLUE)
+                    .width(8f)
+                    .addAll(lap));
+        }
     }
 
     public void createPresenter() {

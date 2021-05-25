@@ -9,52 +9,38 @@ import java.util.List;
 
 public class Route {
 
-    private final List<LatLng> locations;
+    private final List<List<LatLng>> locations;
 
     public Route() {
         locations = new LinkedList<>();
     }
 
-    public static Route from(List<LatLng> latLngs) {
+    public static Route from(List<List<LatLng>> latLngs) {
         Route route = new Route();
         route.addLatLngsToRoute(latLngs);
         return route;
     }
 
-    public List<LatLng> getLocations() {
+    public List<List<LatLng>> getLocations() {
         return locations;
     }
 
-    public List<Tuple<Double, Double>> getLocationsAsTuple() {
-        List<Tuple<Double, Double>> aux = new LinkedList<>();
-        for (LatLng location : locations) {
-            aux.add(Tuple.from(location.latitude, location.longitude));
-        }
-        return aux;
-    }
-
     public Route addToRoute(double latitude, double longitude) {
-        locations.add(new LatLng(latitude, longitude));
-        return this;
+        return addToRoute(new LatLng(latitude, longitude));
     }
 
     public Route addToRoute(LatLng location) {
-        locations.add(location);
-        return this;
-    }
-
-    public Route addTuplesToRoute(Collection<Tuple<Double, Double>> locations) {
-        for (Tuple<Double, Double> tuple : locations) {
-            this.locations.add(new LatLng(tuple.getA(), tuple.getB()));
+        if (locations.isEmpty()) {
+            this.locations.add(new LinkedList<>());
         }
+        locations.get(length() - 1).add(location);
         return this;
     }
 
-    public Route addLatLngsToRoute(Collection<LatLng> locations) {
+    public Route addLatLngsToRoute(List<List<LatLng>> locations) {
         this.locations.addAll(locations);
         return this;
     }
-
 
     public boolean isEmpty() {
         return locations.isEmpty();
@@ -65,11 +51,13 @@ public class Route {
     }
 
     public double getLastLatitude() {
-        return locations.get(length() - 1).latitude;
+        List<LatLng> lastLap = locations.get(length() - 1);
+        return lastLap.get(lastLap.size() - 1).latitude;
     }
 
     public double getLastLongitude() {
-        return locations.get(length() - 1).longitude;
+        List<LatLng> lastLap = locations.get(length() - 1);
+        return lastLap.get(lastLap.size() - 1).longitude;
     }
 
 }

@@ -50,7 +50,7 @@ public class PastRunsFragment extends Fragment implements PastRunsView, OnRunCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_past_runs, container, false);
+        return inflater.inflate(R.layout.fragment_mainpage_past_runs, container, false);
     }
 
     private void setUpRecyclerView(View view) {

@@ -8,6 +8,10 @@ public interface Tracker {
 
     void stopTracking();
 
+    void newLap();
+
+    void resumeTracking();
+
     Route queryRoute();
 
     long queryStartTime();
