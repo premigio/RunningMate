@@ -45,6 +45,8 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
     private static final SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
     private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
 
+    private FloatingActionButton pauseButton;
+    private FloatingActionButton playButton;
     private FloatingActionButton stopButton;
     private TextView stopWatch;
     private TextView distance;
@@ -63,32 +65,40 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         createPresenter();
 
-        stopButton = view.findViewById(R.id.pause_stop);
+        pauseButton = view.findViewById(R.id.pause);
+        playButton = view.findViewById(R.id.play);
+        stopButton = view.findViewById(R.id.stop);
         distance = view.findViewById(R.id.distance);
         pace = view.findViewById(R.id.pace);
         calories = view.findViewById(R.id.calories);
         stopWatch = view.findViewById(R.id.stopwatch);
 
-        setUpStopBtn();
+        setUpButtons();
+    }
+
+    private void setUpButtons() {
+        stopButton.setOnLongClickListener(l -> {
+            presenter.onStopButtonClick();
+            return true;
+        });
+        enlargeOnTouch(stopButton);
+        pauseButton.setOnClickListener(l -> presenter.onPauseButtonClick());
+        playButton.setOnClickListener(l -> presenter.onPlayButtonClick());
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setUpStopBtn() {
-        stopButton.setOnLongClickListener(l -> {
-            presenter.onStartStopButtonClick();
-            return true;
-        });
-        stopButton.setOnTouchListener((v, event) -> {
+    private void enlargeOnTouch(FloatingActionButton btn) {
+        btn.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 float x = (float) 1.25;
                 float y = (float) 1.25;
-                stopButton.setScaleX(x);
-                stopButton.setScaleY(y);
+                btn.setScaleX(x);
+                btn.setScaleY(y);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 float x = 1;
                 float y = 1;
-                stopButton.setScaleX(x);
-                stopButton.setScaleY(y);
+                btn.setScaleX(x);
+                btn.setScaleY(y);
             }
             return false;
         });
@@ -220,5 +230,35 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
                 .setNegativeButton(R.string.no, (dialog, which) -> {
                 })
                 .show();
+    }
+
+    @Override
+    public void showStopBtn() {
+        stopButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showPlayBtn() {
+        playButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showPauseBtn() {
+        pauseButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideStopBtn() {
+        stopButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hidePlayBtn() {
+        playButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hidePauseBtn() {
+        pauseButton.setVisibility(View.INVISIBLE);
     }
 }

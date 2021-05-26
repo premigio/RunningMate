@@ -70,7 +70,7 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
     }
 
     public void stopRun() {
-        if (isTrackerAttached && tracker.isTracking()) {
+        if (isTrackerAttached) {
             tracker.stopTracking();
             float distKm = tracker.queryDistance();
             long timeMillis = tracker.queryElapsedTime();
@@ -83,9 +83,6 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
                     .velocity(tracker.queryVelocity())
                     .calories(RunMetrics.calculateCalories(distKm, Constants.WEIGHT));
             saveRun(run);
-        }
-        if (view.get() != null) {
-            view.get().showInitialMetrics();
         }
     }
 
@@ -114,16 +111,39 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
         view.get().updatePace(pace);
     }
 
-    public void onStartStopButtonClick() {
+    public void onStopButtonClick() {
+        if (view.get() == null || !isTrackerAttached) {
+            return;
+        }
+        if (tracker.queryDistance() < DISTANCE_EPSILON) {
+            view.get().showStopConfirm();
+        } else {
+            stopRun();
+        }
+    }
+
+    public void onPlayButtonClick() {
+        if (view.get() == null || !isTrackerAttached) {
+            return;
+        }
+        if (!tracker.isTracking()) {
+            tracker.newLap();
+            tracker.resumeTracking();
+            view.get().hidePlayBtn();
+            view.get().hideStopBtn();
+            view.get().showPauseBtn();
+        }
+    }
+
+    public void onPauseButtonClick() {
         if (view.get() == null || !isTrackerAttached) {
             return;
         }
         if (tracker.isTracking()) {
-            if (tracker.queryDistance() < DISTANCE_EPSILON) {
-                view.get().showStopConfirm();
-            } else {
-                stopRun();
-            }
+            tracker.stopTracking();
+            view.get().hidePauseBtn();
+            view.get().showPlayBtn();
+            view.get().showStopBtn();
         }
     }
 

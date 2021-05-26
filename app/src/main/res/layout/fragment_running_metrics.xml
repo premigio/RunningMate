@@ -20,7 +20,7 @@
         android:textSize="62sp"
         android:textStyle="bold|italic"
         android:typeface="sans"
-        app:layout_constraintBottom_toTopOf="@+id/pause_stop"
+        app:layout_constraintBottom_toTopOf="@+id/pause"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_default="percent"
         app:layout_constraintHeight_percent="0.15"
@@ -130,7 +130,7 @@
         app:layout_constraintStart_toStartOf="@+id/pace" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/pause_stop"
+        android:id="@+id/pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -144,6 +144,40 @@
         app:maxImageSize="60dp"
         app:srcCompat="@drawable/ic_pause"
         app:tint="@color/md_black_1000" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="14dp"
+        android:visibility="gone"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="120dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/play"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stopwatch"
+        app:maxImageSize="60dp"
+        app:srcCompat="@drawable/ic_stop"
+        app:tint="@color/md_black_1000" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="14dp"
+        android:visibility="gone"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="120dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/stop"
+        app:layout_constraintTop_toBottomOf="@+id/stopwatch"
+        app:maxImageSize="60dp"
+        app:srcCompat="@drawable/ic_play"
+        app:tint="@color/black" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,8 +7,6 @@ import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker
 
 import java.lang.ref.WeakReference;
 
-import io.reactivex.disposables.Disposable;
-
 public class RunningMapPresenter implements OnTrackingLocationUpdateListener {
 
     private final WeakReference<RunningMapView> view;
@@ -16,7 +14,6 @@ public class RunningMapPresenter implements OnTrackingLocationUpdateListener {
 
     private Tracker tracker;
     private boolean isTrackerAttached;
-    private Disposable disposable;
 
     public RunningMapPresenter(final RunningStateStorage stateStorage,
                                final RunningMapView view) {

@@ -1,134 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/md_blue_grey_800_alpha">
+    android:layout_height="match_parent">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/run_detail_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@id/run_detail_start_date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/run_detail_start_date"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:fontFamily="@font/anton"
-        android:gravity="start"
-        android:padding="5dp"
-        android:text="Sabado 14 de Mayo"
-        android:textColor="@color/md_white_1000"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:typeface="sans"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/run_detail_map" />
+        android:background="@color/md_blue_grey_800_alpha">
 
-    <Space
-        android:id="@+id/run_detail_space_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/run_detail_start_date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/run_detail_start_date"
-        app:layout_constraintVertical_bias="0.8" />
+        <com.itba.runningMate.map.MapInScrollView
+            android:id="@+id/run_detail_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="450dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@id/run_detail_start_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/run_detail_start_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/anton"
+            android:gravity="start"
+            android:padding="5dp"
+            android:text="Sabado 14 de Mayo"
+            android:textColor="@color/md_white_1000"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/run_detail_map" />
 
-    <TextView
-        android:id="@+id/run_detail_start_time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="start"
-        android:text="16:00"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/run_detail_start_date"
-        app:layout_constraintStart_toStartOf="@+id/run_detail_start_date"
-        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_1" />
-
-
-    <!--
-    android.support.v4.widget.Space es una solucion mas economica pero no me esta funcionando por un tema de dependencias
-    -->
-    <!--    <View-->
-    <!--        android:id="@+id/run_detail_divider"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="2dp"-->
-    <!--        android:layout_marginTop="5dp"-->
-    <!--        android:background="@color/md_white_1000"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/run_detail_metrics"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/run_detail_start_time"-->
-    <!--        app:layout_constraintWidth_default="percent"-->
-    <!--        app:layout_constraintWidth_percent="0.8" />-->
-
-    <include
-        android:id="@+id/run_detail_metrics"
-        layout="@layout/activity_run_details_metrics"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_run_detail_delete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/run_detail_start_time" />
-
-    <Button
-        android:id="@+id/btn_run_detail_delete"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="center"
-        android:text="@string/btn_run_details_delete"
-        android:textColor="@color/md_red_500"
-        app:elevation="10dp"
-        app:icon="@drawable/ic_delete"
-        app:iconTint="@color/md_red_500"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_run_detail_share"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/run_detail_metrics"
-        app:strokeColor="@color/md_red_500"
-        app:strokeWidth="2dp" />
+        <Space
+            android:id="@+id/run_detail_space_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/run_detail_start_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/run_detail_start_date"
+            app:layout_constraintVertical_bias="0.8" />
 
 
-    <Button
-        android:id="@+id/btn_run_detail_share"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="center"
-        android:text="@string/btn_run_details_share"
-        android:textColor="@color/md_blue_200"
-        app:elevation="10dp"
-        app:icon="@drawable/ic_share_variant"
-        app:iconTint="@color/md_blue_200"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_run_detail_delete"
-        app:layout_constraintTop_toTopOf="@id/btn_run_detail_delete"
-        app:strokeColor="@color/md_blue_200"
-        app:strokeWidth="2dp" />
+        <TextView
+            android:id="@+id/run_detail_start_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="start"
+            android:text="16:00"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/run_detail_start_date"
+            app:layout_constraintStart_toStartOf="@+id/run_detail_start_date"
+            app:layout_constraintTop_toBottomOf="@+id/run_detail_space_1" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--
+        android.support.v4.widget.Space es una solucion mas economica pero no me esta funcionando por un tema de dependencias
+        -->
+        <!--    <View-->
+        <!--        android:id="@+id/run_detail_divider"-->
+        <!--        android:layout_width="0dp"-->
+        <!--        android:layout_height="2dp"-->
+        <!--        android:layout_marginTop="5dp"-->
+        <!--        android:background="@color/md_white_1000"-->
+        <!--        app:layout_constraintBottom_toTopOf="@+id/run_detail_metrics"-->
+        <!--        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--        app:layout_constraintStart_toStartOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/run_detail_start_time"-->
+        <!--        app:layout_constraintWidth_default="percent"-->
+        <!--        app:layout_constraintWidth_percent="0.8" />-->
+
+        <include
+            android:id="@+id/run_detail_metrics"
+            layout="@layout/activity_run_details_metrics"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_run_detail_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/run_detail_start_time" />
+
+        <Button
+            android:id="@+id/btn_run_detail_delete"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/btn_run_details_delete"
+            android:textColor="@color/md_red_500"
+            app:elevation="10dp"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/md_red_500"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_run_detail_share"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/run_detail_metrics"
+            app:strokeColor="@color/md_red_500"
+            app:strokeWidth="2dp" />
+
+
+        <Button
+            android:id="@+id/btn_run_detail_share"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/btn_run_details_share"
+            android:textColor="@color/md_blue_200"
+            app:elevation="10dp"
+            app:icon="@drawable/ic_share_variant"
+            app:iconTint="@color/md_blue_200"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_run_detail_delete"
+            app:layout_constraintTop_toTopOf="@id/btn_run_detail_delete"
+            app:strokeColor="@color/md_blue_200"
+            app:strokeWidth="2dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

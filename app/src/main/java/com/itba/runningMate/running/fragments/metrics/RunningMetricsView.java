@@ -21,4 +21,18 @@ public interface RunningMetricsView {
     void launchRunActivity(long runId);
 
     void showStopConfirm();
+
+    void showStopBtn();
+
+    void showPlayBtn();
+
+    void showPauseBtn();
+
+    void hideStopBtn();
+
+    void hidePlayBtn();
+
+    void hidePauseBtn();
+
+
 }

@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,6 +33,7 @@ import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateSt
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorageImpl;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.map.MapInViewPager;
 
 import timber.log.Timber;
 
@@ -44,9 +44,7 @@ import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
 
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
-    // todo: save presenter and saveinstance fragment
-
-    private MapView mapView;
+    private MapInViewPager mapView;
     private GoogleMap googleMap;
 
     private RunningPresenter presenter;
@@ -54,7 +52,7 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_running, container, false);
+        return inflater.inflate(R.layout.fragment_mainpage_running, container, false);
     }
 
     private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {

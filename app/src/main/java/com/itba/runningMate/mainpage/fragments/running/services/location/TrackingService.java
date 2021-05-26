@@ -57,9 +57,11 @@ public class TrackingService extends Service {
     private boolean isTracking;
 
     private LatLng lastLocation;
-    private List<LatLng> trackedLocations;
+    private List<List<LatLng>> trackedLocations;
+    private List<LatLng> currentLapLocations;
     private float elapsedDistance;
     private long startTimeMillis;
+    private long lastTimeMillis;
     private long lastTimeUpdateMillis;
     private long elapsedMillis;
     private long pace;
@@ -109,8 +111,10 @@ public class TrackingService extends Service {
     public void startTracking() {
         startForegroundService();
         trackedLocations = new LinkedList<>();
+        currentLapLocations = new LinkedList<>();
+        trackedLocations.add(currentLapLocations);
         if (lastLocation != null) {
-            trackedLocations.add(lastLocation);
+            currentLapLocations.add(lastLocation);
         }
         elapsedMillis = 0L;
         lastTimeUpdateMillis = 0L;
@@ -118,6 +122,7 @@ public class TrackingService extends Service {
         pace = 0L;
         isTracking = true;
         startTimeMillis = System.currentTimeMillis();
+        lastTimeMillis = startTimeMillis;
 //        if (areListeners(onTrackingMetricsUpdateListeners)) {
         serviceHandler.post(this::stopWatch);
 //        }
@@ -125,6 +130,17 @@ public class TrackingService extends Service {
 
     public boolean isTracking() {
         return isTracking;
+    }
+
+    public void resumeTracking() {
+        isTracking = true;
+        lastTimeMillis = System.currentTimeMillis();
+        serviceHandler.post(this::stopWatch);
+    }
+
+    public void newLap() {
+        currentLapLocations = new LinkedList<>();
+        trackedLocations.add(currentLapLocations);
     }
 
     public void stopTracking() {
@@ -196,7 +212,7 @@ public class TrackingService extends Service {
         }
     }
 
-    public List<LatLng> getTrackedLocations() {
+    public List<List<LatLng>> getTrackedLocations() {
         return trackedLocations;
     }
 
@@ -237,9 +253,9 @@ public class TrackingService extends Service {
         }
         lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
         if (isTracking) {
-            trackedLocations.add(lastLocation);
-            if (trackedLocations.size() >= 2) {
-                LatLng prev = trackedLocations.get(trackedLocations.size() - 2);
+            currentLapLocations.add(lastLocation);
+            if (currentLapLocations.size() >= 2) {
+                LatLng prev = currentLapLocations.get(currentLapLocations.size() - 2);
                 elapsedDistance += RunMetrics.calculateDistance(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude());
                 pace = RunMetrics.calculatePace(elapsedDistance, elapsedMillis);
                 callbackDistanceUpdate(elapsedDistance);
@@ -285,8 +301,9 @@ public class TrackingService extends Service {
 
     private void stopWatch() {
         if (isTracking && areListeners(onTrackingMetricsUpdateListeners)) {
-            elapsedMillis = System.currentTimeMillis() - startTimeMillis;
-
+            long currentMillis = System.currentTimeMillis();
+            elapsedMillis += currentMillis - lastTimeMillis;
+            lastTimeMillis = currentMillis;
             /*
                 lastTimeUpdateMillis is the time of the last time update,
                 we just want to send updates when a second has elapsed

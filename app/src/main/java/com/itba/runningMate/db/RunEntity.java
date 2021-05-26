@@ -18,7 +18,7 @@ public class RunEntity {
     public long uid;
 
     @ColumnInfo(name = "route")
-    public List<LatLng> route;
+    public List<List<LatLng>> route;
 
     @ColumnInfo(name = "start_time")
     public Date startTime;
@@ -54,16 +54,16 @@ public class RunEntity {
         this.uid = uid;
     }
 
-    public RunEntity route(List<LatLng> route) {
+    public RunEntity route(List<List<LatLng>> route) {
         this.route = route;
         return this;
     }
 
-    public List<LatLng> getRoute() {
+    public List<List<LatLng>> getRoute() {
         return route;
     }
 
-    public void setRoute(List<LatLng> route) {
+    public void setRoute(List<List<LatLng>> route) {
         this.route = route;
     }
 

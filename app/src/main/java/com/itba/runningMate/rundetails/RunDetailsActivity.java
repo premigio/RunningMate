@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.domain.Route;
+import com.itba.runningMate.map.MapInScrollView;
 import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.file.CacheFileProviderImpl;
@@ -44,7 +45,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
 
     private GoogleMap googleMap;
-    private MapView mapView;
+    private MapInScrollView mapView;
     private TextView startDate, startTime, elapsedTtime, speed, pace, distance;
 
     private RunDetailsPresenter presenter;
@@ -179,7 +180,9 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     @Override
     public void showRoute(Route route) {
-        setMapPath(route.getLocations());
+        for (List<LatLng> lap : route.getLocations()) {
+            setMapPath(lap);
+        }
         setMapCenter(route.getLocations());
     }
 
@@ -193,13 +196,14 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
                 .addAll(route));
     }
 
-    private void setMapCenter(List<LatLng> route) {
-
+    private void setMapCenter(List<List<LatLng>> route) {
         if (route == null || route.isEmpty()) return;
 
         LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-        for (LatLng point : route) {
-            boundsBuilder.include(point);
+        for (List<LatLng> lap : route) {
+            for (LatLng point : lap) {
+                boundsBuilder.include(point);
+            }
         }
         LatLngBounds bounds = boundsBuilder.build();
 
