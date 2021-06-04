@@ -22,10 +22,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
@@ -35,8 +33,6 @@ import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker
 import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
 import com.itba.runningMate.map.MapInViewPager;
 
-import timber.log.Timber;
-
 import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
 import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
 import static com.itba.runningMate.Constants.DEFAULT_ZOOM;
@@ -45,7 +41,6 @@ import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
     private MapInViewPager mapView;
-    private GoogleMap googleMap;
 
     private RunningPresenter presenter;
 
@@ -159,66 +154,37 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
     @Override
     public void showDefaultLocation() {
-        showLocation(DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_ZOOM);
-    }
-
-    private void showLocation(double latitude, double longitude, float zoom) {
-        if (googleMap != null) {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
-        }
+        mapView.showDefaultLocation();
     }
 
     @Override
     public void showLocation(double latitude, double longitude) {
-        showLocation(latitude, longitude, MY_LOCATION_ZOOM);
+        mapView.showLocation(latitude, longitude, MY_LOCATION_ZOOM);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
+        mapView.bind(googleMap);
         setupGoogleMap();
         presenter.onMapAttached();
     }
 
     private void setupGoogleMap() {
-        if (googleMap == null) {
-            return;
-        }
-        try {
-            googleMap.setOnCameraMoveStartedListener(mapCameraListener);
-            googleMap.setOnMyLocationButtonClickListener(mapMyLocationButtonListener);
-            googleMap.getUiSettings().setCompassEnabled(true);
-        } catch (SecurityException e) {
-            Timber.e("Exception: %s", e.getMessage());
-        }
+        mapView.setOnCameraMoveStartedListener(mapCameraListener);
+        mapView.setOnMyLocationButtonClickListener(mapMyLocationButtonListener);
+        mapView.setCompassEnabled(true);
     }
 
     @Override
     @SuppressLint("MissingPermission")
     public void mapEnableMyLocation() {
-        if (googleMap == null) {
-            return;
-        }
-        try {
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        } catch (SecurityException e) {
-            Timber.e("Exception: %s", e.getMessage());
-        }
+        mapView.enableMyLocation();
     }
 
     @Override
     @SuppressLint("MissingPermission")
     public void mapDisableMyLocation() {
-        if (googleMap == null) {
-            return;
-        }
-        try {
-            googleMap.setMyLocationEnabled(false);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        } catch (SecurityException e) {
-            Timber.e("Exception: %s", e.getMessage());
-        }
+        mapView.disableMyLocation();
     }
 
     public void showLocationPermissionRationale() {
