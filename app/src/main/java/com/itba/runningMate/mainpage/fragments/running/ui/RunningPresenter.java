@@ -34,8 +34,8 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
 
     public void onViewDetached() {
         stateStorage.persistState();
-        tracker.removeTrackingLocationUpdateListener(this);
-        if (view.get() != null) {
+        if (isTrackerAttached && view.get() != null) {
+            tracker.removeTrackingLocationUpdateListener(this);
             view.get().detachTrackingService();
         }
     }

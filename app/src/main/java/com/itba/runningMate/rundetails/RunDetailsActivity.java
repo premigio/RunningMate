@@ -34,7 +34,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     private static final String RUN_ID = "run-id";
 
     private Map mapView;
-    private TextView startDate, startTime, elapsedTtime, speed, pace, distance;
+    private TextView startDate, startTime, elapsedTime, speed, pace, distance;
 
     private RunDetailsPresenter presenter;
 
@@ -66,7 +66,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         distance = findViewById(R.id.distance);
         startDate = findViewById(R.id.run_detail_start_date);
         startTime = findViewById(R.id.run_detail_start_time);
-        elapsedTtime = findViewById(R.id.stopwatch);
+        elapsedTime = findViewById(R.id.stopwatch);
 
 
         //Creo el botón para volver
@@ -162,7 +162,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     @Override
     public void showElapsedTime(String elapsedTime) {
-        this.elapsedTtime.setText(elapsedTime);
+        this.elapsedTime.setText(elapsedTime);
     }
 
     @Override
@@ -210,6 +210,12 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     @Override
     public void showShareRunError() {
         Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
 
 }
