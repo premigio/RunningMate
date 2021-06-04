@@ -36,6 +36,7 @@ import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -171,7 +172,7 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
 
     @Override
     public void updatePace(long pace) {
-        this.pace.setText(paceFormatter.format(RunConverters.fromTimestamp(pace)));
+        this.pace.setText(paceFormatter.format(new Date(pace)));
     }
 
     @Override

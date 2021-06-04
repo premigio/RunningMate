@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -232,7 +231,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         return super.onOptionsItemSelected(item);
     }
 
-    public void shareImageIntent(Uri uri, Bitmap bitmap) {
+    public void shareImageIntent(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setType("image/png");
