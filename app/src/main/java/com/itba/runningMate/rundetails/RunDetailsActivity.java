@@ -3,7 +3,6 @@ package com.itba.runningMate.rundetails;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -18,38 +17,26 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
 import com.itba.runningMate.db.RunDb;
 import com.itba.runningMate.domain.Route;
-import com.itba.runningMate.map.MapInScrollView;
+import com.itba.runningMate.map.Map;
 import com.itba.runningMate.repository.run.RunRepositoryImpl;
 import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.file.CacheFileProviderImpl;
 import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
-import java.util.List;
-
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 
-    private static final int PADDING = 20; // padding de los puntos en el mapa
     private static final String RUN_ID = "run-id";
 
-
-    private GoogleMap googleMap;
-    private MapInScrollView mapView;
+    private Map mapView;
     private TextView startDate, startTime, elapsedTtime, speed, pace, distance;
 
     private RunDetailsPresenter presenter;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -180,41 +167,13 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     @Override
     public void showRoute(Route route) {
-        for (List<LatLng> lap : route.getLocations()) {
-            setMapPath(lap);
-        }
-        setMapCenter(route.getLocations());
-    }
-
-    private void setMapPath(List<LatLng> route) {
-        if (route == null || route.isEmpty()) {
-            return;
-        }
-        googleMap.addPolyline(new PolylineOptions()
-                .color(Color.BLUE)
-                .width(8f)
-                .addAll(route));
-    }
-
-    private void setMapCenter(List<List<LatLng>> route) {
-        if (route == null || route.isEmpty()) return;
-
-        LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-        for (List<LatLng> lap : route) {
-            for (LatLng point : lap) {
-                boundsBuilder.include(point);
-            }
-        }
-        LatLngBounds bounds = boundsBuilder.build();
-
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, PADDING);
-
-        googleMap.moveCamera(cu);
+        mapView.showRoute(route);
+        mapView.centerMapOn(route);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
+        mapView.bind(googleMap);
         presenter.onMapAttached();
     }
 
@@ -232,7 +191,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         return super.onOptionsItemSelected(item);
     }
 
-    public void shareImageIntent(Uri uri, Bitmap bitmap) {
+    public void shareImageIntent(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setType("image/png");

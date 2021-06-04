@@ -23,7 +23,7 @@ public interface RunDetailsView {
 
     void endActivity();
 
-    void shareImageIntent(Uri uri, Bitmap bitmap);
+    void shareImageIntent(Uri uri);
 
     Bitmap getMetricsImage();
 

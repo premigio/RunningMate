@@ -317,6 +317,10 @@ public class TrackingService extends Service {
     }
 
     private boolean areEqualLocations(double latitudeA, double longitudeA, double latitudeB, double longitudeB) {
+        latitudeA = (double) Math.round(latitudeA * 100000D) / 100000D;
+        longitudeA = (double) Math.round(longitudeA * 100000D) / 100000D;
+        latitudeB = (double) Math.round(latitudeB * 100000D) / 100000D;
+        longitudeB = (double) Math.round(longitudeB * 100000D) / 100000D;
         return Double.compare(latitudeA, latitudeB) == 0 && Double.compare(longitudeA, longitudeB) == 0;
     }
 

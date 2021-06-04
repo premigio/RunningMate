@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -16,33 +15,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorageImpl;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.map.Map;
 
-import java.util.List;
-
-import timber.log.Timber;
-
-import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
-import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
-import static com.itba.runningMate.Constants.DEFAULT_ZOOM;
 import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
 
 
 public class RunningMapFragment extends Fragment implements OnMapReadyCallback, RunningMapView, ServiceConnection {
 
-    private MapView mapView;
-    private GoogleMap googleMap;
+    private Map mapView;
 
     private RunningMapPresenter presenter;
     private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
@@ -125,15 +113,7 @@ public class RunningMapFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void showRoute(Route route) {
-        if (route.isEmpty()) {
-            return;
-        }
-        for (List<LatLng> lap : route.getLocations()) {
-            googleMap.addPolyline(new PolylineOptions()
-                    .color(Color.BLUE)
-                    .width(8f)
-                    .addAll(lap));
-        }
+        mapView.showRoute(route);
     }
 
     public void createPresenter() {
@@ -145,40 +125,26 @@ public class RunningMapFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void showDefaultLocation() {
-        showLocation(DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_ZOOM);
-    }
-
-    private void showLocation(double latitude, double longitude, float zoom) {
-        if (googleMap != null) {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
-        }
+        mapView.showDefaultLocation();
     }
 
     @Override
     public void showLocation(double latitude, double longitude) {
-        showLocation(latitude, longitude, MY_LOCATION_ZOOM);
+        mapView.showLocation(latitude, longitude, MY_LOCATION_ZOOM);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
+        mapView.bind(googleMap);
         setupGoogleMap();
         presenter.onMapAttached();
     }
 
     private void setupGoogleMap() {
-        if (googleMap == null) {
-            return;
-        }
-        try {
-            googleMap.setOnCameraMoveStartedListener(mapCameraListener);
-            googleMap.setOnMyLocationButtonClickListener(mapMyLocationButtonListener);
-            googleMap.getUiSettings().setCompassEnabled(true);
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        } catch (SecurityException e) {
-            Timber.e("Exception: %s", e.getMessage());
-        }
+        mapView.setOnCameraMoveStartedListener(mapCameraListener);
+        mapView.setOnMyLocationButtonClickListener(mapMyLocationButtonListener);
+        mapView.setCompassEnabled(true);
+        mapView.enableMyLocation();
     }
 
     @Override
@@ -198,6 +164,4 @@ public class RunningMapFragment extends Fragment implements OnMapReadyCallback, 
         mapView.onSaveInstanceState(outState);
     }
 
-
 }
-

@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 
-public class MapInViewPager extends MapView {
+public class MapInViewPager extends Map {
 
 //    https://stackoverflow.com/questions/17661084/android-maps-dont-scroll-horizontally
 //    https://stackoverflow.com/questions/61023565/google-map-viewpager2-swiping-conflict

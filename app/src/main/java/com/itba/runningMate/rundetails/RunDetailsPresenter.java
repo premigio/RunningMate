@@ -109,7 +109,7 @@ public class RunDetailsPresenter {
         } catch (Exception e) {
             view.get().showShareRunError();
         }
-        view.get().shareImageIntent(uri, bitmap);
+        view.get().shareImageIntent(uri);
     }
 
     private void onRunDeleted() {
