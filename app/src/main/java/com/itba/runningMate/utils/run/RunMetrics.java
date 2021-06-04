@@ -44,12 +44,16 @@ public class RunMetrics {
         return (long) (distanceKm != 0F ? (timeMillis / distanceKm) : 0L);
     }
 
-    public static int calculateCalories(float distanceKm, float weightKg) {
+    public static int calculateCalories(float distanceKm) {
         /*
          * https://fitness.stackexchange.com/questions/15608/energy-expenditure-calories-burned-equation-for-running/25564#25564
          * calories burned = distance run (kilometres) x weight of runner (kilograms) x 1.036
          * */
-        return Math.round(distanceKm * weightKg * 1.036f);
+        /*
+         * Broadly speaking, the estimate of 62 calories oer kilometer is more like a minimum of what
+         * you can expect to burn while running.
+         * ref: coachmag.co.uk */
+        return Math.round(distanceKm * 62.0F);
     }
 
 }

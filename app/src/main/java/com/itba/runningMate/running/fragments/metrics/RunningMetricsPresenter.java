@@ -81,7 +81,7 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
                     .distance(distKm)
                     .pace(tracker.queryPace())
                     .velocity(tracker.queryVelocity())
-                    .calories(RunMetrics.calculateCalories(distKm, Constants.WEIGHT));
+                    .calories(RunMetrics.calculateCalories(distKm));
             saveRun(run);
         }
     }
@@ -100,7 +100,7 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
             return;
         }
         view.get().updateDistance(elapsedDistance);
-        view.get().updateCalories(RunMetrics.calculateCalories(elapsedDistance, Constants.WEIGHT));
+        view.get().updateCalories(RunMetrics.calculateCalories(elapsedDistance));
     }
 
     @Override
