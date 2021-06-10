@@ -15,21 +15,21 @@ public class PastRunsPresenter {
 
     private final WeakReference<PastRunsView> view;
     private final RunRepository runRepository;
-    private final SchedulerProvider sp;
+    private final SchedulerProvider schedulerProvider;
 
     private Disposable disposable;
 
 
-    public PastRunsPresenter(final SchedulerProvider sp, final RunRepository runRepository, PastRunsView view) {
+    public PastRunsPresenter(final SchedulerProvider schedulerProvider, final RunRepository runRepository, PastRunsView view) {
         this.view = new WeakReference<>(view);
         this.runRepository = runRepository;
-        this.sp = sp;
+        this.schedulerProvider = schedulerProvider;
     }
 
     public void onViewAttached() {
         disposable = runRepository.getRunLazy()
-                .subscribeOn(sp.computation())
-                .observeOn(sp.ui())
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
                 .subscribe(this::receivedRunList, this::onRunListError);
 
     }
