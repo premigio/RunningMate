@@ -27,7 +27,7 @@ public class RunDetailsPresenter {
 
     private final WeakReference<RunDetailsView> view;
     private final RunRepository repo;
-    private final SchedulerProvider sp;
+    private final SchedulerProvider schedulerProvider;
     private final CacheFileProvider cacheFileProvider;
     private final long itemId;
 
@@ -35,21 +35,21 @@ public class RunDetailsPresenter {
 
     public RunDetailsPresenter(final CacheFileProvider cacheFileProvider,
                                final RunRepository repo,
-                               final SchedulerProvider sp,
+                               final SchedulerProvider schedulerProvider,
                                final long itemId,
                                final RunDetailsView view) {
         this.view = new WeakReference<>(view);
         this.cacheFileProvider = cacheFileProvider;
         this.repo = repo;
-        this.sp = sp;
+        this.schedulerProvider = schedulerProvider;
         this.itemId = itemId;
         this.disposables = new CompositeDisposable();
     }
 
     public void onViewAttached() {
         disposables.add(repo.getRunMetrics(itemId)
-                .subscribeOn(sp.computation())
-                .observeOn(sp.ui())
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
                 .subscribe(this::onReceivedRunMetrics, this::onReceivedRunMetricsError));
     }
 
@@ -67,8 +67,8 @@ public class RunDetailsPresenter {
 
     public void onMapAttached() {
         disposables.add(repo.getRun(itemId)
-                .subscribeOn(sp.computation())
-                .observeOn(sp.ui())
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
                 .subscribe(this::onReceivedRun, this::onReceivedRunMetricsError));
     }
 
@@ -88,8 +88,8 @@ public class RunDetailsPresenter {
 
     public void onDeleteButtonClick() {
         disposables.add(Completable.fromAction(() -> repo.deleteRun(itemId))
-                .subscribeOn(sp.computation())
-                .observeOn(sp.ui())
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
                 .subscribe(this::onRunDeleted, this::onRunDeleteError));
     }
 

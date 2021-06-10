@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -18,9 +17,10 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.itba.runningMate.R;
+import com.itba.runningMate.di.DependencyContainer;
+import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorageImpl;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
 import com.itba.runningMate.map.Map;
@@ -117,8 +117,9 @@ public class RunningMapFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     public void createPresenter() {
-        final SharedPreferences preferences = this.getActivity().getSharedPreferences(RunningStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
-        final RunningStateStorage stateStorage = new RunningStateStorageImpl(preferences);
+
+        final DependencyContainer container = DependencyContainerLocator.locateComponent(this.getActivity());
+        final RunningStateStorage stateStorage = container.getRunningStateStorage();
 
         presenter = new RunningMapPresenter(stateStorage, this);
     }

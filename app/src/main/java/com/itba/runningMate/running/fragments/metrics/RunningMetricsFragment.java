@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -23,15 +22,12 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.itba.runningMate.R;
-import com.itba.runningMate.db.RunConverters;
-import com.itba.runningMate.db.RunDb;
+import com.itba.runningMate.di.DependencyContainer;
+import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorageImpl;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.repository.run.RunRepositoryImpl;
-import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.text.DecimalFormat;
@@ -146,12 +142,11 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
     }
 
     public void createPresenter() {
-        final SharedPreferences preferences = this.getActivity().getSharedPreferences(RunningStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
-        final RunningStateStorage stateStorage = new RunningStateStorageImpl(preferences);
-        final SchedulerProvider schedulerProvider = new AndroidSchedulerProvider();
-        final RunRepository runRepository = new RunRepositoryImpl(
-                RunDb.getInstance(this.getActivity().getApplicationContext()).RunDao(),
-                schedulerProvider);
+        final DependencyContainer container = DependencyContainerLocator.locateComponent(this.getActivity());
+        final RunningStateStorage stateStorage = container.getRunningStateStorage();
+        final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
+        final RunRepository runRepository = container.getRunRepository();
+
         presenter = new RunningMetricsPresenter(stateStorage, runRepository, schedulerProvider, this);
     }
 

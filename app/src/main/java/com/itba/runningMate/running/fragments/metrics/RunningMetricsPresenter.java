@@ -1,6 +1,5 @@
 package com.itba.runningMate.running.fragments.metrics;
 
-import com.itba.runningMate.Constants;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
 import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingMetricsUpdateListener;

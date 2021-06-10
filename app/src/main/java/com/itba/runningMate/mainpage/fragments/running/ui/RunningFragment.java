@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,21 +26,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.itba.runningMate.Constants;
 import com.itba.runningMate.R;
+import com.itba.runningMate.di.DependencyContainer;
+import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorageImpl;
 import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
 import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
 import com.itba.runningMate.map.MapInViewPager;
 
-import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
-import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
-import static com.itba.runningMate.Constants.DEFAULT_ZOOM;
 import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
 
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 
     private MapInViewPager mapView;
-
     private RunningPresenter presenter;
 
     @Nullable
@@ -239,12 +235,9 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
     }
 
     public void createPresenter() {
-        /*presenter = (LandingPresenter) getLastNonConfigurationInstance();
-        if (presenter == null) {*/
-        final SharedPreferences preferences = this.getActivity().getSharedPreferences(RunningStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
-        final RunningStateStorage stateStorage = new RunningStateStorageImpl(preferences);
+        final DependencyContainer container = DependencyContainerLocator.locateComponent(this.getActivity());
+        final RunningStateStorage stateStorage = container.getRunningStateStorage();
         presenter = new RunningPresenter(stateStorage, this);
-        /*}*/
     }
 
     @Override

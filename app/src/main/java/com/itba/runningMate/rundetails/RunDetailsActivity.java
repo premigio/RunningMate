@@ -20,13 +20,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.itba.runningMate.R;
-import com.itba.runningMate.db.RunDb;
+import com.itba.runningMate.di.DependencyContainer;
+import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.map.Map;
-import com.itba.runningMate.repository.run.RunRepositoryImpl;
+import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.ImageProcessing;
-import com.itba.runningMate.utils.file.CacheFileProviderImpl;
-import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
+import com.itba.runningMate.utils.file.CacheFileProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
@@ -34,7 +34,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     private static final String RUN_ID = "run-id";
 
     private Map mapView;
-    private TextView startDate, startTime, elapsedTtime, speed, pace, distance;
+    private TextView startDate, startTime, elapsedTime, speed, pace, distance;
 
     private RunDetailsPresenter presenter;
 
@@ -66,7 +66,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         distance = findViewById(R.id.distance);
         startDate = findViewById(R.id.run_detail_start_date);
         startTime = findViewById(R.id.run_detail_start_time);
-        elapsedTtime = findViewById(R.id.stopwatch);
+        elapsedTime = findViewById(R.id.stopwatch);
 
 
         //Creo el botón para volver
@@ -78,7 +78,6 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
         Button shareBtn = findViewById(R.id.btn_run_detail_share);
         shareBtn.setOnClickListener(v -> presenter.onShareButtonClick());
-
     }
 
     private void deleteConfirmationMessage(View view) {
@@ -119,13 +118,14 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     private void createPresenter(long runId) {
+        final DependencyContainer container = DependencyContainerLocator.locateComponent(this);
+        final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
+        final RunRepository runRepository = container.getRunRepository();
+        final CacheFileProvider cacheFileProvider = container.getCacheFileProvider();
 
-        SchedulerProvider sp = new AndroidSchedulerProvider();
-
-        presenter = new RunDetailsPresenter(
-                new CacheFileProviderImpl(this),
-                new RunRepositoryImpl(RunDb.getInstance(getApplicationContext()).RunDao(), sp),
-                sp,
+        presenter = new RunDetailsPresenter(cacheFileProvider,
+                runRepository,
+                schedulerProvider,
                 runId,
                 this);
     }
@@ -162,7 +162,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     @Override
     public void showElapsedTime(String elapsedTime) {
-        this.elapsedTtime.setText(elapsedTime);
+        this.elapsedTime.setText(elapsedTime);
     }
 
     @Override
@@ -210,6 +210,12 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     @Override
     public void showShareRunError() {
         Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
 
 }
