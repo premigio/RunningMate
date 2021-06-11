@@ -1,23 +1,23 @@
 package com.itba.runningMate.running;
 
 import android.os.Bundle;
-import android.view.Window;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.itba.runningMate.R;
 import com.itba.runningMate.running.adapters.ScreenSlidePagerAdapter;
 import com.itba.runningMate.running.fragments.map.RunningMapFragment;
 import com.itba.runningMate.running.fragments.metrics.RunningMetricsFragment;
 import com.itba.runningMate.running.transformers.ZoomOutPageTransformer;
-import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 
 public class RunningActivity extends AppCompatActivity implements RunningView {
 
     private ViewPager2 viewPager;
-    private SpringDotsIndicator dotsIndicator;
+    private TabLayout dotsIndicator;
     private RunningPresenter presenter;
 
 
@@ -28,10 +28,10 @@ public class RunningActivity extends AppCompatActivity implements RunningView {
 
         createPresenter();
 
-        setContentView(R.layout.activity_running_another);
+        setContentView(R.layout.activity_running);
 
         viewPager = findViewById(R.id.pager);
-        dotsIndicator = (SpringDotsIndicator) findViewById(R.id.dots_indicator);
+        dotsIndicator = findViewById(R.id.tabLayout);
 
         setUpTabs();
     }
@@ -60,7 +60,9 @@ public class RunningActivity extends AppCompatActivity implements RunningView {
         pagerAdapter.addFragment(new RunningMapFragment());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
-        dotsIndicator.setViewPager2(viewPager);
+        new TabLayoutMediator(dotsIndicator, viewPager,
+                (tab, position) -> { /* we do not need to configure our tabs */ }
+        ).attach();
     }
 
     @Override

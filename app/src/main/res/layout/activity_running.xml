@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <!-- https://itnext.io/4-steps-to-android-dot-tabitem-dadeeef44f51 -->
-    <com.google.android.material.tabs.TabLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:tabBackground="@drawable/background_amber_dot_3dp"
-        app:tabGravity="center"
-        app:tabIndicator="@drawable/background_tab_indicator"
-        app:tabIndicatorColor="@android:color/holo_red_dark"
-        app:tabIndicatorGravity="center"
-        app:tabMaxWidth="12dp" />
+    android:background="@color/md_blue_grey_800"
+    android:theme="@android:style/Theme.NoTitleBar"
+    tools:context="com.itba.runningMate.running.RunningActivity">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <!-- https://itnext.io/4-steps-to-android-dot-tabitem-dadeeef44f51 -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tabIndicator="@drawable/background_tab_indicator"
+        app:tabBackground="@drawable/background_amber_dot_3dp"
+        app:tabIndicatorColor="@color/md_black_1000"
+        android:background="@android:color/transparent"
+        app:tabIndicatorGravity="center"
+        app:tabPaddingStart="6dp"
+        app:tabPaddingEnd="6dp"
+        app:tabMaxWidth="12dp"
+        app:tabGravity="center"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
