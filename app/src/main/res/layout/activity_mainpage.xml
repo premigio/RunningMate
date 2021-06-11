@@ -17,10 +17,12 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_blue_grey_800_alpha"
+            android:background="@color/mate_color"
             app:tabGravity="fill"
             app:tabInlineLabel="true"
             app:tabMode="fixed"
+            app:tabIndicatorColor="@color/mate_color_alpha"
+            app:tabIndicatorGravity="stretch"
             app:tabTextAppearance="@style/TabMenuStyle"
             app:tabTextColor="@color/white">
 

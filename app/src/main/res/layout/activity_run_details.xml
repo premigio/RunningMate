@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_blue_grey_800_alpha">
+        android:background="@color/mate_color">
 
         <com.itba.runningMate.map.MapInScrollView
             android:id="@+id/run_detail_map"
@@ -104,10 +104,11 @@
             android:layout_marginEnd="10dp"
             android:gravity="center"
             android:text="@string/btn_run_details_delete"
-            android:textColor="@color/md_red_500"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/md_red_500"
             app:elevation="10dp"
             app:icon="@drawable/ic_delete"
-            app:iconTint="@color/md_red_500"
+            app:iconTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_run_detail_share"
             app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +119,6 @@
 
         <Button
             android:id="@+id/btn_run_detail_share"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -126,15 +126,16 @@
             android:layout_marginEnd="10dp"
             android:gravity="center"
             android:text="@string/btn_run_details_share"
-            android:textColor="@color/md_blue_200"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/md_blue_500"
             app:elevation="10dp"
             app:icon="@drawable/ic_share_variant"
-            app:iconTint="@color/md_blue_200"
+            app:iconTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_run_detail_delete"
             app:layout_constraintTop_toTopOf="@id/btn_run_detail_delete"
-            app:strokeColor="@color/md_blue_200"
+            app:strokeColor="@color/md_blue_500"
             app:strokeWidth="2dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
