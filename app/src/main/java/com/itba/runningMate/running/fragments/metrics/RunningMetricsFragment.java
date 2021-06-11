@@ -208,6 +208,11 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
         this.getActivity().finish();
     }
 
+    @Override
+    public void finishActivity() {
+        this.getActivity().finish();
+    }
+
     @SuppressLint("DefaultLocale")
     private String hmsTimeFormatter(long millis) {
         return String.format(
