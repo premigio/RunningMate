@@ -22,7 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RunningMate">
 
-        <activity android:name=".mainpage.MainPageActivity">
+        <activity
+            android:name=".mainpage.MainPageActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +32,9 @@
             </intent-filter>
         </activity> <!-- Recommended for Android 9 (API level 28) and lower. -->
 
-        <activity android:name=".rundetails.RunDetailsActivity">
+        <activity
+            android:name=".rundetails.RunDetailsActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -43,21 +47,9 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.itba.runningMate"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <!-- we intend to request content
-                URIs for the images/subdirectory
-                of your private file area -->
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/paths" />
-        </provider>
-
-
-        <activity android:name=".running.RunningActivity">
+        <activity
+            android:name=".running.RunningActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -81,6 +73,20 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBifC20BsyylNSgFMv4gG8u0BcwnnmmZFc" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.itba.runningMate"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <!-- we intend to request content
+                URIs for the images/subdirectory
+                of your private file area -->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/paths" />
+        </provider>
+
     </application>
 
 </manifest>
