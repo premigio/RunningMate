@@ -138,6 +138,7 @@ public class TrackingService extends Service {
     }
 
     public void resumeTracking() {
+        startForegroundService();
         isTracking = true;
         lastTimeMillis = System.currentTimeMillis();
         serviceHandler.post(this::stopWatch);
