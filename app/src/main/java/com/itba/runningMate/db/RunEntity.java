@@ -41,6 +41,9 @@ public class RunEntity {
     @ColumnInfo(name = "calories")
     public int calories;
 
+    @ColumnInfo(name = "title")
+    public String title;
+
     public RunEntity() {
     }
 
@@ -158,6 +161,19 @@ public class RunEntity {
 
     public RunEntity calories(int calories) {
         this.calories = calories;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public RunEntity title(String title) {
+        this.title = title;
         return this;
     }
 }

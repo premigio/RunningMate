@@ -16,8 +16,9 @@ public class Run {
     /* km/h */
     private float velocity;
     private long pace;
-    private long elapsedTime;
+    private long runningTime;
     private int calories;
+    private String title;
 
     public Run() {
     }
@@ -109,17 +110,17 @@ public class Run {
         this.pace = pace;
     }
 
-    public Run elapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
+    public Run runningTime(long runningTime) {
+        this.runningTime = runningTime;
         return this;
     }
 
-    public long getElapsedTime() {
-        return elapsedTime;
+    public long getRunningTime() {
+        return runningTime;
     }
 
-    public void setElapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
+    public void setRunningTime(long runningTime) {
+        this.runningTime = runningTime;
     }
 
     public int getCalories() {
@@ -132,6 +133,19 @@ public class Run {
 
     public Run calories(int calories) {
         this.calories = calories;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Run title(String title) {
+        this.title = title;
         return this;
     }
 }

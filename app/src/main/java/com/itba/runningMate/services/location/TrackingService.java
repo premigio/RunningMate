@@ -65,10 +65,9 @@ public class TrackingService extends Service {
     private List<LatLng> currentLapLocations;
     private float elapsedDistance;
     private long startTimeMillis;
-    private long endTimeMillis;
     private long lastTimeMillis;
     private long lastTimeUpdateMillis;
-    private long elapsedMillis;
+    private long runningMillis;
     private long pace;
 
     private final LocationCallback locationCallback = new LocationCallback() {
@@ -121,7 +120,7 @@ public class TrackingService extends Service {
         if (lastLocation != null) {
             currentLapLocations.add(lastLocation);
         }
-        elapsedMillis = 0L;
+        runningMillis = 0L;
         lastTimeUpdateMillis = 0L;
         elapsedDistance = 0F;
         pace = 0L;
@@ -152,7 +151,6 @@ public class TrackingService extends Service {
     public void stopTracking() {
         stopForegroundService();
         isTracking = false;
-        endTimeMillis = System.currentTimeMillis();
     }
 
     public void setOnTrackingUpdateListener(OnTrackingUpdateListener listener) {
@@ -265,7 +263,7 @@ public class TrackingService extends Service {
             if (currentLapLocations.size() >= 2) {
                 LatLng prev = currentLapLocations.get(currentLapLocations.size() - 2);
                 elapsedDistance += RunMetrics.calculateDistance(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude());
-                pace = RunMetrics.calculatePace(elapsedDistance, elapsedMillis);
+                pace = RunMetrics.calculatePace(elapsedDistance, runningMillis);
                 callbackDistanceUpdate(elapsedDistance);
                 callbackPaceUpdate(pace);
             }
@@ -310,14 +308,14 @@ public class TrackingService extends Service {
     private void stopWatch() {
         if (isTracking && areListeners(onTrackingMetricsUpdateListeners)) {
             long currentMillis = System.currentTimeMillis();
-            elapsedMillis += currentMillis - lastTimeMillis;
+            runningMillis += currentMillis - lastTimeMillis;
             lastTimeMillis = currentMillis;
             /*
                 lastTimeUpdateMillis is the time of the last time update,
                 we just want to send updates when a second has elapsed
             */
-            if (elapsedMillis >= lastTimeUpdateMillis + 1000L) {
-                mainHandler.post(() -> callbackStopWatchUpdate(elapsedMillis));
+            if (runningMillis >= lastTimeUpdateMillis + 1000L) {
+                mainHandler.post(() -> callbackStopWatchUpdate(runningMillis));
                 lastTimeUpdateMillis += 1000L;
             }
             serviceHandler.postDelayed(this::stopWatch, STOP_WATCH_UPDATE_INTERVAL);
@@ -337,15 +335,15 @@ public class TrackingService extends Service {
     }
 
     public long getEndTimeMillis() {
-        return endTimeMillis;
+        return lastTimeMillis;
     }
 
     public float getElapsedDistance() {
         return elapsedDistance;
     }
 
-    public long getElapsedMillis() {
-        return elapsedMillis;
+    public long getRunningMillis() {
+        return runningMillis;
     }
 
     public long getPace() {

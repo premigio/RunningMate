@@ -1,5 +1,6 @@
 package com.itba.runningMate.running.fragments.metrics;
 
+import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
@@ -13,6 +14,8 @@ import java.util.Date;
 
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
+
+import static com.itba.runningMate.utils.Formatters.dateFormat;
 
 public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener {
 
@@ -79,9 +82,10 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
         } else {
             long timeMillis = tracker.queryElapsedTime();
             Run run = new Run()
+                    .title("Run on ".concat(dateFormat.format(new Date(tracker.queryStartTime()))))
                     .startTime(new Date(tracker.queryStartTime()))
                     .endTime(new Date(tracker.queryEndTime()))
-                    .elapsedTime(timeMillis)
+                    .runningTime(timeMillis)
                     .route(tracker.queryRoute().getLocations())
                     .distance(distKm)
                     .pace(tracker.queryPace())

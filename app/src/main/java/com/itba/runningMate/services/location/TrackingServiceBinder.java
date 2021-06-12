@@ -86,7 +86,7 @@ public class TrackingServiceBinder extends Binder implements Tracker {
 
     @Override
     public long queryElapsedTime() {
-        return trackingService.getElapsedMillis();
+        return trackingService.getRunningMillis();
     }
 
     @Override
@@ -96,6 +96,6 @@ public class TrackingServiceBinder extends Binder implements Tracker {
 
     @Override
     public float queryVelocity() {
-        return RunMetrics.calculateVelocity(trackingService.getElapsedDistance(), trackingService.getElapsedMillis());
+        return RunMetrics.calculateVelocity(trackingService.getElapsedDistance(), trackingService.getRunningMillis());
     }
 }

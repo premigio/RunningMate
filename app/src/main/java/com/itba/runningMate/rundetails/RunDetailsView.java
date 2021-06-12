@@ -15,11 +15,13 @@ public interface RunDetailsView {
 
     void showDistance(String distance);
 
-    void showStartDate(String startDate);
+    void showTitle(String title);
 
-    void showStartTime(String startTime);
+    void showRunTimeInterval(String startTime);
 
     void showElapsedTime(String elapsedTime);
+
+    void showRunningTime(String runningTime);
 
     void endActivity();
 
@@ -29,5 +31,8 @@ public interface RunDetailsView {
 
     void showShareRunError();
 
+    void showUpdateTitleError();
+
+    void showDeleteError();
 
 }

@@ -18,36 +18,37 @@ import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
-import static com.itba.runningMate.utils.Formatters.dateFormat;
+import static com.itba.runningMate.utils.Formatters.datetimeFormat;
 import static com.itba.runningMate.utils.Formatters.paceFormatter;
 import static com.itba.runningMate.utils.Formatters.timeFormat;
 import static com.itba.runningMate.utils.Formatters.twoDecimalPlacesFormatter;
+import static com.itba.runningMate.utils.Formatters.hmsTimeFormatter;
 
 public class RunDetailsPresenter {
 
     private final WeakReference<RunDetailsView> view;
-    private final RunRepository repo;
+    private final RunRepository runRepository;
     private final SchedulerProvider schedulerProvider;
     private final CacheFileProvider cacheFileProvider;
-    private final long itemId;
+    private final long runId;
 
     private final CompositeDisposable disposables;
 
     public RunDetailsPresenter(final CacheFileProvider cacheFileProvider,
-                               final RunRepository repo,
+                               final RunRepository runRepository,
                                final SchedulerProvider schedulerProvider,
-                               final long itemId,
+                               final long runId,
                                final RunDetailsView view) {
         this.view = new WeakReference<>(view);
         this.cacheFileProvider = cacheFileProvider;
-        this.repo = repo;
+        this.runRepository = runRepository;
         this.schedulerProvider = schedulerProvider;
-        this.itemId = itemId;
+        this.runId = runId;
         this.disposables = new CompositeDisposable();
     }
 
     public void onViewAttached() {
-        disposables.add(repo.getRunMetrics(itemId)
+        disposables.add(runRepository.getRunMetrics(runId)
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(this::onReceivedRunMetrics, this::onReceivedRunMetricsError));
@@ -60,20 +61,21 @@ public class RunDetailsPresenter {
         view.get().showSpeed(twoDecimalPlacesFormatter.format(run.getVelocity()));
         view.get().showPace(paceFormatter.format(new Date(run.getPace())));
         view.get().showDistance(twoDecimalPlacesFormatter.format(run.getDistance()));
-        view.get().showStartDate(dateFormat.format(run.getStartTime()));
-        view.get().showStartTime(timeFormat.format(run.getStartTime()));
-        view.get().showElapsedTime(timeFormat.format(new Date(run.getElapsedTime())));
+        view.get().showRunTimeInterval(datetimeFormat.format(run.getStartTime()).concat(" - ").concat(timeFormat.format(run.getEndTime())));
+        view.get().showElapsedTime(hmsTimeFormatter((run.getEndTime().getTime() - run.getStartTime().getTime())));
+        view.get().showTitle(run.getTitle());
+        view.get().showRunningTime(hmsTimeFormatter(run.getRunningTime()));
     }
 
     public void onMapAttached() {
-        disposables.add(repo.getRun(itemId)
+        disposables.add(runRepository.getRun(runId)
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(this::onReceivedRun, this::onReceivedRunMetricsError));
     }
 
     private void onReceivedRunMetricsError(Throwable throwable) {
-        Timber.d("Failed to retrieve run route from db for run-id: %l", itemId);
+        Timber.d("Failed to retrieve run route from db for run-id: %l", runId);
     }
 
     private void onReceivedRun(Run run) {
@@ -87,10 +89,28 @@ public class RunDetailsPresenter {
     }
 
     public void onDeleteButtonClick() {
-        disposables.add(Completable.fromAction(() -> repo.deleteRun(itemId))
+        disposables.add(Completable.fromAction(() -> runRepository.deleteRun(runId))
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(this::onRunDeleted, this::onRunDeleteError));
+    }
+
+    public void onRunTitleModified(String newTitle) {
+        disposables.add(runRepository.updateTitle(runId, newTitle)
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.computation())
+                .subscribe(this::onRunTitleUpdated, this::onRunTitleUpdateError));
+    }
+
+    public void onRunTitleUpdated() {
+        Timber.i("Successfully updated title");
+    }
+
+    public void onRunTitleUpdateError(Throwable throwable) {
+        Timber.d("Failed to update title");
+        if (view.get() != null) {
+            view.get().showUpdateTitleError();
+        }
     }
 
     public void onShareButtonClick() {
@@ -119,7 +139,10 @@ public class RunDetailsPresenter {
     }
 
     private void onRunDeleteError(Throwable throwable) {
-        Timber.d("Failed to delete run from db for run-id: %l", itemId);
+        Timber.d("Failed to delete run from db for run-id: %l", runId);
+        if (view.get() != null) {
+            view.get().showDeleteError();
+        }
     }
 
 }
