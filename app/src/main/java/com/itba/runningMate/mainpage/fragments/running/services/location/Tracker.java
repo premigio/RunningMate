@@ -16,6 +16,8 @@ public interface Tracker {
 
     long queryStartTime();
 
+    long queryEndTime();
+
     float queryDistance();
 
     long queryElapsedTime();

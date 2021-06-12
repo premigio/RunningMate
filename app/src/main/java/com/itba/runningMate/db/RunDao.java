@@ -20,7 +20,7 @@ public interface RunDao {
     @Query("SELECT * FROM runs WHERE runs.run_id = :id")
     Single<RunEntity> getRoute(final long id);
 
-    @Query("SELECT run_id, start_time, elapsed_time, distance, velocity, pace, calories FROM runs WHERE runs.run_id = :id")
+    @Query("SELECT run_id, start_time, end_time, elapsed_time, distance, velocity, pace, calories FROM runs WHERE runs.run_id = :id")
     Single<RunEntity> getRouteMetrics(final long id);
 
     @Insert
@@ -32,7 +32,7 @@ public interface RunDao {
     @Query("DELETE FROM runs WHERE runs.run_id = :id")
     Completable deleteRoute(long id);
 
-    @Query("SELECT run_id, start_time, elapsed_time, distance, velocity, pace, calories FROM runs ORDER BY start_time DESC")
+    @Query("SELECT run_id, start_time, end_time, elapsed_time, distance, velocity, pace, calories FROM runs ORDER BY start_time DESC")
     Flowable<List<RunEntity>> getRoutesLazy();
 
 }

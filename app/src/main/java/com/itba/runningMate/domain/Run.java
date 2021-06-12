@@ -10,6 +10,7 @@ public class Run {
     private long uid;
     private List<List<LatLng>> route;
     private Date startTime;
+    private Date endTime;
     /* km */
     private float distance;
     /* km/h */
@@ -54,6 +55,19 @@ public class Run {
 
     public Date getStartTime() {
         return startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Run endTime(Date endTime) {
+        this.endTime = endTime;
+        return this;
     }
 
     public Run distance(float distance) {

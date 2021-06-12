@@ -62,6 +62,7 @@ public class TrackingService extends Service {
     private List<LatLng> currentLapLocations;
     private float elapsedDistance;
     private long startTimeMillis;
+    private long endTimeMillis;
     private long lastTimeMillis;
     private long lastTimeUpdateMillis;
     private long elapsedMillis;
@@ -147,6 +148,7 @@ public class TrackingService extends Service {
     public void stopTracking() {
         stopForegroundService();
         isTracking = false;
+        endTimeMillis = System.currentTimeMillis();
     }
 
     public void setOnTrackingUpdateListener(OnTrackingUpdateListener listener) {
@@ -328,6 +330,10 @@ public class TrackingService extends Service {
 
     public long getStartTimeMillis() {
         return startTimeMillis;
+    }
+
+    public long getEndTimeMillis() {
+        return endTimeMillis;
     }
 
     public float getElapsedDistance() {

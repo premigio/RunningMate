@@ -72,6 +72,11 @@ public class TrackingServiceBinder extends Binder implements Tracker {
     }
 
     @Override
+    public long queryEndTime() {
+        return trackingService.getEndTimeMillis();
+    }
+
+    @Override
     public float queryDistance() {
         return trackingService.getElapsedDistance();
     }

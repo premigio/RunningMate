@@ -10,6 +10,7 @@ import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
+import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
@@ -80,6 +81,7 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
             long timeMillis = tracker.queryElapsedTime();
             Run run = new Run()
                     .startTime(new Date(tracker.queryStartTime()))
+                    .endTime(new Date(tracker.queryEndTime()))
                     .elapsedTime(timeMillis)
                     .route(tracker.queryRoute().getLocations())
                     .distance(distKm)
@@ -173,7 +175,7 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
         if (view.get() == null) {
             return;
         }
-        Timber.d("Failed to save run in");
+        Timber.d("Failed to save run\n".concat(e.getMessage()));
         view.get().showSaveRunError();
     }
 }
