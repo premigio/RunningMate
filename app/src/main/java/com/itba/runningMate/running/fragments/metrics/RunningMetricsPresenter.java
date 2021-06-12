@@ -69,9 +69,14 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
     }
 
     public void stopRun() {
-        if (isTrackerAttached) {
-            tracker.stopTracking();
-            float distKm = tracker.queryDistance();
+        if (!isTrackerAttached) {
+            return;
+        }
+        tracker.stopTracking();
+        float distKm = tracker.queryDistance();
+        if (tracker.queryDistance() < DISTANCE_EPSILON && view.get() != null) {
+            view.get().finishActivity();
+        } else {
             long timeMillis = tracker.queryElapsedTime();
             Run run = new Run()
                     .startTime(new Date(tracker.queryStartTime()))

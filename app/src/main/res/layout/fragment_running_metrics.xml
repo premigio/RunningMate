@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_blue_grey_800_alpha">
+    android:background="@color/mate_color">
 
     <TextView
         android:id="@+id/stopwatch"

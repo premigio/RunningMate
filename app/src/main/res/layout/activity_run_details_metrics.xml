@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/md_blue_grey_800_alpha">
+    android:background="@color/mate_color">
 
     <Space
         android:id="@+id/run_detail_space_3"
