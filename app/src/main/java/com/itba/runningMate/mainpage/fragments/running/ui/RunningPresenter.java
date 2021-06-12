@@ -1,8 +1,8 @@
 package com.itba.runningMate.mainpage.fragments.running.ui;
 
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingLocationUpdateListener;
-import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
+import com.itba.runningMate.services.location.Tracker;
 
 import java.lang.ref.WeakReference;
 

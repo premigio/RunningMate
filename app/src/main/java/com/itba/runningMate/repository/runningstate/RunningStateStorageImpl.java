@@ -1,11 +1,12 @@
-package com.itba.runningMate.mainpage.fragments.running.repository;
+package com.itba.runningMate.repository.runningstate;
 
 import android.content.SharedPreferences;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 
-import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
-import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
+import static com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE;
+import static com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE;
 
 public class RunningStateStorageImpl implements RunningStateStorage {
 

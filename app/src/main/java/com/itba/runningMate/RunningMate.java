@@ -5,6 +5,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import com.itba.runningMate.utils.Constants;
+
 import timber.log.Timber;
 
 

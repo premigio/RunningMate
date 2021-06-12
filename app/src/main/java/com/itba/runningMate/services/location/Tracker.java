@@ -1,6 +1,9 @@
-package com.itba.runningMate.mainpage.fragments.running.services.location;
+package com.itba.runningMate.services.location;
 
 import com.itba.runningMate.domain.Route;
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
 
 public interface Tracker {
 

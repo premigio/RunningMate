@@ -6,8 +6,8 @@ import android.net.Uri;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.file.CacheFileProvider;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.files.CacheFileProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;

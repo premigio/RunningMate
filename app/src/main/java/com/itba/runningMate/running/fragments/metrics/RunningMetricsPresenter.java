@@ -1,16 +1,15 @@
 package com.itba.runningMate.running.fragments.metrics;
 
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
+import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.run.RunMetrics;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
-import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;

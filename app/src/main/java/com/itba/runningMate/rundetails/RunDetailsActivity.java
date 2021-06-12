@@ -27,8 +27,8 @@ import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.map.Map;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.ImageProcessing;
-import com.itba.runningMate.utils.file.CacheFileProvider;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.files.CacheFileProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 

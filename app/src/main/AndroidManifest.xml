@@ -67,7 +67,7 @@
 
         <!-- Required for Android 10 (API level 29) and higher. -->
         <service
-            android:name=".mainpage.fragments.running.services.location.TrackingService"
+            android:name=".services.location.TrackingService"
             android:foregroundServiceType="location" />
 
         <meta-data

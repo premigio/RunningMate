@@ -24,11 +24,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
-import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+import com.itba.runningMate.services.location.Tracker;
+import com.itba.runningMate.services.location.TrackingService;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;

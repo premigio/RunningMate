@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.running.services.location;
+package com.itba.runningMate.services.location;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -24,9 +24,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.itba.runningMate.Constants;
+import com.itba.runningMate.utils.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.running.RunningActivity;
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
 import com.itba.runningMate.utils.functional.Function;
 import com.itba.runningMate.utils.run.RunMetrics;
 
@@ -37,9 +40,9 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static com.itba.runningMate.Constants.LOCATION_UPDATE_FASTEST_INTERVAL;
-import static com.itba.runningMate.Constants.LOCATION_UPDATE_INTERVAL;
-import static com.itba.runningMate.Constants.STOP_WATCH_UPDATE_INTERVAL;
+import static com.itba.runningMate.utils.Constants.LOCATION_UPDATE_FASTEST_INTERVAL;
+import static com.itba.runningMate.utils.Constants.LOCATION_UPDATE_INTERVAL;
+import static com.itba.runningMate.utils.Constants.STOP_WATCH_UPDATE_INTERVAL;
 
 public class TrackingService extends Service {
 

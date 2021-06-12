@@ -2,7 +2,7 @@ package com.itba.runningMate.repository.run;
 
 import com.itba.runningMate.db.RunDao;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.util.List;
 
