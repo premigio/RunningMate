@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,22 +73,22 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         //Creo el botón para volver
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
         Button deleteBtn = findViewById(R.id.btn_run_detail_delete);
-        deleteBtn.setOnClickListener(this::deleteConfirmationMessage);
+        deleteBtn.setOnClickListener(v -> deleteConfirmationMessage());
 
         Button shareBtn = findViewById(R.id.btn_run_detail_share);
         shareBtn.setOnClickListener(v -> presenter.onShareButtonClick());
     }
 
-    private void deleteConfirmationMessage(View view) {
-        AlertDialog.Builder alertBox = new AlertDialog.Builder(view.getContext());
+    private void deleteConfirmationMessage() {
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
         alertBox.setMessage(R.string.run_delete_message)
                 .setPositiveButton(R.string.yes, (dialog, which) -> presenter.onDeleteButtonClick())
                 .setNegativeButton(R.string.no, (dialog, which) -> {
                 })
                 .show();
-
     }
 
     @Override
@@ -183,12 +184,27 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_run_details, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_item_run_detail_share:
+                presenter.onShareButtonClick();
+                return true;
+            case R.id.menu_item_run_detail_delete:
+                deleteConfirmationMessage();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     public void shareImageIntent(Uri uri) {

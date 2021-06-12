@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".rundetails.RunDetailsActivity">
+
+    <item
+        android:id="@+id/menu_item_run_detail_share"
+        android:title="@string/btn_run_details_share"
+        app:showAsAction="never">
+
+    </item>
+    <item
+        android:id="@+id/menu_item_run_detail_delete"
+        android:title="@string/btn_run_details_delete"
+        app:icon="@drawable/ic_delete"
+        app:showAsAction="never"></item>
+
+</menu>
