@@ -1,11 +1,10 @@
-package com.itba.runningMate.mainpage.fragments.pastruns.runs.ui;
+package com.itba.runningMate.pastruns.runs.ui;
 
 import android.view.View;
 import android.widget.TextView;
 
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.mainpage.fragments.pastruns.runs.ui.OnRunClickListener;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;

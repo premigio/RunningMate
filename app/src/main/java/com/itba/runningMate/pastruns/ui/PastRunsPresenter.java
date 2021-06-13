@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.pastruns.ui;
+package com.itba.runningMate.pastruns.ui;
 
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;

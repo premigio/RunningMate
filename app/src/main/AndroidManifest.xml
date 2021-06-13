@@ -62,6 +62,22 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".pastruns.ui.PastRunsActivity"
+            android:parentActivityName=".mainpage.MainPageActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="pastruns"
+                    android:scheme="runningmate" />
+            </intent-filter>
+        </activity>
+
         <!-- Required for Android 10 (API level 29) and higher. -->
         <service
             android:name=".mainpage.fragments.running.services.location.TrackingService"

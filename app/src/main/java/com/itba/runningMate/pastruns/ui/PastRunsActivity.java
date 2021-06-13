@@ -1,16 +1,13 @@
-package com.itba.runningMate.mainpage.fragments.pastruns.ui;
+package com.itba.runningMate.pastruns.ui;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,14 +17,14 @@ import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.mainpage.fragments.pastruns.runs.ui.OnRunClickListener;
-import com.itba.runningMate.mainpage.fragments.pastruns.runs.ui.RunAdapter;
+import com.itba.runningMate.pastruns.runs.ui.OnRunClickListener;
+import com.itba.runningMate.pastruns.runs.ui.RunAdapter;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.util.List;
 
-public class PastRunsFragment extends Fragment implements PastRunsView, OnRunClickListener {
+public class PastRunsActivity extends AppCompatActivity implements PastRunsView, OnRunClickListener {
 
     private RunAdapter rvRunListAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -35,53 +32,50 @@ public class PastRunsFragment extends Fragment implements PastRunsView, OnRunCli
     private PastRunsPresenter presenter;
     private TextView emptyMessage;
 
-    public PastRunsFragment() {
+    public PastRunsActivity() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.fragment_mainpage_past_runs);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mainpage_past_runs, container, false);
-    }
 
-    private void setUpRecyclerView(View view) {
-        recyclerView = view.findViewById(R.id.old_maps_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),
-                DividerItemDecoration.VERTICAL));
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        rvRunListAdapter = new RunAdapter();
-        rvRunListAdapter.setClickListener(this);
-        recyclerView.setAdapter(rvRunListAdapter);
-    }
-
-    private void setUpRefreshLayout(View view) {
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_old_runs);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            presenter.refreshAction();
-            swipeRefreshLayout.setRefreshing(false);
-        });
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        final DependencyContainer container = DependencyContainerLocator.locateComponent(this.getActivity());
+        final DependencyContainer container = DependencyContainerLocator.locateComponent(this);
         final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
         final RunRepository runRepository = container.getRunRepository();
 
         presenter = new PastRunsPresenter(schedulerProvider, runRepository, this);
 
-        emptyMessage = view.findViewById(R.id.empty_run_list);
-        setUpRecyclerView(view);
-        setUpRefreshLayout(view);
+        emptyMessage = findViewById(R.id.empty_run_list);
+        setUpRecyclerView();
+        setUpRefreshLayout();
 
+        //Creo el botón para volver
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void setUpRecyclerView() {
+        recyclerView = findViewById(R.id.old_maps_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        rvRunListAdapter = new RunAdapter();
+        rvRunListAdapter.setClickListener(this);
+        recyclerView.setAdapter(rvRunListAdapter);
+    }
+
+    private void setUpRefreshLayout() {
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_old_runs);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            presenter.refreshAction();
+            swipeRefreshLayout.setRefreshing(false);
+        });
     }
 
     @Override
@@ -123,5 +117,10 @@ public class PastRunsFragment extends Fragment implements PastRunsView, OnRunCli
     @Override
     public void onRunClick(long id) {
         presenter.onRunClick(id);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

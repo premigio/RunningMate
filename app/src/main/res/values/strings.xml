@@ -27,6 +27,7 @@
     <string name="stop_run_message">It seems that you have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
 
     <string name="run">Run</string>
+    <string name="feed">Feed</string>
     <string name="past">Past Runs</string>
     <string name="past_title">Run on %1$s</string>
     <string name="distance">5.4 km</string>

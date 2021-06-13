@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.pastruns.runs.ui;
+package com.itba.runningMate.pastruns.runs.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +39,7 @@ public class RunAdapter extends RecyclerView.Adapter<RunViewHolder> {
 
     @Override
     public int getItemViewType(final int position) {
-        return R.layout.item_run;
+        return R.layout.run_element;
     }
 
     @NonNull
@@ -60,7 +60,7 @@ public class RunAdapter extends RecyclerView.Adapter<RunViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        if (currentRunList == null || currentRunList.isEmpty()) {
+        if (currentRunList.isEmpty()) {
             return NO_ID;
         }
 

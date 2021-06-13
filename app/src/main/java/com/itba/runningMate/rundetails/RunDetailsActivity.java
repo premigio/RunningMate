@@ -71,7 +71,9 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
         //Creo el botón para volver
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Button deleteBtn = findViewById(R.id.btn_run_detail_delete);
         deleteBtn.setOnClickListener(this::deleteConfirmationMessage);
