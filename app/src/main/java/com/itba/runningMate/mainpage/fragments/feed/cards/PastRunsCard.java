@@ -14,7 +14,6 @@ import com.itba.runningMate.mainpage.fragments.feed.FeedPresenter;
 import com.itba.runningMate.pastruns.runs.ui.OnRunClickListener;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -87,10 +86,6 @@ public class PastRunsCard extends CardView {
             runs.get(i++).setVisibility(GONE);
         }
     }
-
-//    public void setRunDetailsListener(OnClickListener listener){
-//        this.listener = new WeakReference<>(listener);
-//    }
 
     public void launchRunDetails(long id) {
         Uri.Builder uriBuilder = new Uri.Builder()

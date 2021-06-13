@@ -2,24 +2,18 @@ package com.itba.runningMate.mainpage.fragments.feed.cards;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.feed.FeedPresenter;
-import com.itba.runningMate.pastruns.runs.ui.OnRunClickListener;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import timber.log.Timber;
-
-import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 
 public class RunElementView extends FrameLayout {
 
