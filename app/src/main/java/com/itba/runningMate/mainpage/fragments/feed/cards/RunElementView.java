@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.mainpage.fragments.feed.FeedPresenter;
 import com.itba.runningMate.pastruns.runs.ui.OnRunClickListener;
 
 import java.lang.ref.WeakReference;
@@ -15,17 +16,18 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import timber.log.Timber;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 
-public class RunElementView extends FrameLayout implements View.OnClickListener{
+public class RunElementView extends FrameLayout {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
     private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
     private long ID;
 
-    private WeakReference<OnClickListener> listener;
+    FeedPresenter presenter;
 
     public RunElementView(Context context) {
         super(context);
@@ -42,6 +44,10 @@ public class RunElementView extends FrameLayout implements View.OnClickListener{
         inflate(context, R.layout.run_element, this);
     }
 
+    public void setPresenter(FeedPresenter presenter) {
+        this.presenter = presenter;
+    }
+
     public void bind(Run model) {
 
         if (model == null) return;
@@ -56,10 +62,7 @@ public class RunElementView extends FrameLayout implements View.OnClickListener{
         distance.setText(getContext().getString(R.string.distance_string,model.getDistance()));
         time.setText(timeFormat.format(model.getStartTime()));
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        Timber.i("Click");
+        ConstraintLayout cl = this.findViewById(R.id.old_run_row_ll);
+        cl.setOnClickListener((v) -> presenter.onPastRunClick(ID));
     }
 }

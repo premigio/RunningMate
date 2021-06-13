@@ -3,14 +3,12 @@ package com.itba.runningMate.mainpage.fragments.feed;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.file.CacheFileProvider;
 import com.itba.runningMate.utils.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
 public class FeedPresenter {
@@ -69,7 +67,7 @@ public class FeedPresenter {
         }
     }
 
-    public void onRunClick(long id) {
+    public void onPastRunClick(long id) {
         if (view.get() != null) {
             pastRunsCard.get().launchRunDetails(id);
         }

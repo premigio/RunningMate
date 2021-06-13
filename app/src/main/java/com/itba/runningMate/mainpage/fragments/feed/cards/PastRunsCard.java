@@ -42,9 +42,8 @@ public class PastRunsCard extends CardView {
     private void prepareFromConstructor(Context context) {
         inflate(context, R.layout.card_past_runs, this);
         runs = new ArrayList<>();
-        RunElementView run = findViewById(R.id.past_run_card_1);
-//        run.setOnClickListener( (a) -> presenter.goToDetails(a));
-        runs.add(run);
+
+        runs.add(findViewById(R.id.past_run_card_1));
         runs.add(findViewById(R.id.past_run_card_2));
         runs.add(findViewById(R.id.past_run_card_3));
 
@@ -77,7 +76,9 @@ public class PastRunsCard extends CardView {
 
     public void addRunToCard(int i, Run run) {
         runs.get(i).setVisibility(VISIBLE);
+        runs.get(i).setPresenter(presenter);
         runs.get(i).bind(run);
+        runs.get(i).setOnClickListener((v) -> presenter.onPastRunClick(run.getUid()));
     }
 
     public void disappearRuns(int i) {
@@ -92,7 +93,11 @@ public class PastRunsCard extends CardView {
 //    }
 
     public void launchRunDetails(long id) {
-
+        Uri.Builder uriBuilder = new Uri.Builder()
+                .scheme("runningmate")
+                .encodedAuthority("run")
+                .appendQueryParameter("run-id", Long.toString(id));
+        getContext().startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
     }
 
 }

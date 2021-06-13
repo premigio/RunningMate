@@ -29,21 +29,18 @@
             android:id="@+id/past_run_card_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
             android:visibility="gone"/>
 
         <com.itba.runningMate.mainpage.fragments.feed.cards.RunElementView
             android:id="@+id/past_run_card_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
             android:visibility="gone"/>
 
         <com.itba.runningMate.mainpage.fragments.feed.cards.RunElementView
             android:id="@+id/past_run_card_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
             android:visibility="gone"/>
 
         <TextView
