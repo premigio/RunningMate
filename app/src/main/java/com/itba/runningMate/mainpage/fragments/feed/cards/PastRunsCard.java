@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.itba.runningMate.R;
@@ -23,12 +24,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
-public class PastRunsCard extends CardView implements View.OnClickListener {
+public class PastRunsCard extends CardView {
 
     private FeedPresenter presenter;
 
     private TextView pastRunsEmptyMessage;
     private List<RunElementView> runs;
+    private Button seeAll;
 
     private WeakReference<OnRunClickListener> listener;
 
@@ -47,8 +49,8 @@ public class PastRunsCard extends CardView implements View.OnClickListener {
         runs.add(findViewById(R.id.past_run_card_3));
 
         pastRunsEmptyMessage = findViewById(R.id.past_run_empty_card);
-
-
+        seeAll = findViewById(R.id.see_all_past_runs);
+        seeAll.setOnClickListener((v) -> presenter.goToPastRunsActivity());
     }
 
     public PastRunsCard(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
@@ -94,11 +96,5 @@ public class PastRunsCard extends CardView implements View.OnClickListener {
     public void launchRunDetails(long id) {
 
     }
-
-    @Override
-    public void onClick(View v) {
-        presenter.goToPastRunsActivity();
-    }
-
 
 }

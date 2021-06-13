@@ -24,8 +24,8 @@ public class FeedPresenter {
     private final CompositeDisposable disposables; // I need 2 disposables at least
 
 
-    public FeedPresenter(FeedView view, RunRepository repo, SchedulerProvider schedulerProvider, CacheFileProvider cacheFileProvider,
-                         PastRunsCard pastRunsCard) {
+    public FeedPresenter(RunRepository repo, SchedulerProvider schedulerProvider, CacheFileProvider cacheFileProvider,
+                         PastRunsCard pastRunsCard, FeedView view) {
         this.view = new WeakReference<>(view);
         this.pastRunsCard = new WeakReference<>(pastRunsCard);
         this.repo = repo;

@@ -50,6 +50,15 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
+        <Button
+            android:id="@+id/see_all_past_runs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seeAll"
+            android:gravity="center"
+            android:layout_gravity="center"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
     </LinearLayout>
 
 

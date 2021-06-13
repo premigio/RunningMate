@@ -40,13 +40,12 @@ public class FeedFragment extends Fragment implements FeedView {
 
         pastRunsCard = view.findViewById(R.id.past_run_card);
 
-        presenter = new FeedPresenter(this,
+        presenter = new FeedPresenter(
                 container.getRunRepository(),
                 container.getSchedulerProvider(),
                 container.getCacheFileProvider(),
-                pastRunsCard);
+                pastRunsCard, this);
 
-        pastRunsCard.setOnClickListener((v) -> presenter.goToPastRunsActivity());
         pastRunsCard.setPresenter(presenter);
     }
 
