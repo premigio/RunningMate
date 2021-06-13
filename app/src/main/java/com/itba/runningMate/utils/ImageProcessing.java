@@ -3,7 +3,6 @@ package com.itba.runningMate.utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -43,10 +42,15 @@ public class ImageProcessing {
      */
     public @NonNull
     static Bitmap createBitmapFromView(@NonNull View view, int width, int height) {
-//        if (width > 0 && height > 0) {
-//            view.measure(View.MeasureSpec.makeMeasureSpec(convertDpToPixels(width), View.MeasureSpec.EXACTLY),
-//                    View.MeasureSpec.makeMeasureSpec(convertDpToPixels(height), View.MeasureSpec.EXACTLY));
-//        }
+        if (width > 0 && height > 0) {
+            view.measure(View.MeasureSpec.makeMeasureSpec(convertDpToPixels(width), View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(convertDpToPixels(height), View.MeasureSpec.EXACTLY));
+        }
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+        //second, set the width and height of inflated view
+//        view.measure(View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
+//                View.MeasureSpec.makeMeasureSpec(view.getHeight(), View.MeasureSpec.EXACTLY));
 //        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
 
         Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);

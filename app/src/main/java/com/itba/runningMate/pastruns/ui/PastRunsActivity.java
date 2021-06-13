@@ -22,7 +22,7 @@ import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.pastruns.runs.ui.OnRunClickListener;
 import com.itba.runningMate.pastruns.runs.ui.RunAdapter;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.util.List;
 

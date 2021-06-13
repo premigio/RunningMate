@@ -1,18 +1,20 @@
 package com.itba.runningMate.running.fragments.metrics;
 
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.services.location.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
+import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.run.RunMetrics;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
 
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
+
+import static com.itba.runningMate.utils.Formatters.dateFormat;
 
 public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener {
 
@@ -79,8 +81,10 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
         } else {
             long timeMillis = tracker.queryElapsedTime();
             Run run = new Run()
+                    .title("Run on ".concat(dateFormat.format(new Date(tracker.queryStartTime()))))
                     .startTime(new Date(tracker.queryStartTime()))
-                    .elapsedTime(timeMillis)
+                    .endTime(new Date(tracker.queryEndTime()))
+                    .runningTime(timeMillis)
                     .route(tracker.queryRoute().getLocations())
                     .distance(distKm)
                     .pace(tracker.queryPace())
@@ -173,7 +177,7 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
         if (view.get() == null) {
             return;
         }
-        Timber.d("Failed to save run in");
+        Timber.d("Failed to save run\n".concat(e.getMessage()));
         view.get().showSaveRunError();
     }
 }

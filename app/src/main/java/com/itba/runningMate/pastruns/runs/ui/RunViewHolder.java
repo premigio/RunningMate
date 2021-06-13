@@ -39,11 +39,9 @@ class RunViewHolder extends RecyclerView.ViewHolder implements View.OnClickListe
         distance = itemView.findViewById(R.id.run_list_distance_content);
         time = itemView.findViewById(R.id.run_list_time_run);
 
-        title.setText(itemView.getContext().getString(R.string.past_title,dateFormat.format(model.getStartTime())));
-        distance.setText(itemView.getContext().getString(R.string.distance_string,model.getDistance()));
+        title.setText(model.getTitle());
+        distance.setText(itemView.getContext().getString(R.string.distance_string, model.getDistance()));
         time.setText(timeFormat.format(model.getStartTime()));
-
-
     }
 
     @Override

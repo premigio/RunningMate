@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.itba.runningMate.db.RunDao;
 import com.itba.runningMate.db.RunDb;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.file.CacheFileProvider;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.files.CacheFileProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 public class ProductionDependencyContainer implements DependencyContainer {
 

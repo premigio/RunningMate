@@ -1,13 +1,20 @@
 package com.itba.runningMate.rundetails;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,16 +32,18 @@ import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.map.Map;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.rundetails.model.RunMetricsDetail;
 import com.itba.runningMate.utils.ImageProcessing;
-import com.itba.runningMate.utils.file.CacheFileProvider;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.files.CacheFileProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 
     private static final String RUN_ID = "run-id";
 
     private Map mapView;
-    private TextView startDate, startTime, elapsedTime, speed, pace, distance;
+    private TextView runTimeInterval, elapsedTime, runningTime, speed, pace, distance, calories;
+    private EditText title;
 
     private RunDetailsPresenter presenter;
 
@@ -43,7 +52,6 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run_details);
-
         long id;
 
         Intent intent = getIntent();
@@ -64,32 +72,71 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         speed = findViewById(R.id.speed);
         pace = findViewById(R.id.pace);
         distance = findViewById(R.id.distance);
-        startDate = findViewById(R.id.run_detail_start_date);
-        startTime = findViewById(R.id.run_detail_start_time);
-        elapsedTime = findViewById(R.id.stopwatch);
+        title = findViewById(R.id.run_detail_title);
+        runTimeInterval = findViewById(R.id.run_detail_run_time_interval);
+        runningTime = findViewById(R.id.running_time);
+        elapsedTime = findViewById(R.id.elapsed_time);
+        calories = findViewById(R.id.calories);
 
 
         //Creo el botón para volver
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         Button deleteBtn = findViewById(R.id.btn_run_detail_delete);
-        deleteBtn.setOnClickListener(this::deleteConfirmationMessage);
+        deleteBtn.setOnClickListener(v -> deleteConfirmationMessage());
 
         Button shareBtn = findViewById(R.id.btn_run_detail_share);
         shareBtn.setOnClickListener(v -> presenter.onShareButtonClick());
+
+        title.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        title.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
+        title.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        title.setOnEditorActionListener(this::onTextEditAction);
     }
 
-    private void deleteConfirmationMessage(View view) {
-        AlertDialog.Builder alertBox = new AlertDialog.Builder(view.getContext());
+    private boolean onTextEditAction(TextView textView, int actionId, KeyEvent event) {
+        /* Ref: https://gist.github.com/Dogesmith/2b98df97b4fca849ff94 */
+        if (event == null) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                title.clearFocus();
+                InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                presenter.onRunTitleModified(textView.getText().toString());
+            } else if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                // Capture soft enters in other singleLine EditTexts
+            } else if (actionId == EditorInfo.IME_ACTION_GO) {
+            } else {
+                // Let the system handle all other null KeyEvents
+                return false;
+            }
+        } else if (actionId == EditorInfo.IME_NULL) {
+           /*  Capture most soft enters in multi-line EditTexts and all hard enters;
+            They supply a zero actionId and a valid keyEvent rather than
+            a non-zero actionId and a null event like the previous cases.*/
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                /*We capture the event when the key is first pressed.*/
+            } else {
+                return true;
+            }
+        } else {
+            /*We let the system handle it when the listener is triggered by something that
+            wasn't an enter.*/
+            return false;
+        }
+        return true;
+    }
+
+    private void deleteConfirmationMessage() {
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
         alertBox.setMessage(R.string.run_delete_message)
                 .setPositiveButton(R.string.yes, (dialog, which) -> presenter.onDeleteButtonClick())
                 .setNegativeButton(R.string.no, (dialog, which) -> {
                 })
                 .show();
-
     }
 
     @Override
@@ -138,6 +185,23 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
+    public void showRunMetrics(RunMetricsDetail runMetrics) {
+        showSpeed(runMetrics.getSpeed());
+        showPace(runMetrics.getPace());
+        showDistance(runMetrics.getDistance());
+        showRunTimeInterval(runMetrics.getRunTimeInterval());
+        showElapsedTime(runMetrics.getElapsedTime());
+        showTitle(runMetrics.getTitle());
+        showRunningTime(runMetrics.getRunningTime());
+        showCalories(runMetrics.getCalories());
+    }
+
+    @Override
+    public void showCalories(String calories) {
+        this.calories.setText(calories);
+    }
+
+    @Override
     public void showSpeed(String speed) {
         this.speed.setText(speed);
     }
@@ -153,18 +217,23 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
-    public void showStartDate(String startDate) {
-        this.startDate.setText(startDate);
+    public void showTitle(String title) {
+        this.title.setText(title);
     }
 
     @Override
-    public void showStartTime(String startTime) {
-        this.startTime.setText(startTime);
+    public void showRunTimeInterval(String startTime) {
+        this.runTimeInterval.setText(startTime);
     }
 
     @Override
     public void showElapsedTime(String elapsedTime) {
         this.elapsedTime.setText(elapsedTime);
+    }
+
+    @Override
+    public void showRunningTime(String runningTime) {
+        this.runningTime.setText(runningTime);
     }
 
     @Override
@@ -185,12 +254,27 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_run_details, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_item_run_detail_share:
+                presenter.onShareButtonClick();
+                return true;
+            case R.id.menu_item_run_detail_delete:
+                deleteConfirmationMessage();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     public void shareImageIntent(Uri uri) {
@@ -201,17 +285,25 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
-    public Bitmap getMetricsImage() {
-        return ImageProcessing.createBitmapFromView(
-                findViewById(R.id.run_detail_metrics),
-                400,
-                300
-        );
+    public Bitmap getMetricsImage(RunMetricsDetail detail) {
+        RunSummary s = new RunSummary(this);
+        s.bind(detail);
+        return ImageProcessing.createBitmapFromView(s, 390, 285);
     }
 
     @Override
     public void showShareRunError() {
         Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showUpdateTitleError() {
+        Toast.makeText(this, "Error while attempting to update title", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showDeleteError() {
+        Toast.makeText(this, "Error while attempting to delete run", Toast.LENGTH_LONG).show();
     }
 
     @Override

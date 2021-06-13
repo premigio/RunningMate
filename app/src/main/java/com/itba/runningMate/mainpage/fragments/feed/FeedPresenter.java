@@ -3,7 +3,7 @@ package com.itba.runningMate.mainpage.fragments.feed;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

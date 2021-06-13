@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -19,10 +18,10 @@ import com.itba.runningMate.domain.Route;
 
 import java.util.List;
 
-import static com.itba.runningMate.Constants.DEFAULT_LATITUDE;
-import static com.itba.runningMate.Constants.DEFAULT_LONGITUDE;
-import static com.itba.runningMate.Constants.DEFAULT_ZOOM;
-import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
+import static com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE;
+import static com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE;
+import static com.itba.runningMate.utils.Constants.DEFAULT_ZOOM;
+import static com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM;
 
 public class Map extends MapView {
 

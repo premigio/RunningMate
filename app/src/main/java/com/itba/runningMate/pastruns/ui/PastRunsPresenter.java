@@ -2,7 +2,7 @@ package com.itba.runningMate.pastruns.ui;
 
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;

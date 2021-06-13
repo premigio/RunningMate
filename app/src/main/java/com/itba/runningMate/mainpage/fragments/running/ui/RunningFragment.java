@@ -24,16 +24,16 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.itba.runningMate.Constants;
+import com.itba.runningMate.utils.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
-import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+import com.itba.runningMate.services.location.Tracker;
+import com.itba.runningMate.services.location.TrackingService;
 import com.itba.runningMate.map.MapInViewPager;
 
-import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
+import static com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM;
 
 public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
 

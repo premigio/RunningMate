@@ -1,4 +1,4 @@
-package com.itba.runningMate.utils.schedulers;
+package com.itba.runningMate.utils.providers.schedulers;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;

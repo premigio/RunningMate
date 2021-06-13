@@ -1,4 +1,4 @@
-package com.itba.runningMate;
+package com.itba.runningMate.utils;
 
 public class Constants {
 

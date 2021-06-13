@@ -1,4 +1,4 @@
-package com.itba.runningMate.utils.file;
+package com.itba.runningMate.utils.providers.files;
 
 import android.content.Context;
 import android.net.Uri;

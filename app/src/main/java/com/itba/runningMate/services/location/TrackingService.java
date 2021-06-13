@@ -1,9 +1,10 @@
-package com.itba.runningMate.mainpage.fragments.running.services.location;
+package com.itba.runningMate.services.location;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Handler;
@@ -23,9 +24,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.itba.runningMate.Constants;
+import com.itba.runningMate.utils.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.running.RunningActivity;
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
 import com.itba.runningMate.utils.functional.Function;
 import com.itba.runningMate.utils.run.RunMetrics;
 
@@ -36,9 +40,9 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static com.itba.runningMate.Constants.LOCATION_UPDATE_FASTEST_INTERVAL;
-import static com.itba.runningMate.Constants.LOCATION_UPDATE_INTERVAL;
-import static com.itba.runningMate.Constants.STOP_WATCH_UPDATE_INTERVAL;
+import static com.itba.runningMate.utils.Constants.LOCATION_UPDATE_FASTEST_INTERVAL;
+import static com.itba.runningMate.utils.Constants.LOCATION_UPDATE_INTERVAL;
+import static com.itba.runningMate.utils.Constants.STOP_WATCH_UPDATE_INTERVAL;
 
 public class TrackingService extends Service {
 
@@ -63,7 +67,7 @@ public class TrackingService extends Service {
     private long startTimeMillis;
     private long lastTimeMillis;
     private long lastTimeUpdateMillis;
-    private long elapsedMillis;
+    private long runningMillis;
     private long pace;
 
     private final LocationCallback locationCallback = new LocationCallback() {
@@ -116,7 +120,7 @@ public class TrackingService extends Service {
         if (lastLocation != null) {
             currentLapLocations.add(lastLocation);
         }
-        elapsedMillis = 0L;
+        runningMillis = 0L;
         lastTimeUpdateMillis = 0L;
         elapsedDistance = 0F;
         pace = 0L;
@@ -133,6 +137,7 @@ public class TrackingService extends Service {
     }
 
     public void resumeTracking() {
+        startForegroundService();
         isTracking = true;
         lastTimeMillis = System.currentTimeMillis();
         serviceHandler.post(this::stopWatch);
@@ -223,8 +228,9 @@ public class TrackingService extends Service {
             hacer. Tambien podes usar el paramentro flag del pendingIntnet para agreagar mas data
             (ej. updatear la vista no re crearla)
          */
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(notificationIntent);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification =
                 new NotificationCompat.Builder(this, Constants.NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID)
@@ -257,7 +263,7 @@ public class TrackingService extends Service {
             if (currentLapLocations.size() >= 2) {
                 LatLng prev = currentLapLocations.get(currentLapLocations.size() - 2);
                 elapsedDistance += RunMetrics.calculateDistance(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude());
-                pace = RunMetrics.calculatePace(elapsedDistance, elapsedMillis);
+                pace = RunMetrics.calculatePace(elapsedDistance, runningMillis);
                 callbackDistanceUpdate(elapsedDistance);
                 callbackPaceUpdate(pace);
             }
@@ -302,14 +308,14 @@ public class TrackingService extends Service {
     private void stopWatch() {
         if (isTracking && areListeners(onTrackingMetricsUpdateListeners)) {
             long currentMillis = System.currentTimeMillis();
-            elapsedMillis += currentMillis - lastTimeMillis;
+            runningMillis += currentMillis - lastTimeMillis;
             lastTimeMillis = currentMillis;
             /*
                 lastTimeUpdateMillis is the time of the last time update,
                 we just want to send updates when a second has elapsed
             */
-            if (elapsedMillis >= lastTimeUpdateMillis + 1000L) {
-                mainHandler.post(() -> callbackStopWatchUpdate(elapsedMillis));
+            if (runningMillis >= lastTimeUpdateMillis + 1000L) {
+                mainHandler.post(() -> callbackStopWatchUpdate(runningMillis));
                 lastTimeUpdateMillis += 1000L;
             }
             serviceHandler.postDelayed(this::stopWatch, STOP_WATCH_UPDATE_INTERVAL);
@@ -328,12 +334,16 @@ public class TrackingService extends Service {
         return startTimeMillis;
     }
 
+    public long getEndTimeMillis() {
+        return lastTimeMillis;
+    }
+
     public float getElapsedDistance() {
         return elapsedDistance;
     }
 
-    public long getElapsedMillis() {
-        return elapsedMillis;
+    public long getRunningMillis() {
+        return runningMillis;
     }
 
     public long getPace() {
