@@ -85,7 +85,7 @@
 
         <include
             android:id="@+id/run_detail_metrics"
-            layout="@layout/activity_run_details_metrics_alpha"
+            layout="@layout/activity_run_details_metrics"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

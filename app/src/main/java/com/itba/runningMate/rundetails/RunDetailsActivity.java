@@ -32,6 +32,7 @@ import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.map.Map;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.rundetails.model.RunMetricsDetail;
 import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
@@ -41,7 +42,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     private static final String RUN_ID = "run-id";
 
     private Map mapView;
-    private TextView runTimeInterval, elapsedTime, runningTime, speed, pace, distance;
+    private TextView runTimeInterval, elapsedTime, runningTime, speed, pace, distance, calories;
     private EditText title;
 
     private RunDetailsPresenter presenter;
@@ -51,7 +52,6 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run_details);
-
         long id;
 
         Intent intent = getIntent();
@@ -76,6 +76,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         runTimeInterval = findViewById(R.id.run_detail_run_time_interval);
         runningTime = findViewById(R.id.running_time);
         elapsedTime = findViewById(R.id.elapsed_time);
+        calories = findViewById(R.id.calories);
 
 
         //Creo el botón para volver
@@ -182,6 +183,23 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
+    public void showRunMetrics(RunMetricsDetail runMetrics) {
+        showSpeed(runMetrics.getSpeed());
+        showPace(runMetrics.getPace());
+        showDistance(runMetrics.getDistance());
+        showRunTimeInterval(runMetrics.getRunTimeInterval());
+        showElapsedTime(runMetrics.getElapsedTime());
+        showTitle(runMetrics.getTitle());
+        showRunningTime(runMetrics.getRunningTime());
+        showCalories(runMetrics.getCalories());
+    }
+
+    @Override
+    public void showCalories(String calories) {
+        this.calories.setText(calories);
+    }
+
+    @Override
     public void showSpeed(String speed) {
         this.speed.setText(speed);
     }
@@ -265,12 +283,10 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
-    public Bitmap getMetricsImage() {
-        return ImageProcessing.createBitmapFromView(
-                findViewById(R.id.run_detail_metrics),
-                400,
-                300
-        );
+    public Bitmap getMetricsImage(RunMetricsDetail detail) {
+        RunSummary s = new RunSummary(this);
+        s.bind(detail);
+        return ImageProcessing.createBitmapFromView(s, 390, 285);
     }
 
     @Override

@@ -6,23 +6,17 @@ import android.net.Uri;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.rundetails.model.RunMetricsDetail;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
-import java.util.Date;
 
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
-
-import static com.itba.runningMate.utils.Formatters.datetimeFormat;
-import static com.itba.runningMate.utils.Formatters.paceFormatter;
-import static com.itba.runningMate.utils.Formatters.timeFormat;
-import static com.itba.runningMate.utils.Formatters.twoDecimalPlacesFormatter;
-import static com.itba.runningMate.utils.Formatters.hmsTimeFormatter;
 
 public class RunDetailsPresenter {
 
@@ -31,6 +25,7 @@ public class RunDetailsPresenter {
     private final SchedulerProvider schedulerProvider;
     private final CacheFileProvider cacheFileProvider;
     private final long runId;
+    private RunMetricsDetail detail;
 
     private final CompositeDisposable disposables;
 
@@ -58,13 +53,8 @@ public class RunDetailsPresenter {
         if (view.get() == null) {
             return;
         }
-        view.get().showSpeed(twoDecimalPlacesFormatter.format(run.getVelocity()));
-        view.get().showPace(paceFormatter.format(new Date(run.getPace())));
-        view.get().showDistance(twoDecimalPlacesFormatter.format(run.getDistance()));
-        view.get().showRunTimeInterval(datetimeFormat.format(run.getStartTime()).concat(" - ").concat(timeFormat.format(run.getEndTime())));
-        view.get().showElapsedTime(hmsTimeFormatter((run.getEndTime().getTime() - run.getStartTime().getTime())));
-        view.get().showTitle(run.getTitle());
-        view.get().showRunningTime(hmsTimeFormatter(run.getRunningTime()));
+        detail = RunMetricsDetail.from(run);
+        view.get().showRunMetrics(detail);
     }
 
     public void onMapAttached() {
@@ -117,7 +107,7 @@ public class RunDetailsPresenter {
         if (view.get() == null) {
             return;
         }
-        Bitmap bitmap = view.get().getMetricsImage();
+        Bitmap bitmap = view.get().getMetricsImage(detail);
         File image = cacheFileProvider.getFile("runningmate-run-metrics.png");
         Uri uri = null;
         try {
