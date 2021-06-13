@@ -52,7 +52,7 @@ public class RunElementView extends FrameLayout {
         distance = this.findViewById(R.id.run_list_distance_content);
         time = this.findViewById(R.id.run_list_time_run);
         ID = model.getUid();
-        title.setText(getContext().getString(R.string.past_title,dateFormat.format(model.getStartTime())));
+        title.setText( model.getTitle());
         distance.setText(getContext().getString(R.string.distance_string,model.getDistance()));
         time.setText(timeFormat.format(model.getStartTime()));
 
