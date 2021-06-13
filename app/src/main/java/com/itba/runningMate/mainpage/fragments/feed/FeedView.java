@@ -11,4 +11,6 @@ public interface FeedView {
     void addRunToCard(int i, Run run);
 
     void disappearRuns(int abs);
+
+    void disappearNoText();
 }

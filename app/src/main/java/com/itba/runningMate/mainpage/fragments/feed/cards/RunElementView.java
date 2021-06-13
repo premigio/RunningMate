@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
+import timber.log.Timber;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 
@@ -24,7 +25,7 @@ public class RunElementView extends FrameLayout implements View.OnClickListener{
     private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
     private long ID;
 
-    private WeakReference<OnRunClickListener> listener;
+    private WeakReference<OnClickListener> listener;
 
     public RunElementView(Context context) {
         super(context);
@@ -59,13 +60,6 @@ public class RunElementView extends FrameLayout implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if (listener == null) {
-            return;
-        }
-        listener.get().onRunClick(ID);
-    }
-
-    public void setOnClickListener(OnRunClickListener listener){
-        this.listener = new WeakReference<>(listener);
+        Timber.i("Click");
     }
 }

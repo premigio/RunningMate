@@ -43,7 +43,6 @@ public class FeedFragment extends Fragment implements FeedView {
         presenter = new FeedPresenter(
                 container.getRunRepository(),
                 container.getSchedulerProvider(),
-                container.getCacheFileProvider(),
                 pastRunsCard, this);
 
         pastRunsCard.setPresenter(presenter);
@@ -89,8 +88,8 @@ public class FeedFragment extends Fragment implements FeedView {
         pastRunsCard.disappearRuns(i);
     }
 
-    public void setPastRuns(List<Run> list) {
-        pastRunsCard.setPastRuns(list);
-
+    @Override
+    public void disappearNoText() {
+        pastRunsCard.disappearNoText();
     }
 }

@@ -43,7 +43,7 @@ public class PastRunsCard extends CardView {
         inflate(context, R.layout.card_past_runs, this);
         runs = new ArrayList<>();
         RunElementView run = findViewById(R.id.past_run_card_1);
-        //run.setOnClickListener( (a) -> presenter.goToDetails(a));
+//        run.setOnClickListener( (a) -> presenter.goToDetails(a));
         runs.add(run);
         runs.add(findViewById(R.id.past_run_card_2));
         runs.add(findViewById(R.id.past_run_card_3));
@@ -71,10 +71,8 @@ public class PastRunsCard extends CardView {
         pastRunsEmptyMessage.setVisibility(View.VISIBLE);
     }
 
-    public void setPastRuns(List<Run> list) {
-        if (list == null || list.isEmpty()) return;
+    public void disappearNoText() {
         pastRunsEmptyMessage.setVisibility(View.GONE);
-
     }
 
     public void addRunToCard(int i, Run run) {

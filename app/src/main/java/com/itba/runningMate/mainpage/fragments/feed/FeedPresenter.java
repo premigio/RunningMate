@@ -19,18 +19,16 @@ public class FeedPresenter {
     private final WeakReference<PastRunsCard> pastRunsCard;
     private final RunRepository repo;
     private final SchedulerProvider schedulerProvider;
-    private final CacheFileProvider cacheFileProvider;
 
     private final CompositeDisposable disposables; // I need 2 disposables at least
 
 
-    public FeedPresenter(RunRepository repo, SchedulerProvider schedulerProvider, CacheFileProvider cacheFileProvider,
+    public FeedPresenter(RunRepository repo, SchedulerProvider schedulerProvider,
                          PastRunsCard pastRunsCard, FeedView view) {
         this.view = new WeakReference<>(view);
         this.pastRunsCard = new WeakReference<>(pastRunsCard);
         this.repo = repo;
         this.schedulerProvider = schedulerProvider;
-        this.cacheFileProvider = cacheFileProvider;
         disposables = new CompositeDisposable();
     }
 
@@ -42,7 +40,7 @@ public class FeedPresenter {
     }
 
     public void onViewDetached() {
-        disposables.dispose();
+        disposables.clear();
     }
 
     private void onRunListError(Throwable throwable) {
@@ -55,17 +53,17 @@ public class FeedPresenter {
     private void receivedRunList(List<Run> runs) {
         Timber.i("Runs %d", runs.size());
         if (view.get() != null){
-            if (runs == null || runs.isEmpty()){
+            if (runs.isEmpty()){
                 view.get().setPastRunCardsNoText();
                 view.get().disappearRuns(0);
                 return;
             }
+            view.get().disappearNoText();
             int maxVal = Math.min(runs.size(), 3);
             for (int i = 1; i <= maxVal; i++) {
                 //add data to view
                 view.get().addRunToCard(i - 1, runs.get(i - 1));
             }
-
             // disappear the run cards where they should not be
             view.get().disappearRuns(maxVal);
         }
