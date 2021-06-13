@@ -23,6 +23,9 @@ public class RunEntity {
     @ColumnInfo(name = "start_time")
     public Date startTime;
 
+    @ColumnInfo(name = "end_time")
+    public Date endTime;
+
     @ColumnInfo(name = "elapsed_time")
     public long elapsedTime;
 
@@ -37,6 +40,9 @@ public class RunEntity {
 
     @ColumnInfo(name = "calories")
     public int calories;
+
+    @ColumnInfo(name = "title")
+    public String title;
 
     public RunEntity() {
     }
@@ -78,6 +84,19 @@ public class RunEntity {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public RunEntity endTime(Date endTime) {
+        this.endTime = endTime;
+        return this;
     }
 
     public RunEntity elapsedTime(long elapsedTime) {
@@ -142,6 +161,19 @@ public class RunEntity {
 
     public RunEntity calories(int calories) {
         this.calories = calories;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public RunEntity title(String title) {
+        this.title = title;
         return this;
     }
 }

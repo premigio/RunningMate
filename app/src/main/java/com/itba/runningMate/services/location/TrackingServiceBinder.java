@@ -1,8 +1,11 @@
-package com.itba.runningMate.mainpage.fragments.running.services.location;
+package com.itba.runningMate.services.location;
 
 import android.os.Binder;
 
 import com.itba.runningMate.domain.Route;
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
 import com.itba.runningMate.utils.run.RunMetrics;
 
 public class TrackingServiceBinder extends Binder implements Tracker {
@@ -72,13 +75,18 @@ public class TrackingServiceBinder extends Binder implements Tracker {
     }
 
     @Override
+    public long queryEndTime() {
+        return trackingService.getEndTimeMillis();
+    }
+
+    @Override
     public float queryDistance() {
         return trackingService.getElapsedDistance();
     }
 
     @Override
     public long queryElapsedTime() {
-        return trackingService.getElapsedMillis();
+        return trackingService.getRunningMillis();
     }
 
     @Override
@@ -88,6 +96,6 @@ public class TrackingServiceBinder extends Binder implements Tracker {
 
     @Override
     public float queryVelocity() {
-        return RunMetrics.calculateVelocity(trackingService.getElapsedDistance(), trackingService.getElapsedMillis());
+        return RunMetrics.calculateVelocity(trackingService.getElapsedDistance(), trackingService.getRunningMillis());
     }
 }

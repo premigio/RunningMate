@@ -2,10 +2,11 @@ package com.itba.runningMate.repository.run;
 
 import com.itba.runningMate.db.RunDao;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -42,6 +43,11 @@ public class RunRepositoryImpl implements RunRepository {
     @Override
     public Single<Long> insertRun(Run run) {
         return runDao.insertRoute(RunMapper.toEntity(run));
+    }
+
+    @Override
+    public Completable updateTitle(long runId, String title) {
+        return runDao.updateTitle(runId, title);
     }
 
     @Override

@@ -20,12 +20,12 @@ import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Route;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
-import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+import com.itba.runningMate.services.location.Tracker;
+import com.itba.runningMate.services.location.TrackingService;
 import com.itba.runningMate.map.Map;
 
-import static com.itba.runningMate.Constants.MY_LOCATION_ZOOM;
+import static com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM;
 
 
 public class RunningMapFragment extends Fragment implements OnMapReadyCallback, RunningMapView, ServiceConnection {

@@ -4,6 +4,7 @@ import com.itba.runningMate.domain.Run;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -22,4 +23,6 @@ public interface RunRepository {
     void deleteRun(Run run);
 
     void deleteRun(long runId);
+
+    Completable updateTitle(long runId, String title);
 }

@@ -24,17 +24,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
-import com.itba.runningMate.mainpage.fragments.running.repository.RunningStateStorage;
-import com.itba.runningMate.mainpage.fragments.running.services.location.Tracker;
-import com.itba.runningMate.mainpage.fragments.running.services.location.TrackingService;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+import com.itba.runningMate.services.location.Tracker;
+import com.itba.runningMate.services.location.TrackingService;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+
+import static com.itba.runningMate.utils.Formatters.hmsTimeFormatter;
 
 public class RunningMetricsFragment extends Fragment implements RunningMetricsView, ServiceConnection {
 
@@ -68,7 +69,7 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
         distance = view.findViewById(R.id.distance);
         pace = view.findViewById(R.id.pace);
         calories = view.findViewById(R.id.calories);
-        stopWatch = view.findViewById(R.id.stopwatch);
+        stopWatch = view.findViewById(R.id.running_time);
 
         setUpButtons();
     }
@@ -208,14 +209,9 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
         this.getActivity().finish();
     }
 
-    @SuppressLint("DefaultLocale")
-    private String hmsTimeFormatter(long millis) {
-        return String.format(
-                "%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-        );
+    @Override
+    public void finishActivity() {
+        this.getActivity().finish();
     }
 
     @Override

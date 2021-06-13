@@ -20,6 +20,8 @@ public interface RunningMetricsView {
 
     void launchRunActivity(long runId);
 
+    void finishActivity();
+
     void showStopConfirm();
 
     void showStopBtn();
@@ -33,6 +35,5 @@ public interface RunningMetricsView {
     void hidePlayBtn();
 
     void hidePauseBtn();
-
 
 }

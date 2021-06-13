@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.running.repository;
+package com.itba.runningMate.repository.runningstate;
 
 public interface RunningStateStorage {
 

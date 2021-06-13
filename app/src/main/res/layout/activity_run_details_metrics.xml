@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/md_blue_grey_800_alpha">
-
-    <Space
-        android:id="@+id/run_detail_space_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/distance"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/distance"
-        app:layout_constraintVertical_bias="0.8" />
+    android:background="@color/mate_color"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/distance"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="4"
         android:fontFamily="@font/anton"
@@ -26,38 +16,27 @@
         android:textColor="@color/white"
         android:textSize="62sp"
         android:textStyle="bold|italic"
-        android:typeface="sans"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_default="percent" />
+        android:typeface="sans" />
 
     <TextView
         android:id="@+id/distance_label"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-28dp"
         android:gravity="start"
         android:text="@string/text_view_run_details_distance_label"
         android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/distance"
-        app:layout_constraintStart_toStartOf="@+id/distance"
-        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_3" />
+        android:textSize="14sp" />
 
-
-    <Space
-        android:id="@+id/run_detail_space_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/stopwatch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/stopwatch"
-        app:layout_constraintVertical_bias="0.8" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
 
     <TextView
         android:id="@+id/pace"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
         android:fontFamily="@font/anton"
@@ -66,29 +45,28 @@
         android:textColor="@color/white"
         android:textSize="32sp"
         android:textStyle="bold|italic"
-        android:typeface="sans"
-        app:layout_constraintBottom_toBottomOf="@id/stopwatch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/stopwatch"
-        app:layout_constraintTop_toTopOf="@id/stopwatch" />
+        android:typeface="sans" />
 
     <TextView
         android:id="@+id/pace_label"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
         android:gravity="start"
         android:text="@string/text_view_run_details_pace_label"
         android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/pace"
-        app:layout_constraintStart_toStartOf="@+id/pace"
-        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_1" />
+        android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/stopwatch"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
+
+    <TextView
+        android:id="@+id/running_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:ems="5"
         android:fontFamily="@font/anton"
         android:gravity="start"
@@ -96,36 +74,57 @@
         android:textColor="@color/white"
         android:textSize="32sp"
         android:textStyle="bold|italic"
-        android:typeface="sans"
-        app:layout_constraintEnd_toStartOf="@id/pace"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/distance_label" />
+        android:typeface="sans" />
 
     <TextView
-        android:id="@+id/stopwatch_label"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="@string/text_view_run_details_stopwatch_label"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/stopwatch"
-        app:layout_constraintStart_toStartOf="@+id/stopwatch"
-        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_1" />
-
-    <Space
-        android:id="@+id/run_detail_space_2"
+        android:id="@+id/running_time_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/speed"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/speed"
-        app:layout_constraintVertical_bias="0.8" />
+        android:layout_marginTop="-15dp"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_running_time_label"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
+
+    <TextView
+        android:id="@+id/elapsed_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_initial_time"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/elapsed_time_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_elapsed_time_label"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/your_id"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
 
     <TextView
         android:id="@+id/calories"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
         android:fontFamily="@font/anton"
@@ -134,29 +133,28 @@
         android:textColor="@color/white"
         android:textSize="32sp"
         android:textStyle="bold|italic"
-        android:typeface="sans"
-        app:layout_constraintBottom_toBottomOf="@+id/speed"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/speed"
-        app:layout_constraintTop_toTopOf="@+id/speed" />
+        android:typeface="sans" />
 
     <TextView
         android:id="@+id/pace_calories_label"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
         android:gravity="start"
         android:text="@string/text_view_run_details_calories_label"
         android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/calories"
-        app:layout_constraintStart_toStartOf="@+id/calories"
-        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_2" />
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
 
     <TextView
         android:id="@+id/speed"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:ems="5"
         android:fontFamily="@font/anton"
         android:gravity="start"
@@ -164,22 +162,17 @@
         android:textColor="@color/white"
         android:textSize="32sp"
         android:textStyle="bold|italic"
-        android:typeface="sans"
-        app:layout_constraintEnd_toStartOf="@+id/calories"
-        app:layout_constraintStart_toStartOf="@id/stopwatch"
-        app:layout_constraintTop_toBottomOf="@+id/stopwatch_label" />
+        android:typeface="sans" />
 
     <TextView
         android:id="@+id/speed_label"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
         android:gravity="start"
         android:text="@string/text_view_run_details_speed_label"
         android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/speed"
-        app:layout_constraintStart_toStartOf="@+id/speed"
-        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_2" />
+        android:textSize="14sp" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
