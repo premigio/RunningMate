@@ -9,7 +9,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.itba.runningMate.R;
-import com.itba.runningMate.mainpage.fragments.pastruns.ui.PastRunsFragment;
+import com.itba.runningMate.mainpage.fragments.feed.FeedFragment;
 import com.itba.runningMate.mainpage.fragments.running.ui.RunningFragment;
 import com.itba.runningMate.mainpage.adapters.ViewPagerAdapter;
 
@@ -27,7 +27,7 @@ public class MainPageActivity extends AppCompatActivity {
 
         titleList = new LinkedList<>();
         titleList.add(getString(R.string.run));
-        titleList.add(getString(R.string.past));
+        titleList.add(getString(R.string.feed));
 
         setUpTabs();
     }
@@ -37,7 +37,7 @@ public class MainPageActivity extends AppCompatActivity {
     private void setUpTabs() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         adapter.addFragment(new RunningFragment());
-        adapter.addFragment(new PastRunsFragment());
+        adapter.addFragment(new FeedFragment());
 
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(adapter);

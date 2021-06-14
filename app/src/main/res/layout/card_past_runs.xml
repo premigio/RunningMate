@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/past_runs_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="8dp"
+    android:elevation="8dp"
+    android:layout_margin="8dp"
+    android:focusable="true">
+
+    <LinearLayout
+        android:id="@+id/past_runs_card_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/past"
+            android:textAppearance="?attr/textAppearanceHeadline4"
+            android:textColorHighlight="@color/black"
+            android:textStyle="bold"
+            />
+
+        <com.itba.runningMate.mainpage.fragments.feed.cards.RunElementView
+            android:id="@+id/past_run_card_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <com.itba.runningMate.mainpage.fragments.feed.cards.RunElementView
+            android:id="@+id/past_run_card_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <com.itba.runningMate.mainpage.fragments.feed.cards.RunElementView
+            android:id="@+id/past_run_card_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/past_run_empty_card"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/empty_list"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/see_all_past_runs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seeAll"
+            android:gravity="center"
+            android:layout_gravity="center"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+    </LinearLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>
