@@ -1,13 +1,22 @@
 package com.itba.runningMate.running.fragments.map;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.utils.Constants;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +35,6 @@ public class RunningMapPresenterTest {
         tracker = mock(Tracker.class);
 
         presenter = new RunningMapPresenter(stateStorage, view);
-        presenter.onTrackingServiceAttached(tracker);
     }
 
     @Test
@@ -53,7 +61,6 @@ public class RunningMapPresenterTest {
 
     @Test
     public void givenViewDetachedThenDetachTrackingService() {
-
         presenter.onViewDetached();
 
         verify(view).detachTrackingService();
@@ -77,19 +84,44 @@ public class RunningMapPresenterTest {
         verify(view).showDefaultLocation();
     }
 
-//    public void onTrackingServiceAttached(Tracker tracker) {
-//        this.tracker = tracker;
-//        this.isTrackerAttached = true;
-//        tracker.setOnTrackingLocationUpdateListener(this);
-//        if (tracker.isTracking() && view.get() != null) {
-//            // recuperamos la ruta y actualizamos LastKnownLocation
-//            Route route = tracker.queryRoute();
-//            if (!route.isEmpty()) {
-//                stateStorage.setLastKnownLocation(route.getLastLatitude(), route.getLastLongitude());
-//                view.get().showRoute(route);
-//            }
-//        }
-//    }
+    @Test
+    public void givenTrackingServiceAttachedThenSetTrackingLocationUpdateListener() {
+        presenter.onTrackingServiceAttached(tracker);
+
+        verify(tracker).setOnTrackingLocationUpdateListener(presenter);
+    }
+
+    @Test
+    public void givenTrackingServiceAttachedThenShowRoute() {
+        when(tracker.isTracking()).thenReturn(true);
+        List<List<LatLng>> laps = new LinkedList<>();
+        List<LatLng> lapLocations = new LinkedList<>();
+        lapLocations.add(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE));
+        lapLocations.add(new LatLng(Constants.DEFAULT_LATITUDE + 1, Constants.DEFAULT_LONGITUDE + 1));
+        laps.add(lapLocations);
+        Route route = Route.from(laps);
+        when(tracker.queryRoute()).thenReturn(route);
+
+        presenter.onTrackingServiceAttached(tracker);
+
+        verify(view).showRoute(route);
+    }
+
+    @Test
+    public void givenTrackingServiceAttachedThenUpdateLastKnownLocation() {
+        when(tracker.isTracking()).thenReturn(true);
+        List<List<LatLng>> laps = new LinkedList<>();
+        List<LatLng> lapLocations = new LinkedList<>();
+        lapLocations.add(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE));
+        lapLocations.add(new LatLng(Constants.DEFAULT_LATITUDE + 1, Constants.DEFAULT_LONGITUDE + 1));
+        laps.add(lapLocations);
+        Route route = Route.from(laps);
+        when(tracker.queryRoute()).thenReturn(route);
+
+        presenter.onTrackingServiceAttached(tracker);
+
+        verify(stateStorage).setLastKnownLocation(route.getLastLatitude(), route.getLastLongitude());
+    }
 
     @Test
     public void givenCenterCameraThenSaveStateStorage() {
@@ -136,20 +168,41 @@ public class RunningMapPresenterTest {
         verify(view).showLocation(latitude, longitude);
     }
 
-//    @Test
-//    public void givenLocationUpdateWhenTrackingThenShoeLocationUpdate() {
-//        final double latitude = Constants.DEFAULT_LATITUDE;
-//        final double longitude = Constants.DEFAULT_LONGITUDE;
-//
-//        when(tracker.isTracking()).thenReturn(true);
-//        when(stateStorage.hasLastKnownLocation()).thenReturn(true);
-//        Route route = new Route();
-//        route.addToRoute(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude())
-//                .addToRoute(latitude, longitude);
-//
-//        presenter.onLocationUpdate(latitude, longitude);
-//
-//        verify(view).showRoute(route);
-//    }
+    @Test
+    public void givenLocationUpdateWhenTrackingThenShowLocationUpdate() {
+        final double latitude = Constants.DEFAULT_LATITUDE;
+        final double longitude = Constants.DEFAULT_LONGITUDE;
+
+        when(tracker.isTracking()).thenReturn(true);
+        when(stateStorage.hasLastKnownLocation()).thenReturn(true);
+
+        Route route = mock(Route.class);
+        route.addToRoute(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude());
+        ArgumentCaptor<Route> argumentCaptor = ArgumentCaptor.forClass(Route.class);
+
+        when(tracker.queryRoute()).thenReturn(route);
+
+        presenter.onTrackingServiceAttached(tracker);
+        presenter.onLocationUpdate(latitude, longitude);
+
+        verify(view, times(2)).showRoute(argumentCaptor.capture());
+        Route capturedArgument = argumentCaptor.getValue();
+        assert capturedArgument.getLastLatitude() == latitude;
+        assert capturedArgument.getLastLongitude() == longitude;
+    }
+
+    @Test
+    public void givenTrackingServiceDetachedThenSetIsTrackerAttachedFalse() {
+        presenter.onTrackingServiceDetached();
+
+        assertFalse(presenter.isTrackerAttached());
+    }
+
+    @Test
+    public void givenTrackingServiceDetachedThenSetTrackerNull() {
+        presenter.onTrackingServiceDetached();
+
+        assertNull(presenter.getTracker());
+    }
 
 }
