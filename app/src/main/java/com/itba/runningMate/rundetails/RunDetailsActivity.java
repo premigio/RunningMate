@@ -238,7 +238,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     @Override
     public void showRoute(Route route) {
-        mapView.showRoute(route);
+        mapView.showRouteWithMarker(route);
         mapView.centerMapOn(route);
     }
 
