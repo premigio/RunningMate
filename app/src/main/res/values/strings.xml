@@ -26,7 +26,7 @@
     <string name="text_view_running_initial_calories">0</string>
     <string name="stop_run_message">It seems that you have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
 
-    <string name="seeAll">See all</string>
+    <string name="see_all">See all</string>
     <string name="run">Run</string>
     <string name="feed">Feed</string>
     <string name="past">Past Runs</string>
@@ -63,6 +63,25 @@
     <string name="btn_run_details_share">Share</string>
     <string name="text_view_run_details_elapsed_time_label">Elapsed Time</string>
     <string name="text_view_run_details_running_time_label">Running Time</string>
+
+    // Goals / Achievements Activity
+    <string name="goals">Goals</string>
+    <string name="goal_title">Title</string>
+    <string name="goal_subtitle">This is a subtitle, to explain about the goal!</string>
+    <string name="goal_description">This image represents the level you are in.</string>
+
+    <string name="taragui">Taragui</string>
+    <string name="taragui_subtitle">Level 1: Taragui, The "yerba" that leads in Argentina.</string>
+    <string name="cbse">CBSé</string>
+    <string name="cbse_subtitle">Level 2: CBSé, Gather the good.</string>
+    <string name="cruz_de_malta">Cruz de Malta</string>
+    <string name="cruz_de_malta_subtitle">Level 3: Cruz de Malta, Soft and durable.</string>
+    <string name="playadito">Playadito</string>
+    <string name="playadito_subtitle">Level 4: Made with sticks.</string>
+    <string name="rosamonte">Rosamonte</string>
+    <string name="rosamonte_subtitle">Level 5: Rosamonte, The way to "cebar" the best mate.</string>
+    <string name="merced">La Merced</string>
+    <string name="merced_subtitle">Level 6: La Merced, A different "yerba".</string>
 
     <!--    <string name="date_title">%1$s</string>-->
     <!--    <string name="speed_title">Speed</string>-->

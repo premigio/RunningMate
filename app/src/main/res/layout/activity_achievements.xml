@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="parent">-->
+
+    <ImageView
+        android:id="@+id/goal_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        android:contentDescription="@string/goal_description" />
+
+    <TextView
+        android:id="@+id/goal_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/goal_title"
+        app:layout_constraintTop_toBottomOf="@id/goal_image"/>
+
+    <TextView
+        android:id="@+id/goal_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/goal_subtitle"
+        app:layout_constraintTop_toBottomOf="@id/goal_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/goal_progress_bar"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/goal_subtitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/goal_subtitle"
+        app:layout_constraintTop_toBottomOf="@id/goal_subtitle" />
+
+    <View
+        android:id="@+id/goal_achievement_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/goal_progress_bar"/>
+
+    <GridLayout
+        android:id="@+id/achievements_grid_layout"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/goal_achievement_separator">
+
+
+
+    </GridLayout>
+
+
+<!--    </androidx.core.widget.NestedScrollView>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,8 @@
 package com.itba.runningMate.mainpage.fragments.feed;
 
+import android.graphics.Bitmap;
+
+import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard;
 import com.itba.runningMate.repository.run.RunRepository;
@@ -35,6 +38,7 @@ public class FeedPresenter {
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(this::receivedRunList, this::onRunListError));
+        getGoalLevel();
     }
 
     public void onViewDetached() {
@@ -50,8 +54,8 @@ public class FeedPresenter {
 
     private void receivedRunList(List<Run> runs) {
         Timber.i("Runs %d", runs.size());
-        if (view.get() != null){
-            if (runs.isEmpty()){
+        if (view.get() != null) {
+            if (runs.isEmpty()) {
                 view.get().setPastRunCardsNoText();
                 view.get().disappearRuns(0);
                 return;
@@ -74,8 +78,58 @@ public class FeedPresenter {
     }
 
     public void goToPastRunsActivity() {
-        if (view.get() != null){
+        if (view.get() != null) {
             view.get().goToPastRunsActivity();
         }
+    }
+
+    private void getGoalLevel() {
+        disposables.add(repo.getTotalDistance()
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::receivedTotalDistance, this::onRunListErrorGoals));
+    }
+
+    private void receivedTotalDistance(double distance) {
+        if (view.get() != null) {
+            if (distance < 100.0) { // Taragui
+                view.get().setGoalTitle(R.string.taragui);
+                view.get().setGoalSubtitle(R.string.taragui_subtitle);
+                view.get().setGoalImage(R.drawable.taragui);
+            } else if (distance < 200.0) { // CBSé
+                view.get().setGoalTitle(R.string.cbse);
+                view.get().setGoalSubtitle(R.string.cbse_subtitle);
+                view.get().setGoalImage(R.drawable.cbse);
+            } else if (distance < 300.0) { // Cruz de Malta
+                view.get().setGoalTitle(R.string.cruz_de_malta);
+                view.get().setGoalSubtitle(R.string.cruz_de_malta_subtitle);
+                view.get().setGoalImage(R.drawable.cruzdemalta);
+            } else if (distance < 500.0) { // Playadito
+                view.get().setGoalTitle(R.string.playadito);
+                view.get().setGoalSubtitle(R.string.playadito_subtitle);
+                view.get().setGoalImage(R.drawable.playadito);
+            } else if (distance < 750.0) { // Rosamonte
+                view.get().setGoalTitle(R.string.rosamonte);
+                view.get().setGoalSubtitle(R.string.rosamonte_subtitle);
+                view.get().setGoalImage(R.drawable.rosamonte);
+            } else { // La Merced
+                view.get().setGoalTitle(R.string.merced);
+                view.get().setGoalSubtitle(R.string.merced_subtitle);
+                view.get().setGoalImage(R.drawable.lamerced);
+            }
+        }
+    }
+
+    private void onRunListErrorGoals(Throwable throwable) {
+        Timber.d("Failed to retrieve total distance from db");
+        if (view.get() != null) {
+            view.get().setGoalTitle(R.string.taragui);
+            view.get().setGoalSubtitle(R.string.taragui_subtitle);
+            view.get().setGoalImage(R.drawable.taragui);
+        }
+    }
+
+    public void goToAchievementsActivity() {
+        // Go to achivements activity
     }
 }

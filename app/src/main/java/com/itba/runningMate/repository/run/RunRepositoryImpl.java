@@ -46,6 +46,11 @@ public class RunRepositoryImpl implements RunRepository {
     }
 
     @Override
+    public Single<Double> getTotalDistance() {
+        return runDao.getTotalDistance();
+    }
+
+    @Override
     public Completable updateTitle(long runId, String title) {
         return runDao.updateTitle(runId, title);
     }

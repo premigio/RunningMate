@@ -26,6 +26,9 @@ public interface RunDao {
     @Insert
     Single<Long> insertRoute(RunEntity route);
 
+    @Query("SELECT SUM(distance) FROM runs")
+    Single<Double> getTotalDistance();
+
     @Delete
     Completable deleteRoute(RunEntity route);
 

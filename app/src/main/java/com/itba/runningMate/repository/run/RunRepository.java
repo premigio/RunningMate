@@ -20,6 +20,8 @@ public interface RunRepository {
 
     Single<Long> insertRun(Run run);
 
+    Single<Double> getTotalDistance();
+
     void deleteRun(Run run);
 
     void deleteRun(long runId);
