@@ -1,5 +1,7 @@
 package com.itba.runningMate.running.fragments.metrics;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
@@ -14,11 +16,11 @@ import java.util.Date;
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
+import static com.itba.runningMate.utils.Constants.DISTANCE_EPSILON;
 import static com.itba.runningMate.utils.Formatters.dateFormat;
 
 public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener {
 
-    private static final double DISTANCE_EPSILON = 0.1;
     private final WeakReference<RunningMetricsView> view;
     private final RunningStateStorage stateStorage;
     private final RunRepository runRepository;
@@ -179,5 +181,15 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
         }
         Timber.d("Failed to save run\n".concat(e.getMessage()));
         view.get().showSaveRunError();
+    }
+
+    @VisibleForTesting
+    public Tracker getTracker() {
+        return tracker;
+    }
+
+    @VisibleForTesting
+    public boolean isTrackerAttached() {
+        return isTrackerAttached;
     }
 }
