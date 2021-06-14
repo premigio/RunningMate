@@ -50,7 +50,9 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
 
     public void onViewDetached() {
         stateStorage.persistState();
-        tracker.removeTrackingMetricsUpdateListener(this);
+        if (isTrackerAttached) {
+            tracker.removeTrackingMetricsUpdateListener(this);
+        }
         if (view.get() != null) {
             view.get().detachTrackingService();
         }
