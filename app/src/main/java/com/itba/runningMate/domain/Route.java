@@ -58,4 +58,14 @@ public class Route {
         return lastLap.get(lastLap.size() - 1).longitude;
     }
 
+    public double getFirstLatitude() {
+        List<LatLng> firstLap = locations.get(0);
+        return firstLap.get(0).latitude;
+    }
+
+    public double getFirstLongitude() {
+        List<LatLng> firstLap = locations.get(0);
+        return firstLap.get(0).longitude;
+    }
+
 }
