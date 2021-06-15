@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
@@ -19,5 +20,6 @@ public interface DependencyContainer {
 
     RunningStateStorage getRunningStateStorage();
 
+    TrackingLocationUpdatesDispatcher getTrackingLocationUpdatesDispatcher();
 
 }
