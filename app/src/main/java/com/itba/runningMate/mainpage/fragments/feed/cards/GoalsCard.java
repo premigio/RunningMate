@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.itba.runningMate.R;
+import com.itba.runningMate.mainpage.fragments.feed.FeedFragment;
 import com.itba.runningMate.mainpage.fragments.feed.FeedPresenter;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +21,8 @@ public class GoalsCard extends CardView {
     ImageView image;
     TextView title, subtitle;
     Button seeAll;
+    private OnSeeAllClickListener onSeeAllClickListener;
 
-    FeedPresenter presenter;
 
     public GoalsCard(@NonNull @NotNull Context context) {
         super(context);
@@ -46,12 +47,7 @@ public class GoalsCard extends CardView {
         subtitle = findViewById(R.id.goal_subtitle_card);
         seeAll = findViewById(R.id.see_all_goals);
 
-        seeAll.setOnClickListener((v) -> presenter.goToAchievementsActivity());
-    }
-
-
-    public void setPresenter(FeedPresenter presenter) {
-        this.presenter = presenter;
+        seeAll.setOnClickListener((v) -> this.onSeeAllClickListener.onSeeAllClickAchievements());
     }
 
     public void setTitle(int titleInt) {
@@ -64,5 +60,9 @@ public class GoalsCard extends CardView {
 
     public void setImage(int imageInt) {
         image.setImageResource(imageInt);
+    }
+
+    public void setSeeAllListener(OnSeeAllClickListener onSeeAllClickListener) {
+        this.onSeeAllClickListener = onSeeAllClickListener;
     }
 }

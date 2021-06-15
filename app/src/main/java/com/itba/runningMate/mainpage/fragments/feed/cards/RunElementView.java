@@ -9,6 +9,7 @@ import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.feed.FeedPresenter;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -21,7 +22,7 @@ public class RunElementView extends FrameLayout {
     private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
     private long ID;
 
-    FeedPresenter presenter;
+    private WeakReference<OnCardClickListener> listener;
 
     public RunElementView(Context context) {
         super(context);
@@ -38,8 +39,8 @@ public class RunElementView extends FrameLayout {
         inflate(context, R.layout.run_element, this);
     }
 
-    public void setPresenter(FeedPresenter presenter) {
-        this.presenter = presenter;
+    public void setOnClick(OnCardClickListener listener) {
+        this.listener = new WeakReference<OnCardClickListener>(listener);
     }
 
     public void bind(Run model) {
@@ -57,6 +58,7 @@ public class RunElementView extends FrameLayout {
         time.setText(timeFormat.format(model.getStartTime()));
 
         ConstraintLayout cl = this.findViewById(R.id.old_run_row_ll);
-        cl.setOnClickListener((v) -> presenter.onPastRunClick(ID));
+        if (listener.get() != null)
+            cl.setOnClickListener((v) -> listener.get().onRunClick(ID));
     }
 }

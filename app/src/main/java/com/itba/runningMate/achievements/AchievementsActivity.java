@@ -2,6 +2,7 @@ package com.itba.runningMate.achievements;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -109,5 +111,14 @@ public class AchievementsActivity extends AppCompatActivity implements Achieveme
     @Override
     public void setAchievement(Achievements achievementNumber, boolean achieved) {
         achievements.get(achievementNumber.ordinal()).setBadgeVisibility(achieved);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
