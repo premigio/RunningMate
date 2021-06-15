@@ -56,6 +56,9 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
         if (view.get() != null) {
             view.get().detachTrackingService();
         }
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     public void onTrackingServiceAttached(Tracker tracker) {
@@ -173,7 +176,6 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
             return;
         }
         view.get().launchRunActivity(runId);
-        disposable.dispose();
         Timber.d("Successfully saved run in db for run-id: %d", runId);
     }
 

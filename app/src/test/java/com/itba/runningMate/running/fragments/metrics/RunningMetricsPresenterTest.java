@@ -1,6 +1,7 @@
 package com.itba.runningMate.running.fragments.metrics;
 
 import com.itba.runningMate.domain.Route;
+import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.Tracker;
@@ -11,9 +12,13 @@ import com.itba.runningMate.utils.run.RunMetrics;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
+
 import static com.itba.runningMate.utils.Constants.DISTANCE_EPSILON;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -66,30 +71,6 @@ public class RunningMetricsPresenterTest {
 
         verify(view).detachTrackingService();
     }
-
-//    public void stopRun() {
-//        if (!isTrackerAttached) {
-//            return;
-//        }
-//        tracker.stopTracking();
-//        float distKm = tracker.queryDistance();
-//        if (tracker.queryDistance() < DISTANCE_EPSILON && view.get() != null) {
-//            view.get().finishActivity();
-//        } else {
-//            long timeMillis = tracker.queryElapsedTime();
-//            Run run = new Run()
-//                    .title("Run on ".concat(dateFormat.format(new Date(tracker.queryStartTime()))))
-//                    .startTime(new Date(tracker.queryStartTime()))
-//                    .endTime(new Date(tracker.queryEndTime()))
-//                    .runningTime(timeMillis)
-//                    .route(tracker.queryRoute().getLocations())
-//                    .distance(distKm)
-//                    .pace(tracker.queryPace())
-//                    .velocity(tracker.queryVelocity())
-//                    .calories(RunMetrics.calculateCalories(distKm));
-//            saveRun(run);
-//        }
-//    }
 
     @Test
     public void givenStopWatchUpdateThenShowStopWatchUpdate() {
@@ -280,7 +261,7 @@ public class RunningMetricsPresenterTest {
     }
 
     @Test
-    public void givenSopRunWhenTrackingDistanceLessThanThresholdThenEndActivity() {
+    public void givenStopRunWhenTrackingDistanceLessThanThresholdThenEndActivity() {
         when(tracker.queryDistance()).thenReturn((float) (DISTANCE_EPSILON - 0.5));
 
         presenter.onTrackingServiceAttached(tracker);
@@ -290,37 +271,47 @@ public class RunningMetricsPresenterTest {
     }
 
     @Test
-    public void givenSopRunWhenTrackingDistanceGreaterThanThresholdThenEndActivity() {
-        when(tracker.queryDistance()).thenReturn((float) (DISTANCE_EPSILON - 0.5));
+    public void givenStopRunWhenTrackingDistanceGreaterThanThresholdThenSaveRun() {
+        when(tracker.queryDistance()).thenReturn(10F);
+        when(tracker.queryElapsedTime()).thenReturn(10000L);
+        when(tracker.queryStartTime()).thenReturn(System.currentTimeMillis());
+        when(tracker.queryEndTime()).thenReturn(System.currentTimeMillis() + 10000L);
+        when(tracker.queryVelocity()).thenReturn(10F / 10000F);
+        when(tracker.queryPace()).thenReturn(10000L / 10);
+        when(tracker.queryRoute()).thenReturn(route);
+
+        when(schedulers.io()).thenReturn(Schedulers.trampoline());
+        when(schedulers.ui()).thenReturn(Schedulers.trampoline());
+
+        long runId = 1L;
+        when(runRepository.insertRun(any(Run.class))).thenReturn(Single.just(runId));
 
         presenter.onTrackingServiceAttached(tracker);
         presenter.stopRun();
 
-        verify(view).finishActivity();
+        verify(view).launchRunActivity(runId);
     }
 
-//    public void stopRun() {
-//        if (!isTrackerAttached) {
-//            return;
-//        }
-//        tracker.stopTracking();
-//        float distKm = tracker.queryDistance();
-//        if (tracker.queryDistance() < DISTANCE_EPSILON && view.get() != null) {
-//            view.get().finishActivity();
-//        } else {
-//            long timeMillis = tracker.queryElapsedTime();
-//            Run run = new Run()
-//                    .title("Run on ".concat(dateFormat.format(new Date(tracker.queryStartTime()))))
-//                    .startTime(new Date(tracker.queryStartTime()))
-//                    .endTime(new Date(tracker.queryEndTime()))
-//                    .runningTime(timeMillis)
-//                    .route(tracker.queryRoute().getLocations())
-//                    .distance(distKm)
-//                    .pace(tracker.queryPace())
-//                    .velocity(tracker.queryVelocity())
-//                    .calories(RunMetrics.calculateCalories(distKm));
-//            saveRun(run);
-//        }
-//    }
+    @Test
+    public void givenStopRunWhenTrackingDistanceGreaterThanThresholdAndErrorOnSaveRunThenShowErrorMessage() {
+        when(tracker.queryDistance()).thenReturn(10F);
+        when(tracker.queryElapsedTime()).thenReturn(10000L);
+        when(tracker.queryStartTime()).thenReturn(System.currentTimeMillis());
+        when(tracker.queryEndTime()).thenReturn(System.currentTimeMillis() + 10000L);
+        when(tracker.queryVelocity()).thenReturn(10F / 10000F);
+        when(tracker.queryPace()).thenReturn(10000L / 10);
+        when(tracker.queryRoute()).thenReturn(route);
+
+        when(schedulers.io()).thenReturn(Schedulers.trampoline());
+        when(schedulers.ui()).thenReturn(Schedulers.trampoline());
+
+        long runId = 1L;
+        when(runRepository.insertRun(any(Run.class))).thenReturn(Single.error(new RuntimeException("Could not save run")));
+
+        presenter.onTrackingServiceAttached(tracker);
+        presenter.stopRun();
+
+        verify(view).showSaveRunError();
+    }
 
 }
