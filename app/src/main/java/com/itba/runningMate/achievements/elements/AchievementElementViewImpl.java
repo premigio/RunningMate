@@ -6,12 +6,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.itba.runningMate.R;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class AchievementElementViewImpl extends FrameLayout implements AchievementsElementView{
+import com.itba.runningMate.R;
+
+public class AchievementElementViewImpl extends FrameLayout implements AchievementsElementView {
 
     TextView titleView, descriptionView;
     ImageView imageView;
@@ -51,10 +51,8 @@ public class AchievementElementViewImpl extends FrameLayout implements Achieveme
 
     @Override
     public void setBadgeVisibility(boolean achieved) {
-        if (achieved){
-            imageView.setVisibility(VISIBLE);
-        } else {
-            imageView.setVisibility(INVISIBLE);
+        if (achieved) {
+            imageView.setAlpha(1.0F);
         }
     }
 }

@@ -16,7 +16,7 @@
             android:layout_marginBottom="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:src="@drawable/badge_icon"
-            android:visibility="invisible"
+            android:alpha="0.4"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:contentDescription="@string/achievement_unlocked_description"/>

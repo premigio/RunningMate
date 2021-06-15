@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/achievements_cl_activity"
+    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/achievements_cl_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -84,8 +82,9 @@
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColorHighlight="@color/black"
             android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.072"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.069"
+            app:layout_constraintStart_toStartOf="@id/achievements_goal_title_activity"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/goal_achievement_separator"
@@ -111,14 +110,14 @@
             <com.itba.runningMate.achievements.elements.AchievementElementViewImpl
                 android:id="@+id/achievement3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <com.itba.runningMate.achievements.elements.AchievementElementViewImpl
                 android:id="@+id/achievement4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</ScrollView>
