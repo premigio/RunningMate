@@ -29,6 +29,15 @@ public interface RunDao {
     @Query("SELECT SUM(distance) FROM runs")
     Single<Double> getTotalDistance();
 
+    @Query("SELECT MAX(elapsed_time) FROM runs")
+    Single<Long> getMaxTime();
+
+    @Query("SELECT MAX(calories) FROM runs")
+    Single<Double> getMaxKcal();
+
+    @Query("SELECT MAX(velocity) FROM runs")
+    Single<Double> getMaxSpeed();
+
     @Delete
     Completable deleteRoute(RunEntity route);
 
@@ -40,5 +49,4 @@ public interface RunDao {
 
     @Query("UPDATE runs SET title=:title WHERE run_id = :id")
     Completable updateTitle(long id, String title);
-
 }

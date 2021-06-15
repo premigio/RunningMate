@@ -19,4 +19,6 @@ public interface FeedView {
     void setGoalSubtitle(int subtitle);
 
     void setGoalImage(int image);
+
+    void goToAchievementsActivity();
 }

@@ -27,11 +27,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.itba.runningMate.R;
+import com.itba.runningMate.achievements.elements.Achievements;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.map.Map;
+import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.rundetails.model.RunMetricsDetail;
 import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
@@ -171,10 +174,14 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
         final RunRepository runRepository = container.getRunRepository();
         final CacheFileProvider cacheFileProvider = container.getCacheFileProvider();
+        final RunningStateStorage stateStorage = container.getRunningStateStorage();
+        final AchievementsStorage achievementsStorage = container.getAchievementsStorage();
 
         presenter = new RunDetailsPresenter(cacheFileProvider,
                 runRepository,
                 schedulerProvider,
+                stateStorage,
+                achievementsStorage,
                 runId,
                 this);
     }

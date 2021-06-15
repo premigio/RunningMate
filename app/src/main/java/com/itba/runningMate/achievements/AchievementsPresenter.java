@@ -1,123 +1,112 @@
-package com.itba.runningMate.mainpage.fragments.feed;
-
-import android.graphics.Bitmap;
+package com.itba.runningMate.achievements;
 
 import com.itba.runningMate.R;
-import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard;
+import com.itba.runningMate.achievements.elements.Achievements;
+import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
-public class FeedPresenter {
+public class AchievementsPresenter {
 
-    private final WeakReference<FeedView> view;
-    private final WeakReference<PastRunsCard> pastRunsCard;
+    private final WeakReference<AchievementsView> view;
+    private final CompositeDisposable disposables;
     private final RunRepository repo;
     private final SchedulerProvider schedulerProvider;
+    private final AchievementsStorage storage;
 
-    private final CompositeDisposable disposables; // I need 2 disposables at least
 
-
-    public FeedPresenter(RunRepository repo, SchedulerProvider schedulerProvider,
-                         PastRunsCard pastRunsCard, FeedView view) {
+    public AchievementsPresenter(RunRepository repo, SchedulerProvider schedulerProvider, AchievementsStorage storage,
+                                 AchievementsView view) {
         this.view = new WeakReference<>(view);
-        this.pastRunsCard = new WeakReference<>(pastRunsCard);
+        this.disposables = new CompositeDisposable();
         this.repo = repo;
         this.schedulerProvider = schedulerProvider;
-        disposables = new CompositeDisposable();
+        this.storage = storage;
     }
 
     public void onViewAttached() {
-        disposables.add(repo.getRunLazy()
+        receivedTotalDistance(storage.getTotalDistance());
+        getAchievements();
+    }
+
+    private void getAchievements() {
+        disposables.add(repo.getMaxSpeed()
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe(this::receivedMaxSpeed, this::onRunListErrorGoals));
+
+        disposables.add(repo.getMaxKcal()
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
-                .subscribe(this::receivedRunList, this::onRunListError));
-        getGoalLevel();
+                .subscribe(this::receivedMaxKcal, this::onRunListErrorGoals));
+
+        disposables.add(repo.getMaxTime()
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::receivedMaxTime, this::onRunListErrorGoals));
+
+    }
+
+    private void receivedMaxSpeed(double speed) {
+        view.get().setAchievement(Achievements.SPEED10, speed >= 10.0);
+    }
+    private void receivedMaxKcal(double kcal) {
+        view.get().setAchievement(Achievements.KCAL1000, kcal >= 1000.0);
+    }
+
+    private void receivedMaxTime(long time) {
+        view.get().setAchievement(Achievements.TIME1H, time >= 3600000);
     }
 
     public void onViewDetached() {
-        disposables.clear();
-    }
-
-    private void onRunListError(Throwable throwable) {
-        Timber.d("Failed to retrieve runs from db");
-        if (view.get() != null) {
-            view.get().setPastRunCardsNoText();
-        }
-    }
-
-    private void receivedRunList(List<Run> runs) {
-        Timber.i("Runs %d", runs.size());
-        if (view.get() != null) {
-            if (runs.isEmpty()) {
-                view.get().setPastRunCardsNoText();
-                view.get().disappearRuns(0);
-                return;
-            }
-            view.get().disappearNoText();
-            int maxVal = Math.min(runs.size(), 3);
-            for (int i = 1; i <= maxVal; i++) {
-                //add data to view
-                view.get().addRunToCard(i - 1, runs.get(i - 1));
-            }
-            // disappear the run cards where they should not be
-            view.get().disappearRuns(maxVal);
-        }
-    }
-
-    public void onPastRunClick(long id) {
-        if (view.get() != null) {
-            pastRunsCard.get().launchRunDetails(id);
-        }
-    }
-
-    public void goToPastRunsActivity() {
-        if (view.get() != null) {
-            view.get().goToPastRunsActivity();
-        }
-    }
-
-    private void getGoalLevel() {
-        disposables.add(repo.getTotalDistance()
-                .subscribeOn(schedulerProvider.computation())
-                .observeOn(schedulerProvider.ui())
-                .subscribe(this::receivedTotalDistance, this::onRunListErrorGoals));
+        disposables.dispose();
     }
 
     private void receivedTotalDistance(double distance) {
         if (view.get() != null) {
+            double progress = 0.0;
             if (distance < 100.0) { // Taragui
                 view.get().setGoalTitle(R.string.taragui);
                 view.get().setGoalSubtitle(R.string.taragui_subtitle);
                 view.get().setGoalImage(R.drawable.taragui);
+                view.get().setProgressBar(distance, 100.0);
             } else if (distance < 200.0) { // CBSé
                 view.get().setGoalTitle(R.string.cbse);
                 view.get().setGoalSubtitle(R.string.cbse_subtitle);
                 view.get().setGoalImage(R.drawable.cbse);
+                view.get().setProgressBar((distance - 100.0), 100);
             } else if (distance < 300.0) { // Cruz de Malta
                 view.get().setGoalTitle(R.string.cruz_de_malta);
                 view.get().setGoalSubtitle(R.string.cruz_de_malta_subtitle);
                 view.get().setGoalImage(R.drawable.cruzdemalta);
+                view.get().setProgressBar((distance - 200.0), 100.0);
             } else if (distance < 500.0) { // Playadito
                 view.get().setGoalTitle(R.string.playadito);
                 view.get().setGoalSubtitle(R.string.playadito_subtitle);
                 view.get().setGoalImage(R.drawable.playadito);
+                view.get().setProgressBar((distance - 300.0), 200.0);
             } else if (distance < 750.0) { // Rosamonte
                 view.get().setGoalTitle(R.string.rosamonte);
                 view.get().setGoalSubtitle(R.string.rosamonte_subtitle);
                 view.get().setGoalImage(R.drawable.rosamonte);
+                view.get().setProgressBar((distance - 500.0), 250.0);
             } else { // La Merced
                 view.get().setGoalTitle(R.string.merced);
                 view.get().setGoalSubtitle(R.string.merced_subtitle);
                 view.get().setGoalImage(R.drawable.lamerced);
+                view.get().setProgressBar(100.0, 100.0);
             }
+            //achievement 1 unlocked
+            view.get().setAchievement(Achievements.DISTANCE2000, distance >= 2000.0);
+
         }
+
     }
 
     private void onRunListErrorGoals(Throwable throwable) {
@@ -129,9 +118,5 @@ public class FeedPresenter {
         }
     }
 
-    public void goToAchievementsActivity() {
-        if (view.get() != null) {
-            view.get().goToAchievementsActivity();
-        }
-    }
+
 }

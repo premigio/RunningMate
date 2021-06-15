@@ -22,6 +22,12 @@ public interface RunRepository {
 
     Single<Double> getTotalDistance();
 
+    Single<Long> getMaxTime();
+
+    Single<Double> getMaxKcal();
+
+    Single<Double> getMaxSpeed();
+
     void deleteRun(Run run);
 
     void deleteRun(long runId);

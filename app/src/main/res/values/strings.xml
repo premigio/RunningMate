@@ -82,6 +82,19 @@
     <string name="rosamonte_subtitle">Level 5: Rosamonte, The way to "cebar" the best mate.</string>
     <string name="merced">La Merced</string>
     <string name="merced_subtitle">Level 6: La Merced, A different "yerba".</string>
+    <string name="achievements">Achievements</string>
+    <string name="achievement_unlocked_description">Achievement Unlocked</string>
+    <string name="achievement_description">Description of the achievement</string>
+    <string name="total_distance_achievement_title">Ran 2000km</string>
+    <string name="total_distance_achievement_subtitle">Ran more than a total of 2000km</string>
+    <string name="max_speed_achievement_title">Speed 10km/h</string>
+    <string name="max_speed_achievement_subtitle">Got to run at more than 10km/h</string>
+    <string name="max_kcal_achievement_title">1000 Kcal</string>
+    <string name="max_kcal_achievement_subtitle">Burned more than 1000 kcal in one run.</string>
+    <string name="max_time_achievement_title">Time 1h</string>
+    <string name="max_time_achievement_subtitle">Got to run for more than 1h.</string>
+
+
 
     <!--    <string name="date_title">%1$s</string>-->
     <!--    <string name="speed_title">Speed</string>-->

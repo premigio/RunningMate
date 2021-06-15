@@ -109,4 +109,12 @@ public class FeedFragment extends Fragment implements FeedView {
     public void setGoalImage(int image) {
         goalsCard.setImage(image);
     }
+
+    @Override
+    public void goToAchievementsActivity() {
+        Uri.Builder uriBuilder = new Uri.Builder()
+                .scheme("runningmate")
+                .encodedAuthority("achievements");
+        startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
+    }
 }
