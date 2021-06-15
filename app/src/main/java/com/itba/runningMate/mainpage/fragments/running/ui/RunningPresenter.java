@@ -117,22 +117,9 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
     }
 
     @VisibleForTesting
-    public boolean isTrackerAttached() {
-        return isTrackerAttached;
-    }
-
-    @VisibleForTesting
-    public void setTrackerAttached(boolean trackerAttached) {
-        isTrackerAttached = trackerAttached;
-    }
-
-    @VisibleForTesting
     public Tracker getTracker() {
         return this.tracker;
     }
 
-    @VisibleForTesting
-    public void setTracker(Tracker tracker) {
-        this.tracker = tracker;
-    }
+
 }

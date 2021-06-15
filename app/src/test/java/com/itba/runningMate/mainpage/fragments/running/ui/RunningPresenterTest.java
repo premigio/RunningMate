@@ -63,14 +63,15 @@ public class RunningPresenterTest {
         verify(stateStorage).persistState();
     }
 
+    @Test
+    public void givenViewDetachedThenDetachTrackingService() {
 
-//    public void onViewDetached() {
-//        stateStorage.persistState();
-//        if (isTrackerAttached && view.get() != null) {
-//            tracker.removeTrackingLocationUpdateListener(this);
-//            view.get().detachTrackingService();
-//        }
-//    }
+        presenter.onTrackingServiceAttached(tracker);
+        presenter.onViewDetached();
+
+        verify(tracker).removeTrackingLocationUpdateListener(presenter);
+        verify(view).detachTrackingService();
+    }
 
     @Test
     public void givenMapAttachedWhenLocationPermissionGrantedThenEnableMyLocationOnMap() {
@@ -139,7 +140,7 @@ public class RunningPresenterTest {
     }
 
     @Test
-    public void givenAceptedRequestLocationPermissionThenLaunchAndAttachTrackingService() {
+    public void givenAcceptedRequestLocationPermissionThenLaunchAndAttachTrackingService() {
         final boolean grantedPermission = true;
 
         presenter.onRequestLocationPermissionResult(grantedPermission);
@@ -175,20 +176,27 @@ public class RunningPresenterTest {
         verify(view, never()).requestLocationPermission();
     }
 
-//    @Test
-//    public void onStartButtonClick() {
-//        if (view.get() == null) {
-//            return;
-//        }
-//        if (!view.get().areLocationPermissionGranted()) {
-//            view.get().requestLocationPermission();
-//        } else {
-//            if (isTrackerAttached && !tracker.isTracking()) {
-//                tracker.startTracking();
-//                view.get().launchRunningActivity();
-//            }
-//        }
-//    }
+    @Test
+    public void givenStartButtonClickedWhenLocationPermissionGrantedAndTrackingServiceAttachedAndNotTrackingThenStartTracking() {
+        when(view.areLocationPermissionGranted()).thenReturn(true);
+        when(tracker.isTracking()).thenReturn(false);
+
+        presenter.onTrackingServiceAttached(tracker);
+        presenter.onStartButtonClick();
+
+        verify(tracker).startTracking();
+    }
+
+    @Test
+    public void givenStartButtonClickedWhenLocationPermissionGrantedAndTrackingServiceAttachedAndNotTrackingThenLaunchRunningActivity() {
+        when(view.areLocationPermissionGranted()).thenReturn(true);
+        when(tracker.isTracking()).thenReturn(false);
+
+        presenter.onTrackingServiceAttached(tracker);
+        presenter.onStartButtonClick();
+
+        verify(view).launchRunningActivity();
+    }
 
     @Test
     public void givenLocationUpdateWhenCenteredCameraEnabledThenShowLocation() {
