@@ -13,4 +13,12 @@ public interface FeedView {
     void disappearRuns(int abs);
 
     void disappearNoText();
+
+    void setGoalTitle(int title);
+
+    void setGoalSubtitle(int subtitle);
+
+    void setGoalImage(int image);
+
+    void goToAchievementsActivity();
 }

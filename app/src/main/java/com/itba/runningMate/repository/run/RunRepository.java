@@ -20,6 +20,14 @@ public interface RunRepository {
 
     Single<Long> insertRun(Run run);
 
+    Single<Double> getTotalDistance();
+
+    Single<Long> getMaxTime();
+
+    Single<Double> getMaxKcal();
+
+    Single<Double> getMaxSpeed();
+
     Completable deleteRun(Run run);
 
     Completable deleteRun(long runId);

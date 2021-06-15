@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import com.google.android.gms.maps.model.LatLng;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 
+import java.util.Date;
+
 import static com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE;
 import static com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE;
 

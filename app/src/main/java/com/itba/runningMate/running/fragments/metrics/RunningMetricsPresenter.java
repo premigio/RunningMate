@@ -3,6 +3,7 @@ package com.itba.runningMate.running.fragments.metrics;
 import androidx.annotation.VisibleForTesting;
 
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
 import com.itba.runningMate.services.location.Tracker;
@@ -25,6 +26,7 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
     private final RunningStateStorage stateStorage;
     private final RunRepository runRepository;
     private final SchedulerProvider schedulers;
+    private final AchievementsStorage achievementsStorage;
 
     private Tracker tracker;
     private boolean isTrackerAttached;
@@ -33,12 +35,13 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
     public RunningMetricsPresenter(final RunningStateStorage stateStorage,
                                    final RunRepository runRepository,
                                    final SchedulerProvider schedulers,
-                                   final RunningMetricsView view) {
+                                   AchievementsStorage achievementsStorage, final RunningMetricsView view) {
         this.isTrackerAttached = false;
         this.view = new WeakReference<>(view);
         this.stateStorage = stateStorage;
         this.runRepository = runRepository;
         this.schedulers = schedulers;
+        this.achievementsStorage = achievementsStorage;
     }
 
     public void onViewAttached() {
@@ -87,6 +90,8 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
             view.get().finishActivity();
         } else {
             long timeMillis = tracker.queryElapsedTime();
+            achievementsStorage.increaseTotalDistance(distKm);
+            achievementsStorage.persistState();
             Run run = new Run()
                     .title("Run on ".concat(dateFormat.format(new Date(tracker.queryStartTime()))))
                     .startTime(new Date(tracker.queryStartTime()))

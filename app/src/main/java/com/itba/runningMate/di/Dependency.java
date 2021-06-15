@@ -7,10 +7,14 @@ import androidx.room.Room;
 
 import com.itba.runningMate.db.RunDao;
 import com.itba.runningMate.db.RunDb;
+import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
+import com.itba.runningMate.repository.achievementsstorage.AchievementsStorageImpl;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.repository.runningstate.RunningStateStorageImpl;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.repository.run.RunRepositoryImpl;
+import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher;
+import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcherImpl;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
 import com.itba.runningMate.utils.providers.files.CacheFileProviderImpl;
 import com.itba.runningMate.utils.providers.schedulers.AndroidSchedulerProvider;
@@ -50,5 +54,15 @@ public class Dependency {
         return Room.databaseBuilder(getApplicationContext(), RunDb.class, RunDb.NAME)
                 .fallbackToDestructiveMigration()
                 .build();
+    }
+
+    public AchievementsStorage provideAchievementsStorage() {
+        final SharedPreferences preferences = getApplicationContext()
+                .getSharedPreferences(AchievementsStorage.PREF_FILE_ACHIEVEMENTS, Context.MODE_PRIVATE);
+        return new AchievementsStorageImpl(preferences);
+    }
+
+    public TrackingLocationUpdatesDispatcher provideTrackingLocationUpdatesDispatcher() {
+        return new TrackingLocationUpdatesDispatcherImpl();
     }
 }

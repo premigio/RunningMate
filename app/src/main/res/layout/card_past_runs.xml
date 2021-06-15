@@ -57,7 +57,7 @@
             android:id="@+id/see_all_past_runs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/seeAll"
+            android:text="@string/see_all"
             android:gravity="center"
             android:layout_gravity="center"
             style="@style/Widget.MaterialComponents.Button.TextButton"/>
