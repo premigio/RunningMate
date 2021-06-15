@@ -307,6 +307,12 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
+    public void showRunNotAvailableError() {
+        Toast.makeText(this, "Error while attempting to retrieve run", Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);

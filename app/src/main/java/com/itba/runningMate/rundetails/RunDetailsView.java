@@ -40,4 +40,6 @@ public interface RunDetailsView {
 
     void showDeleteError();
 
+    void showRunNotAvailableError();
+
 }

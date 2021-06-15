@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
-import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
@@ -66,6 +65,9 @@ public class RunDetailsPresenter {
 
     private void onReceivedRunMetricsError(Throwable throwable) {
         Timber.d("Failed to retrieve run route from db for run-id: %l", runId);
+        if (view.get() != null) {
+            view.get().showRunNotAvailableError();
+        }
     }
 
     private void onReceivedRun(Run run) {
@@ -79,7 +81,7 @@ public class RunDetailsPresenter {
     }
 
     public void onDeleteButtonClick() {
-        disposables.add(Completable.fromAction(() -> runRepository.deleteRun(runId))
+        disposables.add(runRepository.deleteRun(runId)
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(this::onRunDeleted, this::onRunDeleteError));

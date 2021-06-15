@@ -118,17 +118,6 @@ public class RunningMetricsPresenterTest {
         verify(view).showStopConfirm();
     }
 
-//    @Test
-//    public void givenStopButtonClickWhenDistanceGreaterThanThresholdTHenShowStopConfirm() {
-//        when(tracker.queryDistance()).thenReturn((float) (DISTANCE_EPSILON + 0.5));
-//        when(tracker.queryRoute()).thenReturn(route);
-//
-//        presenterSpy.onTrackingServiceAttached(tracker);
-//        presenterSpy.onStopButtonClick();
-//
-//        verify(presenterSpy).stopRun();
-//    }
-
     @Test
     public void givenPlayButtonClickThenResumeTracking() {
         when(tracker.isTracking()).thenReturn(false);

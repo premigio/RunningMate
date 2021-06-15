@@ -20,9 +20,9 @@ public interface RunRepository {
 
     Single<Long> insertRun(Run run);
 
-    void deleteRun(Run run);
+    Completable deleteRun(Run run);
 
-    void deleteRun(long runId);
+    Completable deleteRun(long runId);
 
     Completable updateTitle(long runId, String title);
 }
