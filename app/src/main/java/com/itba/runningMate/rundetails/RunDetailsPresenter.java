@@ -7,7 +7,6 @@ import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.rundetails.model.RunMetricsDetail;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
@@ -25,7 +24,6 @@ public class RunDetailsPresenter {
     private final RunRepository runRepository;
     private final SchedulerProvider schedulerProvider;
     private final CacheFileProvider cacheFileProvider;
-    private final RunningStateStorage runStorage;
     private final AchievementsStorage achievementsStorage;
     private final long runId;
 
@@ -37,14 +35,13 @@ public class RunDetailsPresenter {
     public RunDetailsPresenter(final CacheFileProvider cacheFileProvider,
                                final RunRepository runRepository,
                                final SchedulerProvider schedulerProvider,
-                               final RunningStateStorage storage,
-                               AchievementsStorage achievementsStorage, final long runId,
+                               final AchievementsStorage achievementsStorage,
+                               final long runId,
                                final RunDetailsView view) {
         this.view = new WeakReference<>(view);
         this.cacheFileProvider = cacheFileProvider;
         this.runRepository = runRepository;
         this.schedulerProvider = schedulerProvider;
-        this.runStorage = storage;
         this.achievementsStorage = achievementsStorage;
         this.runId = runId;
         this.disposables = new CompositeDisposable();

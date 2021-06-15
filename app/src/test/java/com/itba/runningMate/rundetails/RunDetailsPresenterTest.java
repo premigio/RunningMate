@@ -2,6 +2,7 @@ package com.itba.runningMate.rundetails;
 
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.rundetails.model.RunMetricsDetail;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
@@ -39,6 +40,7 @@ public class RunDetailsPresenterTest {
 
     private CacheFileProvider cacheFileProvider;
     private RunRepository runRepository;
+    private AchievementsStorage achievementsStorage;
     private SchedulerProvider schedulerProvider;
     private long runId;
     private RunDetailsView view;
@@ -51,10 +53,11 @@ public class RunDetailsPresenterTest {
         cacheFileProvider = mock(CacheFileProvider.class);
         runRepository = mock(RunRepository.class);
         schedulerProvider = new AndroidTestSchedulerProvider();
+        achievementsStorage = mock(AchievementsStorage.class);
         view = mock(RunDetailsView.class);
         runId = 1;
 
-        presenter = new RunDetailsPresenter(cacheFileProvider, runRepository, schedulerProvider, runId, view);
+        presenter = new RunDetailsPresenter(cacheFileProvider, runRepository, schedulerProvider, achievementsStorage, runId, view);
         presenterSpy = spy(presenter);
     }
 

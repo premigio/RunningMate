@@ -40,7 +40,6 @@ import static com.itba.runningMate.utils.Formatters.hmsTimeFormatter;
 
 public class RunningMetricsFragment extends Fragment implements RunningMetricsView, ServiceConnection {
 
-    // todo: save presenter and saveinstance fragment
     private static final SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
     private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
 
@@ -150,8 +149,7 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
         final RunRepository runRepository = container.getRunRepository();
         final AchievementsStorage achievementsStorage = container.getAchievementsStorage();
 
-        presenter = new RunningMetricsPresenter(stateStorage, runRepository,
-                schedulerProvider, achievementsStorage,this);
+        presenter = new RunningMetricsPresenter(runRepository, schedulerProvider, achievementsStorage, this);
     }
 
     @Override
