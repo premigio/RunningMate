@@ -27,4 +27,6 @@ public class Constants {
     public static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
     public static final long STOP_WATCH_UPDATE_INTERVAL = 200L;
 
+    public static final double DISTANCE_EPSILON = 0.1;
+
 }
