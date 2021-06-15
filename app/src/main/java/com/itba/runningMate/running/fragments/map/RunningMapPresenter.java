@@ -1,5 +1,7 @@
 package com.itba.runningMate.running.fragments.map;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
@@ -31,7 +33,9 @@ public class RunningMapPresenter implements OnTrackingLocationUpdateListener {
 
     public void onViewDetached() {
         stateStorage.persistState();
-        tracker.removeTrackingLocationUpdateListener(this);
+        if (isTrackerAttached) {
+            tracker.removeTrackingLocationUpdateListener(this);
+        }
         if (view.get() != null) {
             view.get().detachTrackingService();
         }
@@ -94,4 +98,13 @@ public class RunningMapPresenter implements OnTrackingLocationUpdateListener {
         stateStorage.setLastKnownLocation(latitude, longitude);
     }
 
+    @VisibleForTesting
+    public Tracker getTracker() {
+        return tracker;
+    }
+
+    @VisibleForTesting
+    public boolean isTrackerAttached() {
+        return isTrackerAttached;
+    }
 }

@@ -24,17 +24,16 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.itba.runningMate.utils.Constants;
 import com.itba.runningMate.R;
+import com.itba.runningMate.di.DependencyContainer;
+import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.running.RunningActivity;
 import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
 import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
 import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
-import com.itba.runningMate.utils.functional.Function;
+import com.itba.runningMate.utils.Constants;
 import com.itba.runningMate.utils.run.RunMetrics;
 
-import java.lang.ref.WeakReference;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,8 +54,7 @@ public class TrackingService extends Service {
     private Handler mainHandler;
 
     private FusedLocationProviderClient fusedLocationClient;
-    private List<WeakReference<OnTrackingMetricsUpdateListener>> onTrackingMetricsUpdateListeners;
-    private List<WeakReference<OnTrackingLocationUpdateListener>> onTrackingLocationsUpdateListeners;
+    private TrackingLocationUpdatesDispatcher updatesDispatcher;
 
     private boolean isTracking;
 
@@ -92,8 +90,8 @@ public class TrackingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        onTrackingLocationsUpdateListeners = new LinkedList<>();
-        onTrackingMetricsUpdateListeners = new LinkedList<>();
+        final DependencyContainer container = DependencyContainerLocator.locateComponent(this);
+        updatesDispatcher = container.getTrackingLocationUpdatesDispatcher();
         isTracking = false;
         notificationManager = NotificationManagerCompat.from(this);
         serviceHandlerThread = new HandlerThread(HANDLER_THREAD_NAME, Process.THREAD_PRIORITY_BACKGROUND);
@@ -159,62 +157,26 @@ public class TrackingService extends Service {
     }
 
     public void setOnTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
-        onTrackingLocationsUpdateListeners.add(new WeakReference<>(listener));
+        updatesDispatcher.setOnTrackingLocationUpdateListener(listener);
     }
 
     public void setOnTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
-        onTrackingMetricsUpdateListeners.add(new WeakReference<>(listener));
+        updatesDispatcher.setOnTrackingMetricsUpdateListener(listener);
         if (isTracking) {
             serviceHandler.post(this::stopWatch);
         }
     }
 
     public void removeTrackingUpdateListener(OnTrackingUpdateListener listener) {
-        removeTrackingLocationUpdateListener(listener);
-        removeTrackingMetricsUpdateListener(listener);
+        updatesDispatcher.removeTrackingUpdateListener(listener);
     }
 
     public void removeTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
-        removeListeners(onTrackingLocationsUpdateListeners, listener);
+        updatesDispatcher.removeTrackingLocationUpdateListener(listener);
     }
 
     public void removeTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
-        removeListeners(onTrackingMetricsUpdateListeners, listener);
-    }
-
-    private <T> void removeListeners(List<WeakReference<T>> listeners, T listener) {
-        Iterator<WeakReference<T>> iterator = listeners.iterator();
-        while (iterator.hasNext()) {
-            WeakReference<T> wr = iterator.next();
-            if (wr.get() == listener) {
-                iterator.remove();
-            }
-        }
-    }
-
-    private <T> boolean areListeners(List<WeakReference<T>> listeners) {
-        Iterator<WeakReference<T>> iterator = listeners.iterator();
-        while (iterator.hasNext()) {
-            WeakReference<T> wr = iterator.next();
-            if (wr.get() == null) {
-                iterator.remove();
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private <T> void callListeners(List<WeakReference<T>> listeners, Function<T> function) {
-        Iterator<WeakReference<T>> iterator = listeners.iterator();
-        while (iterator.hasNext()) {
-            WeakReference<T> wr = iterator.next();
-            if (wr.get() == null) {
-                iterator.remove();
-            } else {
-                function.apply(wr.get());
-            }
-        }
+        updatesDispatcher.removeTrackingMetricsUpdateListener(listener);
     }
 
     public List<List<LatLng>> getTrackedLocations() {
@@ -223,11 +185,7 @@ public class TrackingService extends Service {
 
     private void startForegroundService() {
         Intent notificationIntent = new Intent(this, RunningActivity.class);
-        /*
-            Agregar una accion al notificationIntent para decirle a nuestra landing activity que
-            hacer. Tambien podes usar el paramentro flag del pendingIntnet para agreagar mas data
-            (ej. updatear la vista no re crearla)
-         */
+
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(notificationIntent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -264,27 +222,11 @@ public class TrackingService extends Service {
                 LatLng prev = currentLapLocations.get(currentLapLocations.size() - 2);
                 elapsedDistance += RunMetrics.calculateDistance(prev.latitude, prev.longitude, location.getLatitude(), location.getLongitude());
                 pace = RunMetrics.calculatePace(elapsedDistance, runningMillis);
-                callbackDistanceUpdate(elapsedDistance);
-                callbackPaceUpdate(pace);
+                updatesDispatcher.callbackDistanceUpdate(elapsedDistance);
+                updatesDispatcher.callbackPaceUpdate(pace);
             }
         }
-        callbackLocationUpdate(lastLocation.latitude, lastLocation.longitude);
-    }
-
-    private void callbackLocationUpdate(double latitude, double longitude) {
-        callListeners(onTrackingLocationsUpdateListeners, l -> l.onLocationUpdate(latitude, longitude));
-    }
-
-    private void callbackDistanceUpdate(float distance) {
-        callListeners(onTrackingMetricsUpdateListeners, l -> l.onDistanceUpdate(distance));
-    }
-
-    private void callbackPaceUpdate(long pace) {
-        callListeners(onTrackingMetricsUpdateListeners, l -> l.onPaceUpdate(pace));
-    }
-
-    private void callbackStopWatchUpdate(long elapsedTime) {
-        callListeners(onTrackingMetricsUpdateListeners, l -> l.onStopWatchUpdate(elapsedTime));
+        updatesDispatcher.callbackLocationUpdate(lastLocation.latitude, lastLocation.longitude);
     }
 
     @SuppressLint("MissingPermission")
@@ -295,18 +237,10 @@ public class TrackingService extends Service {
         locationRequest.setFastestInterval(LOCATION_UPDATE_FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-        /*
-            TODO: chequear que los settings sean los apropiados
-            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                    .addLocationRequest(locationRequest);
-            SettingsClient client = LocationServices.getSettingsClient(this);
-            Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
-            task.addOnFailureListener( ... );
-        */
     }
 
     private void stopWatch() {
-        if (isTracking && areListeners(onTrackingMetricsUpdateListeners)) {
+        if (isTracking && updatesDispatcher.areMetricsUpdatesListener()) {
             long currentMillis = System.currentTimeMillis();
             runningMillis += currentMillis - lastTimeMillis;
             lastTimeMillis = currentMillis;
@@ -315,7 +249,7 @@ public class TrackingService extends Service {
                 we just want to send updates when a second has elapsed
             */
             if (runningMillis >= lastTimeUpdateMillis + 1000L) {
-                mainHandler.post(() -> callbackStopWatchUpdate(runningMillis));
+                mainHandler.post(() -> updatesDispatcher.callbackStopWatchUpdate(runningMillis));
                 lastTimeUpdateMillis += 1000L;
             }
             serviceHandler.postDelayed(this::stopWatch, STOP_WATCH_UPDATE_INTERVAL);

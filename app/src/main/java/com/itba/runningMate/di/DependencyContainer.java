@@ -6,6 +6,7 @@ import com.itba.runningMate.achievements.elements.AchievementsElementView;
 import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
@@ -20,6 +21,8 @@ public interface DependencyContainer {
     RunRepository getRunRepository();
 
     RunningStateStorage getRunningStateStorage();
+
+    TrackingLocationUpdatesDispatcher getTrackingLocationUpdatesDispatcher();
 
     AchievementsStorage getAchievementsStorage();
 

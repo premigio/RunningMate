@@ -1,5 +1,7 @@
 package com.itba.runningMate.running.fragments.metrics;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
@@ -15,11 +17,11 @@ import java.util.Date;
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
+import static com.itba.runningMate.utils.Constants.DISTANCE_EPSILON;
 import static com.itba.runningMate.utils.Formatters.dateFormat;
 
 public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener {
 
-    private static final double DISTANCE_EPSILON = 0.1;
     private final WeakReference<RunningMetricsView> view;
     private final RunningStateStorage stateStorage;
     private final RunRepository runRepository;
@@ -51,9 +53,14 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
 
     public void onViewDetached() {
         stateStorage.persistState();
-        tracker.removeTrackingMetricsUpdateListener(this);
+        if (isTrackerAttached) {
+            tracker.removeTrackingMetricsUpdateListener(this);
+        }
         if (view.get() != null) {
             view.get().detachTrackingService();
+        }
+        if (disposable != null) {
+            disposable.dispose();
         }
     }
 
@@ -174,7 +181,6 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
             return;
         }
         view.get().launchRunActivity(runId);
-        disposable.dispose();
         Timber.d("Successfully saved run in db for run-id: %d", runId);
     }
 
@@ -184,5 +190,15 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
         }
         Timber.d("Failed to save run\n".concat(e.getMessage()));
         view.get().showSaveRunError();
+    }
+
+    @VisibleForTesting
+    public Tracker getTracker() {
+        return tracker;
+    }
+
+    @VisibleForTesting
+    public boolean isTrackerAttached() {
+        return isTrackerAttached;
     }
 }

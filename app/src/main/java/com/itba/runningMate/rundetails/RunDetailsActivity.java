@@ -245,7 +245,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     @Override
     public void showRoute(Route route) {
-        mapView.showRoute(route);
+        mapView.showRouteWithMarker(route);
         mapView.centerMapOn(route);
     }
 
@@ -295,7 +295,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     public Bitmap getMetricsImage(RunMetricsDetail detail) {
         RunSummary s = new RunSummary(this);
         s.bind(detail);
-        return ImageProcessing.createBitmapFromView(s, 390, 285);
+        return ImageProcessing.createBitmapFromView(s, 390, 330);
     }
 
     @Override

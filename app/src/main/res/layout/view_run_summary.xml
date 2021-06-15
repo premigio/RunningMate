@@ -13,6 +13,32 @@
     android:padding="10dp"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
+    <Space
+        android:id="@+id/run_detail_space_0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_summary_title"
+        android:textColor="@color/white"
+        android:textSize="38sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintEnd_toEndOf="@id/pace"
+        app:layout_constraintStart_toStartOf="@id/run_detail_space_0"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <Space
         android:id="@+id/run_detail_space_3"
@@ -33,12 +59,12 @@
         android:gravity="center"
         android:text="@string/text_view_run_details_initial_distance"
         android:textColor="@color/white"
-        android:textSize="62sp"
+        android:textSize="48sp"
         android:textStyle="bold|italic"
         android:typeface="sans"
         app:layout_constraintEnd_toEndOf="@id/pace"
-        app:layout_constraintStart_toStartOf="@id/pace"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <TextView
         android:id="@+id/distance_label"
@@ -191,13 +217,15 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="62dp"
-        android:layout_height="69dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/running_time"
-        app:layout_constraintEnd_toStartOf="@+id/distance"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_stat_notify_tracking_service" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/title"
+        app:layout_constraintEnd_toEndOf="@id/title"
+        app:layout_constraintHorizontal_bias="0.90"
+        app:layout_constraintStart_toStartOf="@id/title"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintVertical_bias="0.50"
+        app:srcCompat="@drawable/runing_mate_logo" />
 
 </merge><!--    </androidx.constraintlayout.widget.ConstraintLayout>-->

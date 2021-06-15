@@ -11,8 +11,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.domain.Route;
 
@@ -109,6 +111,22 @@ public class Map extends MapView {
         }
     }
 
+    public void showRouteWithMarker(Route route) {
+        showRoute(route);
+        LatLng start = new LatLng(route.getFirstLatitude(), route.getFirstLongitude());
+        LatLng end = new LatLng(route.getLastLatitude(), route.getLastLongitude());
+
+        googleMap.addMarker(new MarkerOptions()
+                .position(start)
+                .icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        googleMap.addMarker(new MarkerOptions()
+                .position(end)
+                .icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+    }
+
     public void centerMapOn(Route route) {
         if (route == null || route.isEmpty()) {
             return;
@@ -120,6 +138,6 @@ public class Map extends MapView {
                 boundsBuilder.include(point);
             }
         }
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), PADDING));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
     }
 }

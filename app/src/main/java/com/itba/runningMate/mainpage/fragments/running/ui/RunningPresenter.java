@@ -1,8 +1,10 @@
 package com.itba.runningMate.mainpage.fragments.running.ui;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
-import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
 import com.itba.runningMate.services.location.Tracker;
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
 
 import java.lang.ref.WeakReference;
 
@@ -105,12 +107,32 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
 
     @Override
     public void onLocationUpdate(double latitude, double longitude) {
-        if (view.get() == null || !isTrackerAttached) {
+        if (view.get() == null) {
             return;
         }
         if (stateStorage.isCenterCamera()) {
             view.get().showLocation(latitude, longitude);
         }
         stateStorage.setLastKnownLocation(latitude, longitude);
+    }
+
+    @VisibleForTesting
+    public boolean isTrackerAttached() {
+        return isTrackerAttached;
+    }
+
+    @VisibleForTesting
+    public void setTrackerAttached(boolean trackerAttached) {
+        isTrackerAttached = trackerAttached;
+    }
+
+    @VisibleForTesting
+    public Tracker getTracker() {
+        return this.tracker;
+    }
+
+    @VisibleForTesting
+    public void setTracker(Tracker tracker) {
+        this.tracker = tracker;
     }
 }

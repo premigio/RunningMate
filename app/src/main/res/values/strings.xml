@@ -63,6 +63,7 @@
     <string name="btn_run_details_share">Share</string>
     <string name="text_view_run_details_elapsed_time_label">Elapsed Time</string>
     <string name="text_view_run_details_running_time_label">Running Time</string>
+    <string name="text_view_run_summary_title">Running Mate</string>
 
     // Goals / Achievements Activity
     <string name="goals">Goals</string>
