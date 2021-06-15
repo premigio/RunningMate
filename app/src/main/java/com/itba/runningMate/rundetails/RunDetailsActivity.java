@@ -288,7 +288,7 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     public Bitmap getMetricsImage(RunMetricsDetail detail) {
         RunSummary s = new RunSummary(this);
         s.bind(detail);
-        return ImageProcessing.createBitmapFromView(s, 390, 285);
+        return ImageProcessing.createBitmapFromView(s, 390, 330);
     }
 
     @Override
