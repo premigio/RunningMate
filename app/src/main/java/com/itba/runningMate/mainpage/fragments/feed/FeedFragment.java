@@ -11,17 +11,21 @@ import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.mainpage.fragments.feed.cards.GoalsCard;
+import com.itba.runningMate.mainpage.fragments.feed.cards.OnCardClickListener;
+import com.itba.runningMate.mainpage.fragments.feed.cards.OnSeeAllClickListener;
 import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class FeedFragment extends Fragment implements FeedView {
+public class FeedFragment extends Fragment implements FeedView, OnCardClickListener, OnSeeAllClickListener {
 
     private FeedPresenter presenter;
 
     private PastRunsCard pastRunsCard;
+    private GoalsCard goalsCard;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -37,13 +41,16 @@ public class FeedFragment extends Fragment implements FeedView {
         final DependencyContainer container = DependencyContainerLocator.locateComponent(view.getContext());
 
         pastRunsCard = view.findViewById(R.id.past_run_card);
+        goalsCard = view.findViewById(R.id.goals_card);
 
         presenter = new FeedPresenter(
                 container.getRunRepository(),
                 container.getSchedulerProvider(),
                 pastRunsCard, this);
 
-        pastRunsCard.setPresenter(presenter);
+        pastRunsCard.setElementListener(this);
+        pastRunsCard.setSeeAllListener(this);
+        goalsCard.setSeeAllListener(this);
     }
 
     @Override
@@ -90,4 +97,44 @@ public class FeedFragment extends Fragment implements FeedView {
     public void disappearNoText() {
         pastRunsCard.disappearNoText();
     }
+
+    @Override
+    public void setGoalTitle(int title) {
+        goalsCard.setTitle(title);
+    }
+
+    @Override
+    public void setGoalSubtitle(int subtitle) {
+        goalsCard.setSubtitle(subtitle);
+    }
+
+    @Override
+    public void setGoalImage(int image) {
+        goalsCard.setImage(image);
+    }
+
+    @Override
+    public void goToAchievementsActivity() {
+        Uri.Builder uriBuilder = new Uri.Builder()
+                .scheme("runningmate")
+                .encodedAuthority("achievements");
+        startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
+    }
+
+    @Override
+    public void onRunClick(long id) {
+        presenter.onPastRunClick(id);
+    }
+
+    @Override
+    public void onSeeAllClickPastRuns() {
+        presenter.goToPastRunsActivity();
+    }
+
+    @Override
+    public void onSeeAllClickAchievements() {
+        presenter.goToAchievementsActivity();
+    }
+
+
 }

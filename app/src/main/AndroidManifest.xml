@@ -81,6 +81,22 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".achievements.AchievementsActivity"
+            android:parentActivityName=".mainpage.MainPageActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="achievements"
+                    android:scheme="runningmate" />
+            </intent-filter>
+        </activity>
+
         <!-- Required for Android 10 (API level 29) and higher. -->
         <service
             android:name=".services.location.TrackingService"

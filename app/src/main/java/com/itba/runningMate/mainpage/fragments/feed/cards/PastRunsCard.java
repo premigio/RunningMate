@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.mainpage.fragments.feed.FeedFragment;
 import com.itba.runningMate.mainpage.fragments.feed.FeedPresenter;
-import com.itba.runningMate.pastruns.runs.ui.OnRunClickListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,13 +25,12 @@ import androidx.cardview.widget.CardView;
 
 public class PastRunsCard extends CardView {
 
-    private FeedPresenter presenter;
-
     private TextView pastRunsEmptyMessage;
     private List<RunElementView> runs;
     private Button seeAll;
 
-    private WeakReference<OnRunClickListener> listener;
+    private WeakReference<OnCardClickListener> runElementListener;
+    private OnSeeAllClickListener onSeeAllClickListener;
 
     public PastRunsCard(@NonNull @NotNull Context context) {
         super(context);
@@ -48,7 +47,7 @@ public class PastRunsCard extends CardView {
 
         pastRunsEmptyMessage = findViewById(R.id.past_run_empty_card);
         seeAll = findViewById(R.id.see_all_past_runs);
-        seeAll.setOnClickListener((v) -> presenter.goToPastRunsActivity());
+        seeAll.setOnClickListener((v) -> onSeeAllClickListener.onSeeAllClickPastRuns());
     }
 
     public PastRunsCard(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
@@ -61,10 +60,6 @@ public class PastRunsCard extends CardView {
         prepareFromConstructor(context);
     }
 
-    public void setPresenter(FeedPresenter fp) {
-        presenter = fp;
-    }
-
     public void setPastRunCardsNoText() {
         pastRunsEmptyMessage.setVisibility(View.VISIBLE);
     }
@@ -75,9 +70,11 @@ public class PastRunsCard extends CardView {
 
     public void addRunToCard(int i, Run run) {
         runs.get(i).setVisibility(VISIBLE);
-        runs.get(i).setPresenter(presenter);
+        if (runElementListener.get() != null) {
+            runs.get(i).setOnClick(runElementListener.get());
+        }
         runs.get(i).bind(run);
-        runs.get(i).setOnClickListener((v) -> presenter.onPastRunClick(run.getUid()));
+//        runs.get(i).setOnClickListener((v) -> li(run.getUid()));
     }
 
     public void disappearRuns(int i) {
@@ -95,4 +92,11 @@ public class PastRunsCard extends CardView {
         getContext().startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
     }
 
+    public void setElementListener(OnCardClickListener feedFragment) {
+        this.runElementListener = new WeakReference<>(feedFragment);
+    }
+
+    public void setSeeAllListener(OnSeeAllClickListener onSeeAllClickListener) {
+        this.onSeeAllClickListener = onSeeAllClickListener;
+    }
 }

@@ -17,5 +17,4 @@ public interface RunningStateStorage {
     void setLastKnownLocation(final double latitude, final double longitude);
 
     void persistState();
-
 }

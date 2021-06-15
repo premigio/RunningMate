@@ -46,6 +46,26 @@ public class RunRepositoryImpl implements RunRepository {
     }
 
     @Override
+    public Single<Double> getTotalDistance() {
+        return runDao.getTotalDistance();
+    }
+
+    @Override
+    public Single<Long> getMaxTime() {
+        return runDao.getMaxTime();
+    }
+
+    @Override
+    public Single<Double> getMaxKcal() {
+        return runDao.getMaxKcal();
+    }
+
+    @Override
+    public Single<Double> getMaxSpeed() {
+        return runDao.getMaxSpeed();
+    }
+
+    @Override
     public Completable updateTitle(long runId, String title) {
         return runDao.updateTitle(runId, title);
     }
