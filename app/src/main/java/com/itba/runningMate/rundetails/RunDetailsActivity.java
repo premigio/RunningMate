@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -256,28 +254,14 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_run_details, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_item_run_detail_share:
-                presenter.onShareButtonClick();
-                return true;
-            case R.id.menu_item_run_detail_delete:
-                deleteConfirmationMessage();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void shareImageIntent(Uri uri) {
