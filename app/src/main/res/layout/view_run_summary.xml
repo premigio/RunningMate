@@ -226,6 +226,6 @@
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintTop_toTopOf="@id/title"
         app:layout_constraintVertical_bias="0.50"
-        app:srcCompat="@drawable/runing_mate_logo" />
+        app:srcCompat="@drawable/running_mate_logo" />
 
 </merge><!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
