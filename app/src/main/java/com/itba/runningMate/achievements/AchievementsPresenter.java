@@ -1,10 +1,9 @@
 package com.itba.runningMate.achievements;
 
 import com.itba.runningMate.R;
-import com.itba.runningMate.achievements.elements.Achievements;
-import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
+import com.itba.runningMate.achievements.achievement.Achievements;
+import com.itba.runningMate.repository.achievements.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.lang.ref.WeakReference;
@@ -21,8 +20,10 @@ public class AchievementsPresenter {
     private final AchievementsStorage storage;
 
 
-    public AchievementsPresenter(RunRepository repo, SchedulerProvider schedulerProvider, AchievementsStorage storage,
-                                 AchievementsView view) {
+    public AchievementsPresenter(final RunRepository repo,
+                                 final SchedulerProvider schedulerProvider,
+                                 final AchievementsStorage storage,
+                                 final AchievementsView view) {
         this.view = new WeakReference<>(view);
         this.disposables = new CompositeDisposable();
         this.repo = repo;
@@ -37,9 +38,9 @@ public class AchievementsPresenter {
 
     private void getAchievements() {
         disposables.add(repo.getMaxSpeed()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe(this::receivedMaxSpeed, this::onRunListErrorGoals));
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::receivedMaxSpeed, this::onRunListErrorGoals));
 
         disposables.add(repo.getMaxKcal()
                 .subscribeOn(schedulerProvider.computation())
@@ -56,6 +57,7 @@ public class AchievementsPresenter {
     private void receivedMaxSpeed(double speed) {
         view.get().setAchievement(Achievements.SPEED10, speed >= 10.0);
     }
+
     private void receivedMaxKcal(double kcal) {
         view.get().setAchievement(Achievements.KCAL1000, kcal >= 1000.0);
     }
@@ -117,6 +119,5 @@ public class AchievementsPresenter {
             view.get().setGoalImage(R.drawable.taragui);
         }
     }
-
 
 }

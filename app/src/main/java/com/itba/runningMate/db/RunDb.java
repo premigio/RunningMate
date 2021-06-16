@@ -9,7 +9,6 @@ import androidx.room.TypeConverters;
 public abstract class RunDb extends RoomDatabase {
 
     public static final String NAME = "run_db";
-    private static RunDb instance;
 
     public abstract RunDao RunDao();
 }

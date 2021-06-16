@@ -1,8 +1,11 @@
-package com.itba.runningMate.pastruns.runs.ui;
+package com.itba.runningMate.pastruns.runs;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
@@ -10,9 +13,6 @@ import com.itba.runningMate.domain.Run;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 
@@ -39,7 +39,7 @@ public class RunAdapter extends RecyclerView.Adapter<RunViewHolder> {
 
     @Override
     public int getItemViewType(final int position) {
-        return R.layout.run_element;
+        return R.layout.view_run_element;
     }
 
     @NonNull
@@ -66,7 +66,7 @@ public class RunAdapter extends RecyclerView.Adapter<RunViewHolder> {
 
         Run pos = currentRunList.get(position);
 
-        return pos == null? NO_ID : pos.getUid();
+        return pos == null ? NO_ID : pos.getUid();
     }
 
     @Override

@@ -1,17 +1,19 @@
 package com.itba.runningMate.mainpage.fragments.feed.cards;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.mainpage.fragments.feed.FeedFragment;
-import com.itba.runningMate.mainpage.fragments.feed.FeedPresenter;
+import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener;
+import com.itba.runningMate.mainpage.fragments.feed.run.RunElementView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,18 +21,14 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-
 public class PastRunsCard extends CardView {
 
     private TextView pastRunsEmptyMessage;
     private List<RunElementView> runs;
     private Button seeAll;
 
-    private WeakReference<OnCardClickListener> runElementListener;
-    private OnSeeAllClickListener onSeeAllClickListener;
+    private WeakReference<OnRunClickListener> runElementListener;
+    private WeakReference<OnSeeAllClickListener> onSeeAllClickListener;
 
     public PastRunsCard(@NonNull @NotNull Context context) {
         super(context);
@@ -47,7 +45,7 @@ public class PastRunsCard extends CardView {
 
         pastRunsEmptyMessage = findViewById(R.id.past_run_empty_card);
         seeAll = findViewById(R.id.see_all_past_runs);
-        seeAll.setOnClickListener((v) -> onSeeAllClickListener.onSeeAllClickPastRuns());
+        seeAll.setOnClickListener(l -> onSeeAllButtonClicked());
     }
 
     public PastRunsCard(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
@@ -74,7 +72,6 @@ public class PastRunsCard extends CardView {
             runs.get(i).setOnClick(runElementListener.get());
         }
         runs.get(i).bind(run);
-//        runs.get(i).setOnClickListener((v) -> li(run.getUid()));
     }
 
     public void disappearRuns(int i) {
@@ -84,19 +81,17 @@ public class PastRunsCard extends CardView {
         }
     }
 
-    public void launchRunDetails(long id) {
-        Uri.Builder uriBuilder = new Uri.Builder()
-                .scheme("runningmate")
-                .encodedAuthority("run")
-                .appendQueryParameter("run-id", Long.toString(id));
-        getContext().startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
+    private void onSeeAllButtonClicked() {
+        if (onSeeAllClickListener.get() != null) {
+            onSeeAllClickListener.get().onSeeAllPastRunsClick();
+        }
     }
 
-    public void setElementListener(OnCardClickListener feedFragment) {
+    public void setElementListener(OnRunClickListener feedFragment) {
         this.runElementListener = new WeakReference<>(feedFragment);
     }
 
     public void setSeeAllListener(OnSeeAllClickListener onSeeAllClickListener) {
-        this.onSeeAllClickListener = onSeeAllClickListener;
+        this.onSeeAllClickListener = new WeakReference<>(onSeeAllClickListener);
     }
 }

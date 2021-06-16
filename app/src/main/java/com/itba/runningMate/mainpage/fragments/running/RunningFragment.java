@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.running.ui;
+package com.itba.runningMate.mainpage.fragments.running;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -24,14 +24,16 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.itba.runningMate.utils.Constants;
 import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
+import com.itba.runningMate.mainpage.fragments.running.RunningPresenter;
+import com.itba.runningMate.mainpage.fragments.running.RunningView;
+import com.itba.runningMate.map.MapInViewPager;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.services.location.TrackingService;
-import com.itba.runningMate.map.MapInViewPager;
+import com.itba.runningMate.utils.Constants;
 
 import static com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM;
 
@@ -214,13 +216,6 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
         presenter.onTrackingServiceDetached();
     }
 
-    /*@Nullable
-    @Override
-    todo: Guardar instancia del presenter
-    public Object onRetainCustomNonConfigurationInstance() {
-        return presenter;
-    }*/
-
     public boolean areLocationPermissionGranted() {
         return ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -242,7 +237,6 @@ public class RunningFragment extends Fragment implements OnMapReadyCallback, Run
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        // todo: bundle vs shared preferences onsavedInstance vs ondestory para guardar datos
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }

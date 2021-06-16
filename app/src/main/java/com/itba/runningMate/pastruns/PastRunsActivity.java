@@ -1,4 +1,4 @@
-package com.itba.runningMate.pastruns.ui;
+package com.itba.runningMate.pastruns;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,8 +19,8 @@ import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.pastruns.runs.ui.OnRunClickListener;
-import com.itba.runningMate.pastruns.runs.ui.RunAdapter;
+import com.itba.runningMate.pastruns.runs.OnRunClickListener;
+import com.itba.runningMate.pastruns.runs.RunAdapter;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 

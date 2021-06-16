@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -31,7 +29,7 @@ import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.map.Map;
-import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
+import com.itba.runningMate.repository.achievements.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.rundetails.model.RunMetricsDetail;
 import com.itba.runningMate.utils.ImageProcessing;
@@ -65,11 +63,17 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         }
 
         createPresenter(id);
+        setUpMap(savedInstanceState);
+        setUp();
+    }
 
+    private void setUpMap(Bundle savedInstanceState) {
         mapView = findViewById(R.id.run_detail_map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+    }
 
+    private void setUp() {
         speed = findViewById(R.id.speed);
         pace = findViewById(R.id.pace);
         distance = findViewById(R.id.distance);
@@ -151,18 +155,21 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         mapView.onDestroy();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
         mapView.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+
         presenter.onViewDetached();
         mapView.onStop();
     }
@@ -189,54 +196,14 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
 
     @Override
     public void showRunMetrics(RunMetricsDetail runMetrics) {
-        showSpeed(runMetrics.getSpeed());
-        showPace(runMetrics.getPace());
-        showDistance(runMetrics.getDistance());
-        showRunTimeInterval(runMetrics.getRunTimeInterval());
-        showElapsedTime(runMetrics.getElapsedTime());
-        showTitle(runMetrics.getTitle());
-        showRunningTime(runMetrics.getRunningTime());
-        showCalories(runMetrics.getCalories());
-    }
-
-    @Override
-    public void showCalories(String calories) {
-        this.calories.setText(calories);
-    }
-
-    @Override
-    public void showSpeed(String speed) {
-        this.speed.setText(speed);
-    }
-
-    @Override
-    public void showPace(String pace) {
-        this.pace.setText(pace);
-    }
-
-    @Override
-    public void showDistance(String distance) {
-        this.distance.setText(distance);
-    }
-
-    @Override
-    public void showTitle(String title) {
-        this.title.setText(title);
-    }
-
-    @Override
-    public void showRunTimeInterval(String startTime) {
-        this.runTimeInterval.setText(startTime);
-    }
-
-    @Override
-    public void showElapsedTime(String elapsedTime) {
-        this.elapsedTime.setText(elapsedTime);
-    }
-
-    @Override
-    public void showRunningTime(String runningTime) {
-        this.runningTime.setText(runningTime);
+        speed.setText(runMetrics.getSpeed());
+        pace.setText(runMetrics.getPace());
+        distance.setText(runMetrics.getDistance());
+        runTimeInterval.setText(runMetrics.getRunTimeInterval());
+        elapsedTime.setText(runMetrics.getElapsedTime());
+        title.setText(runMetrics.getTitle());
+        runningTime.setText(runMetrics.getRunningTime());
+        calories.setText(runMetrics.getCalories());
     }
 
     @Override
@@ -257,27 +224,12 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_run_details, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_item_run_detail_share:
-                presenter.onShareButtonClick();
-                return true;
-            case R.id.menu_item_run_detail_delete:
-                deleteConfirmationMessage();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void shareImageIntent(Uri uri) {

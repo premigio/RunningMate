@@ -1,4 +1,4 @@
-package com.itba.runningMate.pastruns.runs.ui;
+package com.itba.runningMate.pastruns.runs;
 
 public interface OnRunClickListener {
 

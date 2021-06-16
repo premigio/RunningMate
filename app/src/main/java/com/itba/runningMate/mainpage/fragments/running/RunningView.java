@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.running.ui;
+package com.itba.runningMate.mainpage.fragments.running;
 
 public interface RunningView {
 

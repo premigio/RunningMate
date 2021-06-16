@@ -4,8 +4,6 @@ import com.itba.runningMate.domain.Run;
 
 public interface FeedView {
 
-    void goToPastRunsActivity();
-
     void setPastRunCardsNoText();
 
     void addRunToCard(int i, Run run);
@@ -20,5 +18,9 @@ public interface FeedView {
 
     void setGoalImage(int image);
 
-    void goToAchievementsActivity();
+    void launchAchievementsActivity();
+
+    void launchRunDetailActivity(long runId);
+
+    void launchPastRunsActivity();
 }

@@ -1,4 +1,4 @@
-package com.itba.runningMate.achievements.elements;
+package com.itba.runningMate.achievements.achievement;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,40 +13,45 @@ import com.itba.runningMate.R;
 
 public class AchievementElementViewImpl extends FrameLayout implements AchievementsElementView {
 
-    TextView titleView, descriptionView;
-    ImageView imageView;
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+    private ImageView imageView;
 
     public AchievementElementViewImpl(@NonNull Context context) {
         super(context);
-        inflate(context, R.layout.achievement_element, this);
+        inflate(context, R.layout.view_achievement_element, this);
+        setUp();
     }
 
     public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.achievement_element, this);
+        inflate(context, R.layout.view_achievement_element, this);
+        setUp();
     }
 
     public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        inflate(context, R.layout.achievement_element, this);
+        inflate(context, R.layout.view_achievement_element, this);
+        setUp();
     }
 
     public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        inflate(context, R.layout.achievement_element, this);
+        inflate(context, R.layout.view_achievement_element, this);
+        setUp();
+    }
+
+    private void setUp() {
+        imageView = this.findViewById(R.id.badge_icon);
+
+        titleTextView = this.findViewById(R.id.achievement_title_name);
+        descriptionTextView = this.findViewById(R.id.achievement_description);
     }
 
     @Override
     public void bind(String title, String description) {
-        //this.predicate = predicate;
-        imageView = this.findViewById(R.id.badge_icon);
-
-        titleView = this.findViewById(R.id.achievement_title_name);
-        descriptionView = this.findViewById(R.id.achievement_description);
-
-        titleView.setText(title);
-        descriptionView.setText(description);
-
+        titleTextView.setText(title);
+        descriptionTextView.setText(description);
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.itba.runningMate.running.fragments.metrics;
 import androidx.annotation.VisibleForTesting;
 
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
+import com.itba.runningMate.repository.achievements.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;

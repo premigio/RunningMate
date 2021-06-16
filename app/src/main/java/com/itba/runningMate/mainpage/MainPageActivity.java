@@ -9,9 +9,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.itba.runningMate.R;
-import com.itba.runningMate.mainpage.fragments.feed.FeedFragment;
-import com.itba.runningMate.mainpage.fragments.running.ui.RunningFragment;
 import com.itba.runningMate.mainpage.adapters.ViewPagerAdapter;
+import com.itba.runningMate.mainpage.fragments.feed.FeedFragment;
+import com.itba.runningMate.mainpage.fragments.running.RunningFragment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,8 +32,6 @@ public class MainPageActivity extends AppCompatActivity {
         setUpTabs();
     }
 
-
-    //todo: Averiguar si hace falta guardarse la instancia de los fragmentos
     private void setUpTabs() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         adapter.addFragment(new RunningFragment());

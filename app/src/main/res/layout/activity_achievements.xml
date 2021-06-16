@@ -12,7 +12,7 @@
             android:id="@+id/achievements_goal_title_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/goals"
+            android:text="@string/level"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColorHighlight="@color/black"
             android:textStyle="bold"
@@ -97,22 +97,22 @@
             app:layout_constraintTop_toBottomOf="@id/achievements_achievements_title_activity"
             android:orientation="vertical">
 
-            <com.itba.runningMate.achievements.elements.AchievementElementViewImpl
+            <com.itba.runningMate.achievements.achievement.AchievementElementViewImpl
                 android:id="@+id/achievement1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-            <com.itba.runningMate.achievements.elements.AchievementElementViewImpl
+            <com.itba.runningMate.achievements.achievement.AchievementElementViewImpl
                 android:id="@+id/achievement2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-            <com.itba.runningMate.achievements.elements.AchievementElementViewImpl
+            <com.itba.runningMate.achievements.achievement.AchievementElementViewImpl
                 android:id="@+id/achievement3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.itba.runningMate.achievements.elements.AchievementElementViewImpl
+            <com.itba.runningMate.achievements.achievement.AchievementElementViewImpl
                 android:id="@+id/achievement4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

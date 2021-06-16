@@ -1,7 +1,8 @@
-package com.itba.runningMate.mainpage.fragments.running.ui;
+package com.itba.runningMate.mainpage.fragments.running;
 
 import androidx.annotation.VisibleForTesting;
 
+import com.itba.runningMate.mainpage.fragments.running.RunningView;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
@@ -79,7 +80,7 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
         stateStorage.setCenterCamera(false);
     }
 
-    void onRequestLocationPermissionResult(boolean grantedPermission) {
+    public void onRequestLocationPermissionResult(boolean grantedPermission) {
         if (view.get() == null) {
             return;
         }
@@ -120,6 +121,5 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
     public Tracker getTracker() {
         return this.tracker;
     }
-
 
 }
