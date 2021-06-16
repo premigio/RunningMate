@@ -67,4 +67,5 @@ public class PastRunsPresenter {
             view.get().launchRunDetails(id);
         }
     }
+
 }

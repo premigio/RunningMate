@@ -3,15 +3,15 @@ package com.itba.runningMate.pastruns.runs.ui;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 
@@ -53,7 +53,7 @@ class RunViewHolder extends RecyclerView.ViewHolder implements View.OnClickListe
         listener.get().onRunClick(id);
     }
 
-    public void setOnClickListener(OnRunClickListener listener){
+    public void setOnClickListener(OnRunClickListener listener) {
         this.listener = new WeakReference<>(listener);
     }
 

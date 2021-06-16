@@ -1,5 +1,7 @@
 package com.itba.runningMate.mainpage.fragments.feed.cards;
 
-public interface OnCardClickListener {
+public interface OnRunClickListener {
+
     void onRunClick(long id);
+
 }

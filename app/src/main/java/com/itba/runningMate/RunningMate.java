@@ -9,7 +9,6 @@ import com.itba.runningMate.utils.Constants;
 
 import timber.log.Timber;
 
-
 public class RunningMate extends Application {
 
     @Override

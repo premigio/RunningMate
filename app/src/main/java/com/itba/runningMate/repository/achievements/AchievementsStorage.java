@@ -1,7 +1,8 @@
-package com.itba.runningMate.repository.achievementsstorage;
+package com.itba.runningMate.repository.achievements;
 
 public interface AchievementsStorage {
-    String PREF_FILE_ACHIEVEMENTS = "PREF_FILE_ACHIEVEMENTS";
+
+    String ACHIEVEMENTS_PREFERENCES_FILE = "PREF_RUNNING_MATE_ACHIEVEMENTS";
 
     void persistState();
 
@@ -10,4 +11,5 @@ public interface AchievementsStorage {
     void decreaseTotalDistance(double distance);
 
     void increaseTotalDistance(double distance);
+
 }

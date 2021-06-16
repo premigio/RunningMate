@@ -7,20 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.feed.cards.GoalsCard;
-import com.itba.runningMate.mainpage.fragments.feed.cards.OnCardClickListener;
+import com.itba.runningMate.mainpage.fragments.feed.cards.OnRunClickListener;
 import com.itba.runningMate.mainpage.fragments.feed.cards.OnSeeAllClickListener;
 import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-public class FeedFragment extends Fragment implements FeedView, OnCardClickListener, OnSeeAllClickListener {
+public class FeedFragment extends Fragment implements FeedView, OnRunClickListener, OnSeeAllClickListener {
 
     private FeedPresenter presenter;
 
@@ -38,26 +38,47 @@ public class FeedFragment extends Fragment implements FeedView, OnCardClickListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final DependencyContainer container = DependencyContainerLocator.locateComponent(view.getContext());
+        createPresenter();
 
         pastRunsCard = view.findViewById(R.id.past_run_card);
         goalsCard = view.findViewById(R.id.goals_card);
-
-        presenter = new FeedPresenter(
-                container.getRunRepository(),
-                container.getSchedulerProvider(),
-                pastRunsCard, this);
 
         pastRunsCard.setElementListener(this);
         pastRunsCard.setSeeAllListener(this);
         goalsCard.setSeeAllListener(this);
     }
 
+    private void createPresenter() {
+        final DependencyContainer container = DependencyContainerLocator.locateComponent(getContext());
+
+        presenter = new FeedPresenter(
+                container.getRunRepository(),
+                container.getSchedulerProvider(),
+                this);
+    }
+
     @Override
-    public void goToPastRunsActivity() {
+    public void launchPastRunsActivity() {
         Uri.Builder uriBuilder = new Uri.Builder()
                 .scheme("runningmate")
                 .encodedAuthority("pastruns");
+        startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
+    }
+
+    @Override
+    public void launchRunDetailActivity(long runId) {
+        Uri.Builder uriBuilder = new Uri.Builder()
+                .scheme("runningmate")
+                .encodedAuthority("run")
+                .appendQueryParameter("run-id", Long.toString(runId));
+        startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
+    }
+
+    @Override
+    public void launchAchievementsActivity() {
+        Uri.Builder uriBuilder = new Uri.Builder()
+                .scheme("runningmate")
+                .encodedAuthority("achievements");
         startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
     }
 
@@ -114,27 +135,18 @@ public class FeedFragment extends Fragment implements FeedView, OnCardClickListe
     }
 
     @Override
-    public void goToAchievementsActivity() {
-        Uri.Builder uriBuilder = new Uri.Builder()
-                .scheme("runningmate")
-                .encodedAuthority("achievements");
-        startActivity(new Intent(Intent.ACTION_VIEW, uriBuilder.build()));
-    }
-
-    @Override
     public void onRunClick(long id) {
         presenter.onPastRunClick(id);
     }
 
     @Override
-    public void onSeeAllClickPastRuns() {
+    public void onSeeAllPastRunsClick() {
         presenter.goToPastRunsActivity();
     }
 
     @Override
-    public void onSeeAllClickAchievements() {
+    public void onSeeAllAchievementsClick() {
         presenter.goToAchievementsActivity();
     }
-
 
 }

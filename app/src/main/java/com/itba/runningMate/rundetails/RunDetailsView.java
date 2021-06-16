@@ -12,22 +12,6 @@ public interface RunDetailsView {
 
     void showRunMetrics(RunMetricsDetail runMetrics);
 
-    void showCalories(String calories);
-
-    void showSpeed(String speed);
-
-    void showPace(String pace);
-
-    void showDistance(String distance);
-
-    void showTitle(String title);
-
-    void showRunTimeInterval(String startTime);
-
-    void showElapsedTime(String elapsedTime);
-
-    void showRunningTime(String runningTime);
-
     void endActivity();
 
     void shareImageIntent(Uri uri);

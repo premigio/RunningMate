@@ -1,31 +1,28 @@
 package com.itba.runningMate.achievements;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.itba.runningMate.R;
-import com.itba.runningMate.achievements.elements.AchievementElementViewImpl;
-import com.itba.runningMate.achievements.elements.Achievements;
-import com.itba.runningMate.achievements.elements.AchievementsElementView;
+import com.itba.runningMate.achievements.achievement.Achievements;
+import com.itba.runningMate.achievements.achievement.AchievementsElementView;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
-import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
+import com.itba.runningMate.repository.achievements.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-public class AchievementsActivity extends AppCompatActivity implements AchievementsView{
+public class AchievementsActivity extends AppCompatActivity implements AchievementsView {
 
     private AchievementsPresenter presenter;
 
@@ -40,14 +37,20 @@ public class AchievementsActivity extends AppCompatActivity implements Achieveme
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_achievements);
+        createPresenter();
+        setUp();
+    }
 
+    private void createPresenter() {
         final DependencyContainer container = DependencyContainerLocator.locateComponent(this);
         final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
         final RunRepository runRepository = container.getRunRepository();
         final AchievementsStorage stateStorage = container.getAchievementsStorage();
 
-        presenter = new AchievementsPresenter(runRepository, schedulerProvider,stateStorage,this);
+        presenter = new AchievementsPresenter(runRepository, schedulerProvider, stateStorage, this);
+    }
 
+    private void setUp() {
         goalTitle = findViewById(R.id.goal_title);
         goalSubtitle = findViewById(R.id.goal_subtitle);
         goalImage = findViewById(R.id.goal_image);
@@ -56,7 +59,7 @@ public class AchievementsActivity extends AppCompatActivity implements Achieveme
         achievements = new ArrayList<>();
         AchievementsElementView achievement = findViewById(R.id.achievement1);
         achievement.bind(getString(R.string.total_distance_achievement_title),
-                         getString(R.string.total_distance_achievement_subtitle));
+                getString(R.string.total_distance_achievement_subtitle));
         achievements.add(achievement);
 
         achievement = findViewById(R.id.achievement2);

@@ -6,23 +6,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.itba.runningMate.R;
-import com.itba.runningMate.mainpage.fragments.feed.FeedFragment;
-import com.itba.runningMate.mainpage.fragments.feed.FeedPresenter;
-
-import org.jetbrains.annotations.NotNull;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
+import com.itba.runningMate.R;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.ref.WeakReference;
+
 public class GoalsCard extends CardView {
 
-    ImageView image;
-    TextView title, subtitle;
-    Button seeAll;
-    private OnSeeAllClickListener onSeeAllClickListener;
-
+    private ImageView image;
+    private TextView title, subtitle;
+    private Button seeAll;
+    private WeakReference<OnSeeAllClickListener> onSeeAllClickListener;
 
     public GoalsCard(@NonNull @NotNull Context context) {
         super(context);
@@ -47,7 +46,13 @@ public class GoalsCard extends CardView {
         subtitle = findViewById(R.id.goal_subtitle_card);
         seeAll = findViewById(R.id.see_all_goals);
 
-        seeAll.setOnClickListener((v) -> this.onSeeAllClickListener.onSeeAllClickAchievements());
+        seeAll.setOnClickListener(l -> onSeeAllButtonClicked());
+    }
+
+    private void onSeeAllButtonClicked() {
+        if (onSeeAllClickListener.get() != null) {
+            onSeeAllClickListener.get().onSeeAllAchievementsClick();
+        }
     }
 
     public void setTitle(int titleInt) {
@@ -63,6 +68,6 @@ public class GoalsCard extends CardView {
     }
 
     public void setSeeAllListener(OnSeeAllClickListener onSeeAllClickListener) {
-        this.onSeeAllClickListener = onSeeAllClickListener;
+        this.onSeeAllClickListener = new WeakReference<>(onSeeAllClickListener);
     }
 }

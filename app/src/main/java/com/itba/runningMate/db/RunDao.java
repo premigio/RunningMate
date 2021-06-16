@@ -49,4 +49,5 @@ public interface RunDao {
 
     @Query("UPDATE runs SET title=:title WHERE run_id = :id")
     Completable updateTitle(long id, String title);
+
 }

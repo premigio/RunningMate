@@ -24,11 +24,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
-import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+import com.itba.runningMate.repository.achievements.AchievementsStorage;
+import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.services.location.TrackingService;
-import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.text.DecimalFormat;
@@ -144,7 +143,6 @@ public class RunningMetricsFragment extends Fragment implements RunningMetricsVi
 
     public void createPresenter() {
         final DependencyContainer container = DependencyContainerLocator.locateComponent(this.getActivity());
-        final RunningStateStorage stateStorage = container.getRunningStateStorage();
         final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
         final RunRepository runRepository = container.getRunRepository();
         final AchievementsStorage achievementsStorage = container.getAchievementsStorage();

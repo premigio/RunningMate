@@ -121,5 +121,4 @@ public class RunningPresenter implements OnTrackingLocationUpdateListener {
         return this.tracker;
     }
 
-
 }

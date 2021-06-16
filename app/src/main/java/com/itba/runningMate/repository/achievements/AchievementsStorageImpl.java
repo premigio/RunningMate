@@ -1,13 +1,10 @@
-package com.itba.runningMate.repository.achievementsstorage;
+package com.itba.runningMate.repository.achievements;
 
 import android.content.SharedPreferences;
 
-import static com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE;
-import static com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE;
+public class AchievementsStorageImpl implements AchievementsStorage {
 
-public class AchievementsStorageImpl  implements AchievementsStorage {
-
-    public static final String KEY_TOTAL_DISTANCE = "total_distance";
+    private static final String KEY_TOTAL_DISTANCE = "total_distance";
 
     private Double totalDistance;
 

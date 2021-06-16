@@ -27,7 +27,7 @@ import static com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM;
 
 public class Map extends MapView {
 
-    private static final int PADDING = 20; // padding de los puntos en el mapa
+    private static final int PADDING = 100;
 
     private GoogleMap googleMap;
 
@@ -138,6 +138,6 @@ public class Map extends MapView {
                 boundsBuilder.include(point);
             }
         }
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), PADDING));
     }
 }

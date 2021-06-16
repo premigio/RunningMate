@@ -22,4 +22,5 @@ public class DependencyContainerLocator {
     public static void setComponent(final DependencyContainer dependencyContainer) {
         DependencyContainerLocator.dependencyContainer = dependencyContainer;
     }
+
 }

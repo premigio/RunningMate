@@ -1,10 +1,7 @@
 package com.itba.runningMate.mainpage.fragments.feed;
 
-import android.graphics.Bitmap;
-
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
@@ -17,17 +14,16 @@ import timber.log.Timber;
 public class FeedPresenter {
 
     private final WeakReference<FeedView> view;
-    private final WeakReference<PastRunsCard> pastRunsCard;
     private final RunRepository repo;
     private final SchedulerProvider schedulerProvider;
 
     private final CompositeDisposable disposables; // I need 2 disposables at least
 
 
-    public FeedPresenter(RunRepository repo, SchedulerProvider schedulerProvider,
-                         PastRunsCard pastRunsCard, FeedView view) {
+    public FeedPresenter(final RunRepository repo,
+                         final SchedulerProvider schedulerProvider,
+                         final FeedView view) {
         this.view = new WeakReference<>(view);
-        this.pastRunsCard = new WeakReference<>(pastRunsCard);
         this.repo = repo;
         this.schedulerProvider = schedulerProvider;
         disposables = new CompositeDisposable();
@@ -73,13 +69,13 @@ public class FeedPresenter {
 
     public void onPastRunClick(long id) {
         if (view.get() != null) {
-            pastRunsCard.get().launchRunDetails(id);
+            view.get().launchRunDetailActivity(id);
         }
     }
 
     public void goToPastRunsActivity() {
         if (view.get() != null) {
-            view.get().goToPastRunsActivity();
+            view.get().launchPastRunsActivity();
         }
     }
 
@@ -131,7 +127,7 @@ public class FeedPresenter {
 
     public void goToAchievementsActivity() {
         if (view.get() != null) {
-            view.get().goToAchievementsActivity();
+            view.get().launchAchievementsActivity();
         }
     }
 }

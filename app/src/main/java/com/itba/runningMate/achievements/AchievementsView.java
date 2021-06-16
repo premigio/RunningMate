@@ -1,6 +1,6 @@
 package com.itba.runningMate.achievements;
 
-import com.itba.runningMate.achievements.elements.Achievements;
+import com.itba.runningMate.achievements.achievement.Achievements;
 
 public interface AchievementsView {
 
