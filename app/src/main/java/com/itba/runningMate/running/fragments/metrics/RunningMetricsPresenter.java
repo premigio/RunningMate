@@ -4,12 +4,11 @@ import androidx.annotation.VisibleForTesting;
 
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
-import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.run.RunMetrics;
+import com.itba.runningMate.services.location.Tracker;
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.run.RunMetrics;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -23,7 +22,6 @@ import static com.itba.runningMate.utils.Formatters.dateFormat;
 public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener {
 
     private final WeakReference<RunningMetricsView> view;
-    private final RunningStateStorage stateStorage;
     private final RunRepository runRepository;
     private final SchedulerProvider schedulers;
     private final AchievementsStorage achievementsStorage;
@@ -32,13 +30,11 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
     private boolean isTrackerAttached;
     private Disposable disposable;
 
-    public RunningMetricsPresenter(final RunningStateStorage stateStorage,
-                                   final RunRepository runRepository,
+    public RunningMetricsPresenter(final RunRepository runRepository,
                                    final SchedulerProvider schedulers,
                                    AchievementsStorage achievementsStorage, final RunningMetricsView view) {
         this.isTrackerAttached = false;
         this.view = new WeakReference<>(view);
-        this.stateStorage = stateStorage;
         this.runRepository = runRepository;
         this.schedulers = schedulers;
         this.achievementsStorage = achievementsStorage;
@@ -52,7 +48,6 @@ public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener 
     }
 
     public void onViewDetached() {
-        stateStorage.persistState();
         if (isTrackerAttached) {
             tracker.removeTrackingMetricsUpdateListener(this);
         }

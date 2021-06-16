@@ -71,20 +71,12 @@ public class RunRepositoryImpl implements RunRepository {
     }
 
     @Override
-    public void deleteRun(Run run) {
-        runDao.deleteRoute(RunMapper.toEntity(run))
-                .onErrorComplete()
-                .subscribeOn(scheduler.io())
-                .observeOn(scheduler.ui())
-                .subscribe();
+    public Completable deleteRun(Run run) {
+        return runDao.deleteRoute(RunMapper.toEntity(run));
     }
 
 
-    public void deleteRun(long runId) {
-        runDao.deleteRoute(runId)
-                .onErrorComplete()
-                .subscribeOn(scheduler.io())
-                .observeOn(scheduler.ui())
-                .subscribe();
+    public Completable deleteRun(long runId) {
+        return runDao.deleteRoute(runId);
     }
 }

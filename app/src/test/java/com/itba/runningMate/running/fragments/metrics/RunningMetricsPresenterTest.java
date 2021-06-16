@@ -2,8 +2,8 @@ package com.itba.runningMate.running.fragments.metrics;
 
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.repository.achievementsstorage.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.utils.Constants;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class RunningMetricsPresenterTest {
 
-    private RunningStateStorage stateStorage;
+    private AchievementsStorage achievementsStorage;
     private RunRepository runRepository;
     private SchedulerProvider schedulers;
     private RunningMetricsView view;
@@ -39,13 +39,13 @@ public class RunningMetricsPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        stateStorage = mock(RunningStateStorage.class);
+        achievementsStorage = mock(AchievementsStorage.class);
         runRepository = mock(RunRepository.class);
         schedulers = mock(SchedulerProvider.class);
         view = mock(RunningMetricsView.class);
         tracker = mock(Tracker.class);
 
-        presenter = new RunningMetricsPresenter(stateStorage, runRepository, schedulers, view);
+        presenter = new RunningMetricsPresenter(runRepository, schedulers, achievementsStorage, view);
         presenterSpy = spy(presenter);
 
         route = new Route().addToRoute(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE);
@@ -56,13 +56,6 @@ public class RunningMetricsPresenterTest {
         presenter.onViewAttached();
 
         verify(view).attachTrackingService();
-    }
-
-    @Test
-    public void givenViewDetachedThenPersistStateStorage() {
-        presenter.onViewDetached();
-
-        verify(stateStorage).persistState();
     }
 
     @Test
@@ -117,17 +110,6 @@ public class RunningMetricsPresenterTest {
 
         verify(view).showStopConfirm();
     }
-
-//    @Test
-//    public void givenStopButtonClickWhenDistanceGreaterThanThresholdTHenShowStopConfirm() {
-//        when(tracker.queryDistance()).thenReturn((float) (DISTANCE_EPSILON + 0.5));
-//        when(tracker.queryRoute()).thenReturn(route);
-//
-//        presenterSpy.onTrackingServiceAttached(tracker);
-//        presenterSpy.onStopButtonClick();
-//
-//        verify(presenterSpy).stopRun();
-//    }
 
     @Test
     public void givenPlayButtonClickThenResumeTracking() {

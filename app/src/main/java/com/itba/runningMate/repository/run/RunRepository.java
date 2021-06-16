@@ -28,9 +28,9 @@ public interface RunRepository {
 
     Single<Double> getMaxSpeed();
 
-    void deleteRun(Run run);
+    Completable deleteRun(Run run);
 
-    void deleteRun(long runId);
+    Completable deleteRun(long runId);
 
     Completable updateTitle(long runId, String title);
 }
