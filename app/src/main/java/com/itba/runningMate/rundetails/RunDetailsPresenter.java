@@ -1,13 +1,11 @@
 package com.itba.runningMate.rundetails;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.achievements.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.rundetails.model.RunMetricsDetail;
+import com.itba.runningMate.utils.ImageProcessing;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
@@ -119,19 +117,14 @@ public class RunDetailsPresenter {
         if (view.get() == null) {
             return;
         }
-        Bitmap bitmap = view.get().getMetricsImage(detail);
         File image = cacheFileProvider.getFile("runningmate-run-metrics.png");
-        Uri uri = null;
         try {
             FileOutputStream outputStream = new FileOutputStream(image);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
-            outputStream.flush();
-            outputStream.close();
-            uri = cacheFileProvider.getUriForFile(image);
+            ImageProcessing.compress(view.get().getMetricsImage(detail), outputStream);
         } catch (Exception e) {
             view.get().showShareRunError();
         }
-        view.get().shareImageIntent(uri);
+        view.get().shareImageIntent(cacheFileProvider.getUriForFile(image));
     }
 
     private void onRunDeleted() {

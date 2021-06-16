@@ -1,5 +1,8 @@
 package com.itba.runningMate.rundetails;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.repository.achievements.AchievementsStorage;
@@ -13,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.io.File;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -162,6 +166,20 @@ public class RunDetailsPresenterTest {
         presenter.onRunTitleModified(newTitle);
 
         verify(view).showUpdateTitleError();
+    }
+
+    @Test
+    public void givenShareButtonClickedThenShareImage() {
+        Bitmap bitmap = mock(Bitmap.class);
+        Uri uri = mock(Uri.class);
+        File file = mock(File.class);
+        when(cacheFileProvider.getFile(any(String.class))).thenReturn(file);
+        when(view.getMetricsImage(any(RunMetricsDetail.class))).thenReturn(bitmap);
+        when(cacheFileProvider.getUriForFile(any(File.class))).thenReturn(uri);
+
+        presenter.onShareButtonClick();
+
+        verify(view).shareImageIntent(uri);
     }
 
 }
