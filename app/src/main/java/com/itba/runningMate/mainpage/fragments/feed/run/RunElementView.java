@@ -25,19 +25,19 @@ public class RunElementView extends FrameLayout {
 
     public RunElementView(Context context) {
         super(context);
-        inflate(context, R.layout.run_element, this);
+        inflate(context, R.layout.view_run_element, this);
         setUp();
     }
 
     public RunElementView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.run_element, this);
+        inflate(context, R.layout.view_run_element, this);
         setUp();
     }
 
     public RunElementView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        inflate(context, R.layout.run_element, this);
+        inflate(context, R.layout.view_run_element, this);
         setUp();
     }
 

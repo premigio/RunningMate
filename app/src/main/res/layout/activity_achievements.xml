@@ -12,7 +12,7 @@
             android:id="@+id/achievements_goal_title_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/goals"
+            android:text="@string/level"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColorHighlight="@color/black"
             android:textStyle="bold"

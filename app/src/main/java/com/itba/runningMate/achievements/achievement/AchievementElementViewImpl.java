@@ -19,25 +19,25 @@ public class AchievementElementViewImpl extends FrameLayout implements Achieveme
 
     public AchievementElementViewImpl(@NonNull Context context) {
         super(context);
-        inflate(context, R.layout.achievement_element, this);
+        inflate(context, R.layout.view_achievement_element, this);
         setUp();
     }
 
     public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.achievement_element, this);
+        inflate(context, R.layout.view_achievement_element, this);
         setUp();
     }
 
     public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        inflate(context, R.layout.achievement_element, this);
+        inflate(context, R.layout.view_achievement_element, this);
         setUp();
     }
 
     public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        inflate(context, R.layout.achievement_element, this);
+        inflate(context, R.layout.view_achievement_element, this);
         setUp();
     }
 

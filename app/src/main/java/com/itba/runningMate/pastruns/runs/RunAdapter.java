@@ -39,7 +39,7 @@ public class RunAdapter extends RecyclerView.Adapter<RunViewHolder> {
 
     @Override
     public int getItemViewType(final int position) {
-        return R.layout.run_element;
+        return R.layout.view_run_element;
     }
 
     @NonNull

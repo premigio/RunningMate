@@ -29,7 +29,7 @@
     <string name="see_all">See all</string>
     <string name="run">Run</string>
     <string name="feed">Feed</string>
-    <string name="past">Past Runs</string>
+    <string name="past">Recent Activity</string>
     <string name="past_title">Run on %1$s</string>
     <string name="distance">5.4 km</string>
     <string name="distance_string">%1$.1f km</string>
@@ -94,7 +94,7 @@
     <string name="max_kcal_achievement_subtitle">Burned more than 1000 kcal in one run.</string>
     <string name="max_time_achievement_title">Time 1h</string>
     <string name="max_time_achievement_subtitle">Got to run for more than 1h.</string>
-
+    <string name="level">Level</string>
 
 
     <!--    <string name="date_title">%1$s</string>-->
