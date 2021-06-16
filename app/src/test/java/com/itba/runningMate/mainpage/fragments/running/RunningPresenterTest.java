@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.running.ui;
+package com.itba.runningMate.mainpage.fragments.running;
 
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.Tracker;

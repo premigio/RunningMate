@@ -103,4 +103,8 @@ public class RunningMapPresenter implements OnTrackingLocationUpdateListener {
         return tracker;
     }
 
+    @VisibleForTesting
+    public boolean isTrackerAttached() {
+        return isTrackerAttached;
+    }
 }
