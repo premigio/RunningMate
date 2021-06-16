@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mate_color"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_initial_distance"
+        android:textColor="@color/white"
+        android:textSize="62sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/distance_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-28dp"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_distance_label"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
+
+    <TextView
+        android:id="@+id/pace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_initial_pace"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/pace_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_pace_label"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
+
+    <TextView
+        android:id="@+id/running_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_initial_time"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/running_time_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_running_time_label"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
+
+    <TextView
+        android:id="@+id/elapsed_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_initial_time"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/elapsed_time_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_elapsed_time_label"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/your_id"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
+
+    <TextView
+        android:id="@+id/calories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_initial_calories"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/pace_calories_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_calories_label"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/mate_color_alpha" />
+
+    <TextView
+        android:id="@+id/speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_initial_speed"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/speed_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:gravity="start"
+        android:text="@string/text_view_run_details_speed_label"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+
+</LinearLayout>

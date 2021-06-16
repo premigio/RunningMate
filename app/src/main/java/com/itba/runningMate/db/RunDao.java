@@ -20,11 +20,23 @@ public interface RunDao {
     @Query("SELECT * FROM runs WHERE runs.run_id = :id")
     Single<RunEntity> getRoute(final long id);
 
-    @Query("SELECT run_id, start_time, elapsed_time, distance, velocity, pace FROM runs WHERE runs.run_id = :id")
+    @Query("SELECT run_id, start_time, end_time, elapsed_time, distance, velocity, pace, calories, title FROM runs WHERE runs.run_id = :id")
     Single<RunEntity> getRouteMetrics(final long id);
 
     @Insert
     Single<Long> insertRoute(RunEntity route);
+
+    @Query("SELECT SUM(distance) FROM runs")
+    Single<Double> getTotalDistance();
+
+    @Query("SELECT MAX(elapsed_time) FROM runs")
+    Single<Long> getMaxTime();
+
+    @Query("SELECT MAX(calories) FROM runs")
+    Single<Double> getMaxKcal();
+
+    @Query("SELECT MAX(velocity) FROM runs")
+    Single<Double> getMaxSpeed();
 
     @Delete
     Completable deleteRoute(RunEntity route);
@@ -32,7 +44,10 @@ public interface RunDao {
     @Query("DELETE FROM runs WHERE runs.run_id = :id")
     Completable deleteRoute(long id);
 
-    @Query("SELECT run_id, start_time, elapsed_time, distance, velocity, pace FROM runs ORDER BY start_time DESC")
+    @Query("SELECT run_id, start_time, end_time, elapsed_time, distance, velocity, pace, calories, title FROM runs ORDER BY start_time DESC")
     Flowable<List<RunEntity>> getRoutesLazy();
+
+    @Query("UPDATE runs SET title=:title WHERE run_id = :id")
+    Completable updateTitle(long id, String title);
 
 }

@@ -11,23 +11,29 @@ public class RunMapper {
     public static Run toModel(final RunEntity entity) {
         return new Run()
                 .uid(entity.getUid())
+                .title(entity.getTitle())
                 .route(entity.getRoute())
                 .startTime(entity.getStartTime())
-                .elapsedTime(entity.getElapsedTime())
+                .endTime(entity.getEndTime())
+                .runningTime(entity.getElapsedTime())
                 .distance(entity.getDistance())
                 .pace(entity.getPace())
-                .velocity(entity.getVelocity());
+                .velocity(entity.getVelocity())
+                .calories(entity.getCalories());
     }
 
     public static RunEntity toEntity(final Run model) {
         return new RunEntity()
                 .uid(model.getUid())
+                .title(model.getTitle())
                 .route(model.getRoute())
                 .startTime(model.getStartTime())
-                .elapsedTime(model.getElapsedTime())
+                .endTime(model.getEndTime())
+                .elapsedTime(model.getRunningTime())
                 .distance(model.getDistance())
                 .pace(model.getPace())
-                .velocity(model.getVelocity());
+                .velocity(model.getVelocity())
+                .calories(model.getCalories());
     }
 
     public static List<Run> toModel(final List<RunEntity> entities) {

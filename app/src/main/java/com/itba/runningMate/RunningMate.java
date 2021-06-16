@@ -5,8 +5,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
-import timber.log.Timber;
+import com.itba.runningMate.utils.Constants;
 
+import timber.log.Timber;
 
 public class RunningMate extends Application {
 

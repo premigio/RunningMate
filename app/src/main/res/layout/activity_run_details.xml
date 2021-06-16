@@ -1,176 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/run_description_ll_0"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/map_detail_run">
+        android:background="@color/mate_color">
+
+        <com.itba.runningMate.map.MapInScrollView
+            android:id="@+id/run_detail_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="450dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@id/run_detail_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/run_detail_title"
+            android:backgroundTint="@color/white"
+            android:maxLength="40"
+            android:maxLines="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/anton"
+            android:gravity="start"
+            android:padding="5dp"
+            android:text="Sabado 14 de Mayo"
+            android:textColor="@color/md_white_1000"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/run_detail_map" />
+
+        <!--        <Space-->
+        <!--            android:id="@+id/run_detail_space_1"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/run_detail_start_date"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/run_detail_start_date"-->
+        <!--            app:layout_constraintVertical_bias="0.95" />-->
+
 
         <TextView
-            android:id="@+id/run_description_start_time"
-            android:layout_width="wrap_content"
+            android:id="@+id/run_detail_run_time_interval"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/date_title"
-            android:textColor="@color/title_color"
-            android:textSize="30sp"
-            android:textStyle="bold"/>
-
-        <GridLayout
-            android:id="@+id/run_description_gl_1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnCount="2"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/run_description_start_time">
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="start"
+            android:text="16:00"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/run_detail_title"
+            app:layout_constraintStart_toStartOf="@+id/run_detail_title"
+            app:layout_constraintTop_toBottomOf="@+id/run_detail_title" />
 
 
-            <LinearLayout
-                android:id="@+id/run_description_ll_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill"
-                android:layout_marginStart="15dp"
-                android:orientation="vertical">
+        <!--
+        android.support.v4.widget.Space es una solucion mas economica pero no me esta funcionando por un tema de dependencias
+        -->
+        <!--    <View-->
+        <!--        android:id="@+id/run_detail_divider"-->
+        <!--        android:layout_width="0dp"-->
+        <!--        android:layout_height="2dp"-->
+        <!--        android:layout_marginTop="5dp"-->
+        <!--        android:background="@color/md_white_1000"-->
+        <!--        app:layout_constraintBottom_toTopOf="@+id/run_detail_metrics"-->
+        <!--        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--        app:layout_constraintStart_toStartOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/run_detail_run_time_interval"-->
+        <!--        app:layout_constraintWidth_default="percent"-->
+        <!--        app:layout_constraintWidth_percent="0.8" />-->
 
-                <TextView
-                    android:id="@+id/run_description_distance_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="fill"
-                    android:text="@string/distance_title"
-                    android:textColor="@color/title_color"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+        <include
+            android:id="@+id/run_detail_metrics"
+            layout="@layout/activity_run_details_metrics"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_run_detail_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/run_detail_run_time_interval" />
 
-                <TextView
-                    android:id="@+id/run_description_distance_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="@string/distance_string"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/run_description_ll_speed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill"
-                android:layout_marginStart="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/run_description_speed_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="fill"
-                    android:text="@string/speed_title"
-                    android:textColor="@color/title_color"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/run_description_speed_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="@string/speed_value"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/run_description_ll_elapsed_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill"
-                android:layout_marginStart="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/run_description_elapsed_time_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="fill"
-                    android:text="@string/time_elapsed_title"
-                    android:textColor="@color/title_color"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/run_description_elapsed_time_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="@string/time_elapsed_value"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/run_description_ll_pace"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill"
-                android:layout_marginStart="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/run_description_pace_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="fill"
-                    android:text="@string/pace_title"
-                    android:textColor="@color/title_color"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/run_description_pace_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="@string/pace_value"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-
-        </GridLayout>
         <Button
-            android:id="@+id/delete_button_run"
-            android:layout_width="wrap_content"
+            android:id="@+id/btn_run_detail_delete"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:backgroundTint="@color/delete_button"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
             android:layout_gravity="center"
-            android:text="@string/delete_run" />
-    </LinearLayout>
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/btn_run_details_delete"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/mate_color_beta"
+            app:elevation="10dp"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_run_detail_share"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/run_detail_metrics"
+            app:strokeColor="@color/mate_color_beta"
+            app:strokeWidth="2dp" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map_detail_run"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/btn_run_detail_share"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/btn_run_details_share"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/mate_color_beta"
+            app:elevation="10dp"
+            app:icon="@drawable/ic_share_variant"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_run_detail_delete"
+            app:layout_constraintTop_toTopOf="@id/btn_run_detail_delete"
+            app:strokeColor="@color/mate_color_beta"
+            app:strokeWidth="2dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

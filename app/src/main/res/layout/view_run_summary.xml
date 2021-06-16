@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?><!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:background="@color/mate_color">-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mate_color"
+    android:padding="10dp"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <Space
+        android:id="@+id/run_detail_space_0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:fontFamily="@font/anton"
+        android:gravity="start"
+        android:text="@string/text_view_run_summary_title"
+        android:textColor="@color/white"
+        android:textSize="38sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintEnd_toEndOf="@id/pace"
+        app:layout_constraintStart_toStartOf="@id/run_detail_space_0"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Space
+        android:id="@+id/run_detail_space_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/distance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/distance"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_initial_distance"
+        android:textColor="@color/white"
+        android:textSize="48sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintEnd_toEndOf="@id/pace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <TextView
+        android:id="@+id/distance_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_distance_label"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/distance"
+        app:layout_constraintStart_toStartOf="@+id/distance"
+        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_3" />
+
+
+    <Space
+        android:id="@+id/run_detail_space_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/running_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/running_time"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:id="@+id/pace"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_initial_pace"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintBottom_toBottomOf="@id/running_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/running_time"
+        app:layout_constraintTop_toTopOf="@id/running_time" />
+
+    <TextView
+        android:id="@+id/pace_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_pace_label"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/pace"
+        app:layout_constraintStart_toStartOf="@+id/pace"
+        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_1" />
+
+    <TextView
+        android:id="@+id/running_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_initial_time"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintEnd_toStartOf="@id/pace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/distance_label" />
+
+    <TextView
+        android:id="@+id/running_time_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_stopwatch_label"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/running_time"
+        app:layout_constraintStart_toStartOf="@+id/running_time"
+        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_1" />
+
+    <Space
+        android:id="@+id/run_detail_space_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/speed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/speed"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:id="@+id/calories"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_initial_calories"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintBottom_toBottomOf="@+id/speed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/speed"
+        app:layout_constraintTop_toTopOf="@+id/speed" />
+
+    <TextView
+        android:id="@+id/pace_calories_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_calories_label"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/calories"
+        app:layout_constraintStart_toStartOf="@+id/calories"
+        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_2" />
+
+    <TextView
+        android:id="@+id/speed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="5"
+        android:fontFamily="@font/anton"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_initial_speed"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintEnd_toStartOf="@+id/calories"
+        app:layout_constraintStart_toStartOf="@id/running_time"
+        app:layout_constraintTop_toBottomOf="@+id/running_time_label" />
+
+    <TextView
+        android:id="@+id/speed_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/text_view_run_details_speed_label"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/speed"
+        app:layout_constraintStart_toStartOf="@+id/speed"
+        app:layout_constraintTop_toBottomOf="@+id/run_detail_space_2" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/title"
+        app:layout_constraintEnd_toEndOf="@id/title"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="@id/title"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintVertical_bias="0.50"
+        app:srcCompat="@drawable/running_mate_logo" />
+
+</merge><!--    </androidx.constraintlayout.widget.ConstraintLayout>-->

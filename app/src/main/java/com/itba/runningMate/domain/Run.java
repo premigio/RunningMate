@@ -8,14 +8,17 @@ import java.util.List;
 public class Run {
 
     private long uid;
-    private List<LatLng> route;
+    private List<List<LatLng>> route;
     private Date startTime;
+    private Date endTime;
     /* km */
     private float distance;
     /* km/h */
     private float velocity;
     private long pace;
-    private long elapsedTime;
+    private long runningTime;
+    private int calories;
+    private String title;
 
     public Run() {
     }
@@ -29,16 +32,16 @@ public class Run {
         return uid;
     }
 
-    public Run route(List<LatLng> route) {
+    public Run route(List<List<LatLng>> route) {
         this.route = route;
         return this;
     }
 
-    public List<LatLng> getRoute() {
+    public List<List<LatLng>> getRoute() {
         return route;
     }
 
-    public void setRoute(List<LatLng> route) {
+    public void setRoute(List<List<LatLng>> route) {
         this.route = route;
     }
 
@@ -53,6 +56,19 @@ public class Run {
 
     public Date getStartTime() {
         return startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Run endTime(Date endTime) {
+        this.endTime = endTime;
+        return this;
     }
 
     public Run distance(float distance) {
@@ -94,16 +110,43 @@ public class Run {
         this.pace = pace;
     }
 
-    public Run elapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
+    public Run runningTime(long runningTime) {
+        this.runningTime = runningTime;
         return this;
     }
 
-    public long getElapsedTime() {
-        return elapsedTime;
+    public long getRunningTime() {
+        return runningTime;
     }
 
-    public void setElapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
+    public void setRunningTime(long runningTime) {
+        this.runningTime = runningTime;
     }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public Run calories(int calories) {
+        this.calories = calories;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Run title(String title) {
+        this.title = title;
+        return this;
+    }
+
 }

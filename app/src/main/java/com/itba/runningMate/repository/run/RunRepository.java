@@ -4,6 +4,7 @@ import com.itba.runningMate.domain.Run;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -19,7 +20,17 @@ public interface RunRepository {
 
     Single<Long> insertRun(Run run);
 
-    void deleteRun(Run run);
+    Single<Double> getTotalDistance();
 
-    void deleteRun(long runId);
+    Single<Long> getMaxTime();
+
+    Single<Double> getMaxKcal();
+
+    Single<Double> getMaxSpeed();
+
+    Completable deleteRun(Run run);
+
+    Completable deleteRun(long runId);
+
+    Completable updateTitle(long runId, String title);
 }

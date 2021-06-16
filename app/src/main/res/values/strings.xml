@@ -13,7 +13,7 @@
         You can always change location permissions from system settings.
     </string>
 
-    activity_login_et_password
+    // Running Metrics Fragment
     <string name="button_running_start">Start</string>
     <string name="button_running_stop">Stop</string>
     <string name="text_view_running_pace_label">Pace</string>
@@ -22,10 +22,14 @@
     <string name="text_view_running_initial_time">00:00:00</string>
     <string name="text_view_running_initial_distance">0.00</string>
     <string name="text_view_running_initial_pace">00\' 00\"</string>
-    <string name="stop_run_message">It seems that you still have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
+    <string name="text_view_running_calories_label">Calories (Kcal)</string>
+    <string name="text_view_running_initial_calories">0</string>
+    <string name="stop_run_message">It seems that you have not begun running.\nAre you sure you want to stop?\nYour data will not be saved.</string>
 
+    <string name="see_all">See all</string>
     <string name="run">Run</string>
-    <string name="past">Past Runs</string>
+    <string name="feed">Feed</string>
+    <string name="past">Recent Activity</string>
     <string name="past_title">Run on %1$s</string>
     <string name="distance">5.4 km</string>
     <string name="distance_string">%1$.1f km</string>
@@ -42,16 +46,65 @@
     <string name="toast_error_run_save">Could not save run</string>
 
     // Notifications
-    <string name="notification_tracking_service">Hey I\'am tracking your run</string>
+    <string name="notification_tracking_service">Hey I\'m tracking your run</string>
 
-    <string name="date_title">%1$s</string>
-    <string name="speed_title">Speed</string>
-    <string name="speed_value">%1$.1f km/h</string>
-    <string name="pace_title">Pace</string>
-    <string name="pace_value">%1$s</string>
-    <string name="distance_title">Distance</string>
-    <string name="time_elapsed_title">Run Time</string>
-    <string name="time_elapsed_value">%1$s min</string>
-    <string name="delete_run">Delete</string>
+    // Run Details Fragment
+    <string name="text_view_run_details_pace_label">Pace</string>
+    <string name="text_view_run_details_stopwatch_label">Time</string>
+    <string name="text_view_run_details_distance_label">Distance (Km)</string>
+    <string name="text_view_run_details_initial_time">00:00:00</string>
+    <string name="text_view_run_details_initial_distance">0.00</string>
+    <string name="text_view_run_details_initial_pace">00\' 00\"</string>
+    <string name="text_view_run_details_calories_label">Calories (Kcal)</string>
+    <string name="text_view_run_details_initial_calories">0</string>
+    <string name="text_view_run_details_speed_label">Speed (Km/h)</string>
+    <string name="text_view_run_details_initial_speed">0.00</string>
+    <string name="btn_run_details_delete">Delete</string>
+    <string name="btn_run_details_share">Share</string>
+    <string name="text_view_run_details_elapsed_time_label">Elapsed Time</string>
+    <string name="text_view_run_details_running_time_label">Running Time</string>
+    <string name="text_view_run_summary_title">RunningMate</string>
+
+    // Goals / Achievements Activity
+    <string name="goals">Goals</string>
+    <string name="goal_title">Title</string>
+    <string name="goal_subtitle">This is a subtitle, to explain about the goal!</string>
+    <string name="goal_description">This image represents the level you are in.</string>
+
+    <string name="taragui">Taragui</string>
+    <string name="taragui_subtitle">Level 1: Taragui, The "yerba" that leads in Argentina.</string>
+    <string name="cbse">CBSé</string>
+    <string name="cbse_subtitle">Level 2: CBSé, Gather the good.</string>
+    <string name="cruz_de_malta">Cruz de Malta</string>
+    <string name="cruz_de_malta_subtitle">Level 3: Cruz de Malta, Soft and durable.</string>
+    <string name="playadito">Playadito</string>
+    <string name="playadito_subtitle">Level 4: Made with sticks.</string>
+    <string name="rosamonte">Rosamonte</string>
+    <string name="rosamonte_subtitle">Level 5: Rosamonte, The way to "cebar" the best mate.</string>
+    <string name="merced">La Merced</string>
+    <string name="merced_subtitle">Level 6: La Merced, A different "yerba".</string>
+    <string name="achievements">Achievements</string>
+    <string name="achievement_unlocked_description">Achievement Unlocked</string>
+    <string name="achievement_description">Description of the achievement</string>
+    <string name="total_distance_achievement_title">Ran 2000km</string>
+    <string name="total_distance_achievement_subtitle">Ran more than a total of 2000km</string>
+    <string name="max_speed_achievement_title">Speed 10km/h</string>
+    <string name="max_speed_achievement_subtitle">Got to run at more than 10km/h</string>
+    <string name="max_kcal_achievement_title">1000 Kcal</string>
+    <string name="max_kcal_achievement_subtitle">Burned more than 1000 kcal in one run.</string>
+    <string name="max_time_achievement_title">Time 1h</string>
+    <string name="max_time_achievement_subtitle">Got to run for more than 1h.</string>
+    <string name="level">Level</string>
+
+
+    <!--    <string name="date_title">%1$s</string>-->
+    <!--    <string name="speed_title">Speed</string>-->
+    <!--    <string name="speed_value">%1$.1f km/h</string>-->
+    <!--    <string name="pace_title">Pace</string>-->
+    <!--    <string name="pace_value">%1$s</string>-->
+    <!--    <string name="distance_title">Distance</string>-->
+    <!--    <string name="time_elapsed_title">Run Time</string>-->
+    <!--    <string name="time_elapsed_value">%1$s min</string>-->
+    <!--    <string name="delete_run">Delete</string>-->
 
 </resources>

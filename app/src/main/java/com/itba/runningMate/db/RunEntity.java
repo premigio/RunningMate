@@ -17,10 +17,13 @@ public class RunEntity {
     public long uid;
 
     @ColumnInfo(name = "route")
-    public List<LatLng> route;
+    public List<List<LatLng>> route;
 
     @ColumnInfo(name = "start_time")
     public Date startTime;
+
+    @ColumnInfo(name = "end_time")
+    public Date endTime;
 
     @ColumnInfo(name = "elapsed_time")
     public long elapsedTime;
@@ -33,6 +36,12 @@ public class RunEntity {
 
     @ColumnInfo(name = "pace")
     public long pace;
+
+    @ColumnInfo(name = "calories")
+    public int calories;
+
+    @ColumnInfo(name = "title")
+    public String title;
 
     public RunEntity() {
     }
@@ -50,16 +59,16 @@ public class RunEntity {
         this.uid = uid;
     }
 
-    public RunEntity route(List<LatLng> route) {
+    public RunEntity route(List<List<LatLng>> route) {
         this.route = route;
         return this;
     }
 
-    public List<LatLng> getRoute() {
+    public List<List<LatLng>> getRoute() {
         return route;
     }
 
-    public void setRoute(List<LatLng> route) {
+    public void setRoute(List<List<LatLng>> route) {
         this.route = route;
     }
 
@@ -74,6 +83,19 @@ public class RunEntity {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public RunEntity endTime(Date endTime) {
+        this.endTime = endTime;
+        return this;
     }
 
     public RunEntity elapsedTime(long elapsedTime) {
@@ -127,4 +149,31 @@ public class RunEntity {
     public void setPace(long pace) {
         this.pace = pace;
     }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public RunEntity calories(int calories) {
+        this.calories = calories;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public RunEntity title(String title) {
+        this.title = title;
+        return this;
+    }
+
 }

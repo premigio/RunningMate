@@ -1,59 +1,83 @@
 package com.itba.runningMate.rundetails;
 
+import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.repository.achievements.AchievementsStorage;
 import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.rundetails.model.RunMetricsDetail;
+import com.itba.runningMate.utils.ImageProcessing;
+import com.itba.runningMate.utils.providers.files.CacheFileProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
-import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
 public class RunDetailsPresenter {
 
     private final WeakReference<RunDetailsView> view;
-    private final RunRepository repo;
-    private final SchedulerProvider sp;
-    private final long itemId;
+    private final RunRepository runRepository;
+    private final SchedulerProvider schedulerProvider;
+    private final CacheFileProvider cacheFileProvider;
+    private final AchievementsStorage achievementsStorage;
+    private final long runId;
+
+    private double distance;
+    private RunMetricsDetail detail;
 
     private final CompositeDisposable disposables;
 
-    public RunDetailsPresenter(RunDetailsView view, RunRepository repo, SchedulerProvider sp, long itemId) {
+    public RunDetailsPresenter(final CacheFileProvider cacheFileProvider,
+                               final RunRepository runRepository,
+                               final SchedulerProvider schedulerProvider,
+                               final AchievementsStorage achievementsStorage,
+                               final long runId,
+                               final RunDetailsView view) {
         this.view = new WeakReference<>(view);
-        this.repo = repo;
-        this.sp = sp;
-        this.itemId = itemId;
+        this.cacheFileProvider = cacheFileProvider;
+        this.runRepository = runRepository;
+        this.schedulerProvider = schedulerProvider;
+        this.achievementsStorage = achievementsStorage;
+        this.runId = runId;
         this.disposables = new CompositeDisposable();
     }
 
     public void onViewAttached() {
-        disposables.add(repo.getRunMetrics(itemId)
-                .subscribeOn(sp.computation())
-                .observeOn(sp.ui())
-                .subscribe(this::receivedRunMetrics, this::onReceivedRunError));
+        disposables.add(runRepository.getRunMetrics(runId)
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::onReceivedRunMetrics, this::onReceivedRunMetricsError));
     }
 
-    private void receivedRunMetrics(Run run) {
-        if (view.get() != null) {
-            view.get().bindRunMetrics(run);
+    private void onReceivedRunMetrics(Run run) {
+        if (view.get() == null) {
+            return;
         }
+        distance = run.getDistance();
+        detail = RunMetricsDetail.from(run);
+        view.get().showRunMetrics(detail);
     }
 
     public void onMapAttached() {
-        disposables.add(repo.getRun(itemId)
-                .subscribeOn(sp.computation())
-                .observeOn(sp.ui())
-                .subscribe(this::onReceivedRun, this::onReceivedRunError));
+        disposables.add(runRepository.getRun(runId)
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::onReceivedRun, this::onReceivedRunMetricsError));
     }
 
-    private void onReceivedRunError(Throwable throwable) {
-        Timber.d("Failed to retrieve run route from db for run-id: %l", itemId);
+    private void onReceivedRunMetricsError(Throwable throwable) {
+        Timber.d("Failed to retrieve run route from db for run-id: %l", runId);
+        if (view.get() != null) {
+            view.get().showRunNotAvailableError();
+        }
     }
 
     private void onReceivedRun(Run run) {
         if (view.get() != null) {
-            view.get().bindRunRoute(run);
+            view.get().showRoute(Route.from(run.getRoute()));
         }
     }
 
@@ -61,20 +85,59 @@ public class RunDetailsPresenter {
         disposables.dispose();
     }
 
-    public void deleteRun() {
-        disposables.add(Completable.fromAction(() -> repo.deleteRun(itemId))
-                .subscribeOn(sp.computation())
-                .observeOn(sp.ui())
-                .subscribe(this::endRunDetail, this::onEndRunError));
+    public void onDeleteButtonClick() {
+        achievementsStorage.decreaseTotalDistance(this.distance);
+        achievementsStorage.persistState();
+
+        disposables.add(runRepository.deleteRun(runId)
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(this::onRunDeleted, this::onRunDeleteError));
     }
 
-    private void endRunDetail() {
+    public void onRunTitleModified(String newTitle) {
+        disposables.add(runRepository.updateTitle(runId, newTitle)
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.computation())
+                .subscribe(this::onRunTitleUpdated, this::onRunTitleUpdateError));
+    }
+
+    public void onRunTitleUpdated() {
+        Timber.i("Successfully updated title");
+    }
+
+    public void onRunTitleUpdateError(Throwable throwable) {
+        Timber.d("Failed to update title");
+        if (view.get() != null) {
+            view.get().showUpdateTitleError();
+        }
+    }
+
+    public void onShareButtonClick() {
+        if (view.get() == null) {
+            return;
+        }
+        File image = cacheFileProvider.getFile("runningmate-run-metrics.png");
+        try {
+            FileOutputStream outputStream = new FileOutputStream(image);
+            ImageProcessing.compress(view.get().getMetricsImage(detail), outputStream);
+        } catch (Exception e) {
+            view.get().showShareRunError();
+        }
+        view.get().shareImageIntent(cacheFileProvider.getUriForFile(image));
+    }
+
+    private void onRunDeleted() {
         if (view.get() != null) {
             view.get().endActivity();
         }
     }
 
-    private void onEndRunError(Throwable throwable) {
-        Timber.d("Failed to delete run from db for run-id: %l", itemId);
+    private void onRunDeleteError(Throwable throwable) {
+        Timber.d("Failed to delete run from db for run-id: %l", runId);
+        if (view.get() != null) {
+            view.get().showDeleteError();
+        }
     }
+
 }

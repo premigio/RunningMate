@@ -2,10 +2,11 @@ package com.itba.runningMate.repository.run;
 
 import com.itba.runningMate.db.RunDao;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -45,20 +46,37 @@ public class RunRepositoryImpl implements RunRepository {
     }
 
     @Override
-    public void deleteRun(Run run) {
-        runDao.deleteRoute(RunMapper.toEntity(run))
-                .onErrorComplete()
-                .subscribeOn(scheduler.io())
-                .observeOn(scheduler.ui())
-                .subscribe();
+    public Single<Double> getTotalDistance() {
+        return runDao.getTotalDistance();
+    }
+
+    @Override
+    public Single<Long> getMaxTime() {
+        return runDao.getMaxTime();
+    }
+
+    @Override
+    public Single<Double> getMaxKcal() {
+        return runDao.getMaxKcal();
+    }
+
+    @Override
+    public Single<Double> getMaxSpeed() {
+        return runDao.getMaxSpeed();
+    }
+
+    @Override
+    public Completable updateTitle(long runId, String title) {
+        return runDao.updateTitle(runId, title);
+    }
+
+    @Override
+    public Completable deleteRun(Run run) {
+        return runDao.deleteRoute(RunMapper.toEntity(run));
     }
 
 
-    public void deleteRun(long runId) {
-        runDao.deleteRoute(runId)
-                .onErrorComplete()
-                .subscribeOn(scheduler.io())
-                .observeOn(scheduler.ui())
-                .subscribe();
+    public Completable deleteRun(long runId) {
+        return runDao.deleteRoute(runId);
     }
 }

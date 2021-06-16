@@ -26,22 +26,22 @@ public class RunConverters {
     }
 
     @TypeConverter
-    public static List<LatLng> jsonToLatLngList(String route) {
+    public static List<List<LatLng>> jsonToLatLngList(String route) {
         if (route == null) {
             return Collections.emptyList();
         }
 
-        Type listType = new TypeToken<List<LatLng>>() {
+        Type listType = new TypeToken<List<List<LatLng>>>() {
         }.getType();
         return gson.fromJson(route, listType);
     }
 
     @TypeConverter
-    public static String LatLngListToJson(List<LatLng> route) {
+    public static String LatLngListToJson(List<List<LatLng>> route) {
         if (route == null) {
             return null;
         }
-        Type type = new TypeToken<List<LatLng>>() {
+        Type type = new TypeToken<List<List<LatLng>>>() {
         }.getType();
         return gson.toJson(route, type);
     }

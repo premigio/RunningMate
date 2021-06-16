@@ -1,13 +1,20 @@
 package com.itba.runningMate.rundetails;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,46 +22,35 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.itba.runningMate.R;
-import com.itba.runningMate.db.RunConverters;
-import com.itba.runningMate.db.RunDb;
-import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.repository.run.RunRepositoryImpl;
-import com.itba.runningMate.utils.schedulers.AndroidSchedulerProvider;
-import com.itba.runningMate.utils.schedulers.SchedulerProvider;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import com.itba.runningMate.di.DependencyContainer;
+import com.itba.runningMate.di.DependencyContainerLocator;
+import com.itba.runningMate.domain.Route;
+import com.itba.runningMate.map.Map;
+import com.itba.runningMate.repository.achievements.AchievementsStorage;
+import com.itba.runningMate.repository.run.RunRepository;
+import com.itba.runningMate.rundetails.model.RunMetricsDetail;
+import com.itba.runningMate.utils.ImageProcessing;
+import com.itba.runningMate.utils.providers.files.CacheFileProvider;
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
 
-    private static final int PADDING = 20; // padding de los puntos en el mapa
     private static final String RUN_ID = "run-id";
-    private static SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-    private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
 
+    private Map mapView;
+    private TextView runTimeInterval, elapsedTime, runningTime, speed, pace, distance, calories;
+    private EditText title;
 
-    private GoogleMap googleMap;
-    private MapView mapView;
     private RunDetailsPresenter presenter;
 
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run_details);
-
         long id;
 
         Intent intent = getIntent();
@@ -67,28 +63,85 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         }
 
         createPresenter(id);
+        setUpMap(savedInstanceState);
+        setUp();
+    }
 
-        mapView = findViewById(R.id.map_detail_run);
+    private void setUpMap(Bundle savedInstanceState) {
+        mapView = findViewById(R.id.run_detail_map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+    }
+
+    private void setUp() {
+        speed = findViewById(R.id.speed);
+        pace = findViewById(R.id.pace);
+        distance = findViewById(R.id.distance);
+        title = findViewById(R.id.run_detail_title);
+        runTimeInterval = findViewById(R.id.run_detail_run_time_interval);
+        runningTime = findViewById(R.id.running_time);
+        elapsedTime = findViewById(R.id.elapsed_time);
+        calories = findViewById(R.id.calories);
+
 
         //Creo el botón para volver
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-        Button deleteButton = findViewById(R.id.delete_button_run);
-        deleteButton.setOnClickListener(this::deleteConfirmationMessage);
+        Button deleteBtn = findViewById(R.id.btn_run_detail_delete);
+        deleteBtn.setOnClickListener(v -> deleteConfirmationMessage());
 
+        Button shareBtn = findViewById(R.id.btn_run_detail_share);
+        shareBtn.setOnClickListener(v -> presenter.onShareButtonClick());
+
+        title.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        title.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
+        title.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        title.setOnEditorActionListener(this::onTextEditAction);
     }
 
-    private void deleteConfirmationMessage(View view) {
-        AlertDialog.Builder alertBox = new AlertDialog.Builder(view.getContext());
+    private boolean onTextEditAction(TextView textView, int actionId, KeyEvent event) {
+        /* Ref: https://gist.github.com/Dogesmith/2b98df97b4fca849ff94 */
+        if (event == null) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                title.clearFocus();
+                InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                presenter.onRunTitleModified(textView.getText().toString());
+            } else if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                // Capture soft enters in other singleLine EditTexts
+            } else if (actionId == EditorInfo.IME_ACTION_GO) {
+            } else {
+                // Let the system handle all other null KeyEvents
+                return false;
+            }
+        } else if (actionId == EditorInfo.IME_NULL) {
+           /*  Capture most soft enters in multi-line EditTexts and all hard enters;
+            They supply a zero actionId and a valid keyEvent rather than
+            a non-zero actionId and a null event like the previous cases.*/
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                /*We capture the event when the key is first pressed.*/
+            } else {
+                return true;
+            }
+        } else {
+            /*We let the system handle it when the listener is triggered by something that
+            wasn't an enter.*/
+            return false;
+        }
+        return true;
+    }
+
+    private void deleteConfirmationMessage() {
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
         alertBox.setMessage(R.string.run_delete_message)
-                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.deleteRun())
+                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.onDeleteButtonClick())
                 .setNegativeButton(R.string.no, (dialog, which) -> {
                 })
                 .show();
-
     }
 
     @Override
@@ -102,35 +155,38 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         mapView.onDestroy();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
         mapView.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+
         presenter.onViewDetached();
         mapView.onStop();
     }
 
     private void createPresenter(long runId) {
+        final DependencyContainer container = DependencyContainerLocator.locateComponent(this);
+        final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
+        final RunRepository runRepository = container.getRunRepository();
+        final CacheFileProvider cacheFileProvider = container.getCacheFileProvider();
+        final AchievementsStorage achievementsStorage = container.getAchievementsStorage();
 
-        SchedulerProvider sp = new AndroidSchedulerProvider();
-
-        presenter = new RunDetailsPresenter(this,
-                new RunRepositoryImpl(RunDb.getInstance(
-                        getApplicationContext()).RunDao(),
-                        sp), sp, runId);
-    }
-
-    @Override
-    public void bindRunMetrics(Run run) {
-        setRunDetailsLabel(run);
+        presenter = new RunDetailsPresenter(cacheFileProvider,
+                runRepository,
+                schedulerProvider,
+                achievementsStorage,
+                runId,
+                this);
     }
 
     @Override
@@ -139,60 +195,26 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
     }
 
     @Override
-    public void bindRunRoute(Run run) {
-        setMapPath(run.getRoute());
-        setMapCenter(run.getRoute());
+    public void showRunMetrics(RunMetricsDetail runMetrics) {
+        speed.setText(runMetrics.getSpeed());
+        pace.setText(runMetrics.getPace());
+        distance.setText(runMetrics.getDistance());
+        runTimeInterval.setText(runMetrics.getRunTimeInterval());
+        elapsedTime.setText(runMetrics.getElapsedTime());
+        title.setText(runMetrics.getTitle());
+        runningTime.setText(runMetrics.getRunningTime());
+        calories.setText(runMetrics.getCalories());
     }
 
-    private void setMapPath(List<LatLng> route) {
-        if (route == null || route.isEmpty()) {
-            return;
-        }
-        googleMap.addPolyline(new PolylineOptions()
-                .color(Color.BLUE)
-                .width(8f)
-                .addAll(route));
-    }
-
-    private void setRunDetailsLabel(Run run) {
-        TextView date, time, speed, pace, distance;
-
-        speed = findViewById(R.id.run_description_speed_content);
-        speed.setText(getString(R.string.speed_value, run.getVelocity()));
-
-        pace = findViewById(R.id.run_description_pace_content);
-        Date paceValue = RunConverters.fromTimestamp(run.getPace());
-        pace.setText(getString(R.string.pace_value, paceFormatter.format(paceValue)));
-
-        distance = findViewById(R.id.run_description_distance_content);
-        distance.setText(getString(R.string.distance_string, run.getDistance()));
-
-        date = findViewById(R.id.run_description_start_time);
-        date.setText(getString(R.string.date_title, dateFormat.format(run.getStartTime())));
-
-        time = findViewById(R.id.run_description_elapsed_time_content);
-        Date timeValue = RunConverters.fromTimestamp(run.getElapsedTime());
-        time.setText(getString(R.string.time_elapsed_value, timeFormat.format(timeValue)));
-    }
-
-    private void setMapCenter(List<LatLng> route) {
-
-        if (route == null || route.isEmpty()) return;
-
-        LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-        for (LatLng point : route) {
-            boundsBuilder.include(point);
-        }
-        LatLngBounds bounds = boundsBuilder.build();
-
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, PADDING);
-
-        googleMap.moveCamera(cu);
+    @Override
+    public void showRoute(Route route) {
+        mapView.showRouteWithMarker(route);
+        mapView.centerMapOn(route);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
+        mapView.bind(googleMap);
         presenter.onMapAttached();
     }
 
@@ -209,4 +231,46 @@ public class RunDetailsActivity extends AppCompatActivity implements RunDetailsV
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void shareImageIntent(Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("image/png");
+        startActivity(Intent.createChooser(intent, "Share Via"));
+    }
+
+    @Override
+    public Bitmap getMetricsImage(RunMetricsDetail detail) {
+        RunSummary s = new RunSummary(this);
+        s.bind(detail);
+        return ImageProcessing.createBitmapFromView(s, 390, 330);
+    }
+
+    @Override
+    public void showShareRunError() {
+        Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showUpdateTitleError() {
+        Toast.makeText(this, "Error while attempting to update title", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showDeleteError() {
+        Toast.makeText(this, "Error while attempting to delete run", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showRunNotAvailableError() {
+        Toast.makeText(this, "Error while attempting to retrieve run", Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
 }
