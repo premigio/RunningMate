@@ -1,4 +1,4 @@
-package com.itba.runningMate.pastruns.runs.ui;
+package com.itba.runningMate.pastruns.runs;
 
 import android.view.LayoutInflater;
 import android.view.View;

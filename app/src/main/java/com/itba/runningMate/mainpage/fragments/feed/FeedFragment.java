@@ -16,7 +16,7 @@ import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
 import com.itba.runningMate.domain.Run;
 import com.itba.runningMate.mainpage.fragments.feed.cards.GoalsCard;
-import com.itba.runningMate.mainpage.fragments.feed.cards.OnRunClickListener;
+import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener;
 import com.itba.runningMate.mainpage.fragments.feed.cards.OnSeeAllClickListener;
 import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard;
 

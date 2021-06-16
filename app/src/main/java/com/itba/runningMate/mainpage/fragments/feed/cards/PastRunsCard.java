@@ -12,6 +12,8 @@ import androidx.cardview.widget.CardView;
 
 import com.itba.runningMate.R;
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener;
+import com.itba.runningMate.mainpage.fragments.feed.run.RunElementView;
 
 import org.jetbrains.annotations.NotNull;
 

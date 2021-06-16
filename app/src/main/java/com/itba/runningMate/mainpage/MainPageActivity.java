@@ -11,7 +11,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.itba.runningMate.R;
 import com.itba.runningMate.mainpage.adapters.ViewPagerAdapter;
 import com.itba.runningMate.mainpage.fragments.feed.FeedFragment;
-import com.itba.runningMate.mainpage.fragments.running.ui.RunningFragment;
+import com.itba.runningMate.mainpage.fragments.running.RunningFragment;
 
 import java.util.LinkedList;
 import java.util.List;

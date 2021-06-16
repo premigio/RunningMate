@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.running.ui;
+package com.itba.runningMate.mainpage.fragments.running;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -27,6 +27,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.itba.runningMate.R;
 import com.itba.runningMate.di.DependencyContainer;
 import com.itba.runningMate.di.DependencyContainerLocator;
+import com.itba.runningMate.mainpage.fragments.running.RunningPresenter;
+import com.itba.runningMate.mainpage.fragments.running.RunningView;
 import com.itba.runningMate.map.MapInViewPager;
 import com.itba.runningMate.repository.runningstate.RunningStateStorage;
 import com.itba.runningMate.services.location.Tracker;

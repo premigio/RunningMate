@@ -1,4 +1,4 @@
-package com.itba.runningMate.pastruns.runs.ui;
+package com.itba.runningMate.pastruns.runs;
 
 import android.view.View;
 import android.widget.TextView;
@@ -15,7 +15,7 @@ import java.util.Locale;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 
-class RunViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class RunViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
     private long id = NO_ID;
