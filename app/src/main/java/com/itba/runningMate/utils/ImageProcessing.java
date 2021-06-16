@@ -8,6 +8,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import java.io.FileOutputStream;
+
 public class ImageProcessing {
 
 
@@ -58,5 +60,11 @@ public class ImageProcessing {
         view.draw(canvas);
 
         return bitmap;
+    }
+
+    public static void compress(Bitmap bitmap, FileOutputStream outputStream) throws Exception {
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+        outputStream.flush();
+        outputStream.close();
     }
 }
