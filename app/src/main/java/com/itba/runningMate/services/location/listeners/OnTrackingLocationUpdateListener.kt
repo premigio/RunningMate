@@ -1,7 +1,7 @@
-package com.itba.runningMate.services.location.listeners;
+package com.itba.runningMate.services.location.listeners
 
-public interface OnTrackingLocationUpdateListener {
+interface OnTrackingLocationUpdateListener {
 
-    void onLocationUpdate(double latitude, double longitude);
+    fun onLocationUpdate(latitude: Double, longitude: Double)
 
 }

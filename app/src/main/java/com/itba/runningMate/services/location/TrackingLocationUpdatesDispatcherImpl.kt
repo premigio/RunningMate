@@ -1,115 +1,119 @@
-package com.itba.runningMate.services.location;
+package com.itba.runningMate.services.location
 
-import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
-import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
-import com.itba.runningMate.utils.functional.Function;
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener
+import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener
+import com.itba.runningMate.utils.functional.Function
+import java.lang.ref.WeakReference
+import java.util.*
 
-import java.lang.ref.WeakReference;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+class TrackingLocationUpdatesDispatcherImpl : TrackingLocationUpdatesDispatcher {
 
-public class TrackingLocationUpdatesDispatcherImpl implements TrackingLocationUpdatesDispatcher {
+    var onTrackingMetricsUpdateListeners: MutableList<WeakReference<OnTrackingMetricsUpdateListener>> =
+        mutableListOf()
+    var onTrackingLocationsUpdateListeners: MutableList<WeakReference<OnTrackingLocationUpdateListener>> =
+        mutableListOf()
 
-    public List<WeakReference<OnTrackingMetricsUpdateListener>> onTrackingMetricsUpdateListeners;
-    public List<WeakReference<OnTrackingLocationUpdateListener>> onTrackingLocationsUpdateListeners;
-
-    public TrackingLocationUpdatesDispatcherImpl() {
-        onTrackingLocationsUpdateListeners = new LinkedList<>();
-        onTrackingMetricsUpdateListeners = new LinkedList<>();
+    override fun setOnTrackingUpdateListener(listener: OnTrackingUpdateListener) {
+        setOnTrackingLocationUpdateListener(listener)
+        setOnTrackingMetricsUpdateListener(listener)
     }
 
-    public void setOnTrackingUpdateListener(OnTrackingUpdateListener listener) {
-        setOnTrackingLocationUpdateListener(listener);
-        setOnTrackingMetricsUpdateListener(listener);
+    override fun setOnTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener) {
+        onTrackingLocationsUpdateListeners.add(WeakReference(listener))
     }
 
-    public void setOnTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
-        onTrackingLocationsUpdateListeners.add(new WeakReference<>(listener));
+    override fun setOnTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener) {
+        onTrackingMetricsUpdateListeners.add(WeakReference(listener))
     }
 
-    public void setOnTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
-        onTrackingMetricsUpdateListeners.add(new WeakReference<>(listener));
+    override fun removeTrackingUpdateListener(listener: OnTrackingUpdateListener) {
+        removeTrackingLocationUpdateListener(listener)
+        removeTrackingMetricsUpdateListener(listener)
     }
 
-    public void removeTrackingUpdateListener(OnTrackingUpdateListener listener) {
-        removeTrackingLocationUpdateListener(listener);
-        removeTrackingMetricsUpdateListener(listener);
+    override fun removeTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener) {
+        removeListeners(onTrackingLocationsUpdateListeners, listener)
     }
 
-    public void removeTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
-        removeListeners(onTrackingLocationsUpdateListeners, listener);
+    override fun removeTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener) {
+        removeListeners(onTrackingMetricsUpdateListeners, listener)
     }
 
-    public void removeTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
-        removeListeners(onTrackingMetricsUpdateListeners, listener);
-    }
-
-    public <T> void removeListeners(List<WeakReference<T>> listeners, T listener) {
-        Iterator<WeakReference<T>> iterator = listeners.iterator();
+    fun <T> removeListeners(listeners: MutableList<WeakReference<T>>, listener: T) {
+        val iterator = listeners.iterator()
         while (iterator.hasNext()) {
-            WeakReference<T> wr = iterator.next();
-            if (wr.get() == listener) {
-                iterator.remove();
+            val wr = iterator.next()
+            if (wr.get() === listener) {
+                iterator.remove()
             }
         }
     }
 
-    @Override
-    public boolean areMetricsUpdatesListener() {
-        return areListeners(onTrackingMetricsUpdateListeners);
+    override fun areMetricsUpdatesListener(): Boolean {
+        return areListeners(onTrackingMetricsUpdateListeners)
     }
 
-    @Override
-    public boolean areLocationUpdatesListener() {
-        return areListeners(onTrackingLocationsUpdateListeners);
+    override fun areLocationUpdatesListener(): Boolean {
+        return areListeners(onTrackingLocationsUpdateListeners)
     }
 
-    @Override
-    public boolean areUpdatesListener() {
-        return areLocationUpdatesListener() || areMetricsUpdatesListener();
+    override fun areUpdatesListener(): Boolean {
+        return areLocationUpdatesListener() || areMetricsUpdatesListener()
     }
 
-    private <T> boolean areListeners(List<WeakReference<T>> listeners) {
-        Iterator<WeakReference<T>> iterator = listeners.iterator();
+    private fun <T> areListeners(listeners: MutableList<WeakReference<T>>): Boolean {
+        val iterator = listeners.iterator()
         while (iterator.hasNext()) {
-            WeakReference<T> wr = iterator.next();
+            val wr = iterator.next()
             if (wr.get() == null) {
-                iterator.remove();
+                iterator.remove()
             } else {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 
-    public <T> void callListeners(List<WeakReference<T>> listeners, Function<T> function) {
-        Iterator<WeakReference<T>> iterator = listeners.iterator();
+    fun <T> callListeners(listeners: MutableList<WeakReference<T>>, function: Function<T>) {
+        val iterator = listeners.iterator()
         while (iterator.hasNext()) {
-            WeakReference<T> wr = iterator.next();
+            val wr = iterator.next()
             if (wr.get() == null) {
-                iterator.remove();
+                iterator.remove()
             } else {
-                function.apply(wr.get());
+                function.apply(wr.get())
             }
         }
     }
 
-    public void callbackLocationUpdate(double latitude, double longitude) {
-        callListeners(onTrackingLocationsUpdateListeners, l -> l.onLocationUpdate(latitude, longitude));
+    override fun callbackLocationUpdate(latitude: Double, longitude: Double) {
+        callListeners(
+            onTrackingLocationsUpdateListeners,
+            Function { l: OnTrackingLocationUpdateListener ->
+                l.onLocationUpdate(
+                    latitude,
+                    longitude
+                )
+            })
     }
 
-    public void callbackDistanceUpdate(float distance) {
-        callListeners(onTrackingMetricsUpdateListeners, l -> l.onDistanceUpdate(distance));
+    override fun callbackDistanceUpdate(distance: Float) {
+        callListeners(
+            onTrackingMetricsUpdateListeners,
+            Function { l: OnTrackingMetricsUpdateListener -> l.onDistanceUpdate(distance) })
     }
 
-    public void callbackPaceUpdate(long pace) {
-        callListeners(onTrackingMetricsUpdateListeners, l -> l.onPaceUpdate(pace));
+    override fun callbackPaceUpdate(pace: Long) {
+        callListeners(
+            onTrackingMetricsUpdateListeners,
+            Function { l: OnTrackingMetricsUpdateListener -> l.onPaceUpdate(pace) })
     }
 
-    public void callbackStopWatchUpdate(long elapsedTime) {
-        callListeners(onTrackingMetricsUpdateListeners, l -> l.onStopWatchUpdate(elapsedTime));
+    override fun callbackStopWatchUpdate(elapsedTime: Long) {
+        callListeners(
+            onTrackingMetricsUpdateListeners,
+            Function { l: OnTrackingMetricsUpdateListener -> l.onStopWatchUpdate(elapsedTime) })
     }
 
 }

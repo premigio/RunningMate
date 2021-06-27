@@ -1,11 +1,11 @@
-package com.itba.runningMate.services.location.listeners;
+package com.itba.runningMate.services.location.listeners
 
-public interface OnTrackingMetricsUpdateListener {
+interface OnTrackingMetricsUpdateListener {
 
-    void onStopWatchUpdate(long elapsedTime);
+    fun onStopWatchUpdate(elapsedTime: Long)
 
-    void onDistanceUpdate(float elapsedDistance);
+    fun onDistanceUpdate(elapsedDistance: Float)
 
-    void onPaceUpdate(long pace);
+    fun onPaceUpdate(pace: Long)
 
 }

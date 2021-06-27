@@ -1,45 +1,46 @@
-package com.itba.runningMate.services.location;
+package com.itba.runningMate.services.location
 
-import com.itba.runningMate.domain.Route;
-import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
-import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
+import com.itba.runningMate.domain.Route
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener
+import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener
 
-public interface Tracker {
+interface Tracker {
 
-    void startTracking();
+    fun startTracking()
 
-    void stopTracking();
+    fun stopTracking()
 
-    void newLap();
+    fun newLap()
 
-    void resumeTracking();
+    fun resumeTracking()
 
-    Route queryRoute();
+    fun queryRoute(): Route
 
-    long queryStartTime();
+    fun queryStartTime(): Long
 
-    long queryEndTime();
+    fun queryEndTime(): Long
 
-    float queryDistance();
+    fun queryDistance(): Float
 
-    long queryElapsedTime();
+    fun queryElapsedTime(): Long
 
-    long queryPace();
+    fun queryPace(): Long
 
-    float queryVelocity();
+    fun queryVelocity(): Float
 
-    boolean isTracking();
+    val isTracking: Boolean
 
-    void setOnTrackingUpdateListener(OnTrackingUpdateListener listener);
+    fun setOnTrackingUpdateListener(listener: OnTrackingUpdateListener)
 
-    void setOnTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener);
+    fun setOnTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener)
 
-    void setTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener);
+    fun setTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener)
 
-    void removeTrackingUpdateListener(OnTrackingUpdateListener listener);
+    fun removeTrackingUpdateListener(listener: OnTrackingUpdateListener)
 
-    void removeTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener);
+    fun removeTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener)
 
-    void removeTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener);
+    fun removeTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener)
+
 }

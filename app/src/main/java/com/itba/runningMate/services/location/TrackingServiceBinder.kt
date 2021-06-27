@@ -1,101 +1,86 @@
-package com.itba.runningMate.services.location;
+package com.itba.runningMate.services.location
 
-import android.os.Binder;
+import android.os.Binder
+import com.itba.runningMate.domain.Route
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener
+import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener
+import com.itba.runningMate.utils.run.RunMetrics
 
-import com.itba.runningMate.domain.Route;
-import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
-import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
-import com.itba.runningMate.utils.run.RunMetrics;
+class TrackingServiceBinder(private val trackingService: TrackingService) : Binder(), Tracker {
 
-public class TrackingServiceBinder extends Binder implements Tracker {
-
-    private final TrackingService trackingService;
-
-    public TrackingServiceBinder(final TrackingService trackingService) {
-        this.trackingService = trackingService;
+    override fun queryRoute(): Route {
+        return Route().addLatLngsToRoute(trackingService.getTrackedLocations())
     }
 
-    public Route queryRoute() {
-        return new Route().addLatLngsToRoute(trackingService.getTrackedLocations());
+    override fun isTracking(): Boolean {
+        return trackingService.isTracking
     }
 
-    public boolean isTracking() {
-        return trackingService.isTracking();
+    override fun startTracking() {
+        trackingService.startTracking()
     }
 
-    public void startTracking() {
-        trackingService.startTracking();
+    override fun stopTracking() {
+        trackingService.stopTracking()
     }
 
-    public void stopTracking() {
-        trackingService.stopTracking();
+    override fun newLap() {
+        trackingService.newLap()
     }
 
-    public void newLap() {
-        trackingService.newLap();
+    override fun resumeTracking() {
+        trackingService.resumeTracking()
     }
 
-    public void resumeTracking() {
-        trackingService.resumeTracking();
+    override fun setOnTrackingUpdateListener(listener: OnTrackingUpdateListener) {
+        trackingService.setOnTrackingUpdateListener(listener)
     }
 
-    public void setOnTrackingUpdateListener(OnTrackingUpdateListener listener) {
-        trackingService.setOnTrackingUpdateListener(listener);
+    override fun setOnTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener) {
+        trackingService.setOnTrackingLocationUpdateListener(listener)
     }
 
-    @Override
-    public void setOnTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
-        trackingService.setOnTrackingLocationUpdateListener(listener);
+    override fun setTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener) {
+        trackingService.setOnTrackingMetricsUpdateListener(listener)
     }
 
-    @Override
-    public void setTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
-        trackingService.setOnTrackingMetricsUpdateListener(listener);
+    override fun removeTrackingUpdateListener(listener: OnTrackingUpdateListener) {
+        trackingService.removeTrackingUpdateListener(listener)
     }
 
-    @Override
-    public void removeTrackingUpdateListener(OnTrackingUpdateListener listener) {
-        trackingService.removeTrackingUpdateListener(listener);
+    override fun removeTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener) {
+        trackingService.removeTrackingLocationUpdateListener(listener)
     }
 
-    @Override
-    public void removeTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener) {
-        trackingService.removeTrackingLocationUpdateListener(listener);
+    override fun removeTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener) {
+        trackingService.removeTrackingMetricsUpdateListener(listener)
     }
 
-    @Override
-    public void removeTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener) {
-        trackingService.removeTrackingMetricsUpdateListener(listener);
+    override fun queryStartTime(): Long {
+        return trackingService.startTimeMillis
     }
 
-    @Override
-    public long queryStartTime() {
-        return trackingService.getStartTimeMillis();
+    override fun queryEndTime(): Long {
+        return trackingService.endTimeMillis
     }
 
-    @Override
-    public long queryEndTime() {
-        return trackingService.getEndTimeMillis();
+    override fun queryDistance(): Float {
+        return trackingService.elapsedDistance
     }
 
-    @Override
-    public float queryDistance() {
-        return trackingService.getElapsedDistance();
+    override fun queryElapsedTime(): Long {
+        return trackingService.runningMillis
     }
 
-    @Override
-    public long queryElapsedTime() {
-        return trackingService.getRunningMillis();
+    override fun queryPace(): Long {
+        return trackingService.pace
     }
 
-    @Override
-    public long queryPace() {
-        return trackingService.getPace();
-    }
-
-    @Override
-    public float queryVelocity() {
-        return RunMetrics.calculateVelocity(trackingService.getElapsedDistance(), trackingService.getRunningMillis());
+    override fun queryVelocity(): Float {
+        return RunMetrics.calculateVelocity(
+            trackingService.elapsedDistance,
+            trackingService.runningMillis
+        )
     }
 }

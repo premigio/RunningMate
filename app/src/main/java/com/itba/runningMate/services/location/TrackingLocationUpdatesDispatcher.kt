@@ -1,34 +1,35 @@
-package com.itba.runningMate.services.location;
+package com.itba.runningMate.services.location
 
-import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
-import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener;
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener
+import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener
 
-public interface TrackingLocationUpdatesDispatcher {
+interface TrackingLocationUpdatesDispatcher {
 
-    void setOnTrackingUpdateListener(OnTrackingUpdateListener listener);
+    fun setOnTrackingUpdateListener(listener: OnTrackingUpdateListener)
 
-    void setOnTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener);
+    fun setOnTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener)
 
-    void setOnTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener);
+    fun setOnTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener)
 
-    void removeTrackingUpdateListener(OnTrackingUpdateListener listener);
+    fun removeTrackingUpdateListener(listener: OnTrackingUpdateListener)
 
-    void removeTrackingLocationUpdateListener(OnTrackingLocationUpdateListener listener);
+    fun removeTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener)
 
-    void removeTrackingMetricsUpdateListener(OnTrackingMetricsUpdateListener listener);
+    fun removeTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener)
 
-    void callbackLocationUpdate(double latitude, double longitude);
+    fun callbackLocationUpdate(latitude: Double, longitude: Double)
 
-    void callbackDistanceUpdate(float distance);
+    fun callbackDistanceUpdate(distance: Float)
 
-    void callbackPaceUpdate(long pace);
+    fun callbackPaceUpdate(pace: Long)
 
-    void callbackStopWatchUpdate(long elapsedTime);
+    fun callbackStopWatchUpdate(elapsedTime: Long)
 
-    boolean areMetricsUpdatesListener();
+    fun areMetricsUpdatesListener(): Boolean
 
-    boolean areLocationUpdatesListener();
+    fun areLocationUpdatesListener(): Boolean
 
-    boolean areUpdatesListener();
+    fun areUpdatesListener(): Boolean
+
 }

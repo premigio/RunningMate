@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.google.secrets_gradle_plugin' version '0.5'
 }
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 30
@@ -78,4 +79,9 @@ dependencies {
     testImplementation "org.robolectric:robolectric:4.5"
     androidTestImplementation "androidx.test.ext:junit:1.1.2"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
