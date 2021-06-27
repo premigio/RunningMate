@@ -1,22 +1,19 @@
-package com.itba.runningMate.utils.providers.schedulers;
+package com.itba.runningMate.utils.providers.schedulers
 
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 
-public class AndroidTestSchedulerProvider implements SchedulerProvider {
+class AndroidTestSchedulerProvider : SchedulerProvider {
 
-    @Override
-    public Scheduler io() {
-        return Schedulers.trampoline();
+    override fun io(): Scheduler {
+        return Schedulers.trampoline()
     }
 
-    @Override
-    public Scheduler computation() {
-        return Schedulers.trampoline();
+    override fun computation(): Scheduler {
+        return Schedulers.trampoline()
     }
 
-    @Override
-    public Scheduler ui() {
-        return Schedulers.trampoline();
+    override fun ui(): Scheduler {
+        return Schedulers.trampoline()
     }
 }

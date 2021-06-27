@@ -1,6 +1,7 @@
-package com.itba.runningMate.utils.functional;
+package com.itba.runningMate.utils.functional
 
-public interface Function<T> {
+fun interface Function<T> {
 
-    void apply(T elem);
+    fun apply(elem: T)
+
 }

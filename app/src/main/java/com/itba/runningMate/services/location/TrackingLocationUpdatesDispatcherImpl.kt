@@ -5,13 +5,12 @@ import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateL
 import com.itba.runningMate.services.location.listeners.OnTrackingUpdateListener
 import com.itba.runningMate.utils.functional.Function
 import java.lang.ref.WeakReference
-import java.util.*
 
 class TrackingLocationUpdatesDispatcherImpl : TrackingLocationUpdatesDispatcher {
 
-    var onTrackingMetricsUpdateListeners: MutableList<WeakReference<OnTrackingMetricsUpdateListener>> =
+    private var onTrackingMetricsUpdateListeners: MutableList<WeakReference<OnTrackingMetricsUpdateListener>> =
         mutableListOf()
-    var onTrackingLocationsUpdateListeners: MutableList<WeakReference<OnTrackingLocationUpdateListener>> =
+    private var onTrackingLocationsUpdateListeners: MutableList<WeakReference<OnTrackingLocationUpdateListener>> =
         mutableListOf()
 
     override fun setOnTrackingUpdateListener(listener: OnTrackingUpdateListener) {
@@ -40,7 +39,7 @@ class TrackingLocationUpdatesDispatcherImpl : TrackingLocationUpdatesDispatcher 
         removeListeners(onTrackingMetricsUpdateListeners, listener)
     }
 
-    fun <T> removeListeners(listeners: MutableList<WeakReference<T>>, listener: T) {
+    private fun <T> removeListeners(listeners: MutableList<WeakReference<T>>, listener: T) {
         val iterator = listeners.iterator()
         while (iterator.hasNext()) {
             val wr = iterator.next()
@@ -75,45 +74,45 @@ class TrackingLocationUpdatesDispatcherImpl : TrackingLocationUpdatesDispatcher 
         return false
     }
 
-    fun <T> callListeners(listeners: MutableList<WeakReference<T>>, function: Function<T>) {
+    private fun <T> callListeners(listeners: MutableList<WeakReference<T>>, function: Function<T>) {
         val iterator = listeners.iterator()
         while (iterator.hasNext()) {
             val wr = iterator.next()
             if (wr.get() == null) {
                 iterator.remove()
             } else {
-                function.apply(wr.get())
+                function.apply(wr.get()!!)
             }
         }
     }
 
     override fun callbackLocationUpdate(latitude: Double, longitude: Double) {
         callListeners(
-            onTrackingLocationsUpdateListeners,
-            Function { l: OnTrackingLocationUpdateListener ->
-                l.onLocationUpdate(
-                    latitude,
-                    longitude
-                )
-            })
+            onTrackingLocationsUpdateListeners
+        ) { l: OnTrackingLocationUpdateListener ->
+            l.onLocationUpdate(
+                latitude,
+                longitude
+            )
+        }
     }
 
     override fun callbackDistanceUpdate(distance: Float) {
         callListeners(
-            onTrackingMetricsUpdateListeners,
-            Function { l: OnTrackingMetricsUpdateListener -> l.onDistanceUpdate(distance) })
+            onTrackingMetricsUpdateListeners
+        ) { l: OnTrackingMetricsUpdateListener -> l.onDistanceUpdate(distance) }
     }
 
     override fun callbackPaceUpdate(pace: Long) {
         callListeners(
-            onTrackingMetricsUpdateListeners,
-            Function { l: OnTrackingMetricsUpdateListener -> l.onPaceUpdate(pace) })
+            onTrackingMetricsUpdateListeners
+        ) { l: OnTrackingMetricsUpdateListener -> l.onPaceUpdate(pace) }
     }
 
     override fun callbackStopWatchUpdate(elapsedTime: Long) {
         callListeners(
-            onTrackingMetricsUpdateListeners,
-            Function { l: OnTrackingMetricsUpdateListener -> l.onStopWatchUpdate(elapsedTime) })
+            onTrackingMetricsUpdateListeners
+        ) { l: OnTrackingMetricsUpdateListener -> l.onStopWatchUpdate(elapsedTime) }
     }
 
 }

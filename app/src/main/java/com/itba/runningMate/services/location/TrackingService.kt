@@ -124,35 +124,35 @@ class TrackingService : Service() {
         isTracking = false
     }
 
-    fun setOnTrackingUpdateListener(listener: OnTrackingUpdateListener?) {
+    fun setOnTrackingUpdateListener(listener: OnTrackingUpdateListener) {
         setOnTrackingLocationUpdateListener(listener)
         setOnTrackingMetricsUpdateListener(listener)
     }
 
-    fun setOnTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener?) {
+    fun setOnTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener) {
         updatesDispatcher.setOnTrackingLocationUpdateListener(listener)
     }
 
-    fun setOnTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener?) {
+    fun setOnTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener) {
         updatesDispatcher.setOnTrackingMetricsUpdateListener(listener)
         if (isTracking) {
             serviceHandler.post { stopWatch() }
         }
     }
 
-    fun removeTrackingUpdateListener(listener: OnTrackingUpdateListener?) {
+    fun removeTrackingUpdateListener(listener: OnTrackingUpdateListener) {
         updatesDispatcher.removeTrackingUpdateListener(listener)
     }
 
-    fun removeTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener?) {
-        updatesDispatcher!!.removeTrackingLocationUpdateListener(listener)
+    fun removeTrackingLocationUpdateListener(listener: OnTrackingLocationUpdateListener) {
+        updatesDispatcher.removeTrackingLocationUpdateListener(listener)
     }
 
-    fun removeTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener?) {
-        updatesDispatcher!!.removeTrackingMetricsUpdateListener(listener)
+    fun removeTrackingMetricsUpdateListener(listener: OnTrackingMetricsUpdateListener) {
+        updatesDispatcher.removeTrackingMetricsUpdateListener(listener)
     }
 
-    fun getTrackedLocations(): List<List<LatLng>>? {
+    fun getTrackedLocations(): List<List<LatLng>> {
         return trackedLocations
     }
 

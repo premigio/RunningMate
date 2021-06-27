@@ -29,7 +29,7 @@ interface Tracker {
 
     fun queryVelocity(): Float
 
-    val isTracking: Boolean
+    fun isTracking(): Boolean
 
     fun setOnTrackingUpdateListener(listener: OnTrackingUpdateListener)
 

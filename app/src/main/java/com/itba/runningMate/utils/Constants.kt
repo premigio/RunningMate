@@ -1,32 +1,29 @@
-package com.itba.runningMate.utils;
+package com.itba.runningMate.utils
 
-public class Constants {
-
-    public static final String APPLICATION_PACKAGE = "com.itba.runningMate";
+object Constants {
+    const val APPLICATION_PACKAGE = "com.itba.runningMate"
 
     /* TODO:  */
-    public static final float WEIGHT = 76.5F;
+    const val WEIGHT = 76.5f
 
     /* Notifications */
-    public static final String NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID = "LocationServiceChannel";
-    public static final String NOTIFICATION_LOCATION_SERVICE_CHANNEL_NAME = "Location Service Channel";
-    public static final int NOTIFICATION_LOCATION_SERVICE_ID = 1;
+    const val NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID = "LocationServiceChannel"
+    const val NOTIFICATION_LOCATION_SERVICE_CHANNEL_NAME = "Location Service Channel"
+    const val NOTIFICATION_LOCATION_SERVICE_ID = 1
 
     // TODO: encapsular dentro de una clase Permissions
     /* Permissions */
-    public static final int PERMISSION_LOCATION = 1;
+    const val PERMISSION_LOCATION = 1
 
     /* Map */
-    public static final double DEFAULT_LATITUDE = -34.606451;
-    public static final double DEFAULT_LONGITUDE = -58.4396797;
-    public static final int DEFAULT_ZOOM = 10;
-    public static final int MY_LOCATION_ZOOM = 15;
+    const val DEFAULT_LATITUDE = -34.606451
+    const val DEFAULT_LONGITUDE = -58.4396797
+    const val DEFAULT_ZOOM = 10
+    const val MY_LOCATION_ZOOM = 15
 
     /* Tracking Service */
-    public static final int LOCATION_UPDATE_INTERVAL = 5000;
-    public static final int LOCATION_UPDATE_FASTEST_INTERVAL = 1000;
-    public static final long STOP_WATCH_UPDATE_INTERVAL = 200L;
-
-    public static final double DISTANCE_EPSILON = 0.1;
-
+    const val LOCATION_UPDATE_INTERVAL = 5000
+    const val LOCATION_UPDATE_FASTEST_INTERVAL = 1000
+    const val STOP_WATCH_UPDATE_INTERVAL = 200L
+    const val DISTANCE_EPSILON = 0.1
 }

@@ -1,12 +1,12 @@
-package com.itba.runningMate.utils.providers.schedulers;
+package com.itba.runningMate.utils.providers.schedulers
 
-import io.reactivex.Scheduler;
+import io.reactivex.Scheduler
 
-public interface SchedulerProvider {
+interface SchedulerProvider {
 
-    Scheduler io();
+    fun io(): Scheduler
 
-    Scheduler computation();
+    fun computation(): Scheduler
 
-    Scheduler ui();
+    fun ui(): Scheduler
 }

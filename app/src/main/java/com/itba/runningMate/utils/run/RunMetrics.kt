@@ -1,50 +1,61 @@
-package com.itba.runningMate.utils.run;
+package com.itba.runningMate.utils.run
 
-import android.location.Location;
+import android.location.Location
+import com.google.android.gms.maps.model.LatLng
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.List;
-
-public class RunMetrics {
+object RunMetrics {
 
     /* Km */
-    public static float calculateDistance(List<LatLng> locations) {
+    fun calculateDistance(locations: List<LatLng>?): Float {
         if (locations == null || locations.isEmpty()) {
-            return -1;
+            return (-1).toFloat()
         }
-        LatLng prev = locations.get(0);
-        float distance = 0;
-        for (int i = 1; i < locations.size(); i++) {
-            LatLng current = locations.get(i);
-            float[] aux = new float[1];
+        var prev = locations[0]
+        var distance = 0f
+        for (i in 1 until locations.size) {
+            val current = locations[i]
+            val aux = FloatArray(1)
             // distancia en metros
-            Location.distanceBetween(prev.latitude, prev.longitude, current.latitude, current.longitude, aux);
-            distance += aux[0];
-            prev = current;
+            Location.distanceBetween(
+                prev.latitude,
+                prev.longitude,
+                current.latitude,
+                current.longitude,
+                aux
+            )
+            distance += aux[0]
+            prev = current
         }
-        return distance / 1000f;
+        return distance / 1000f
     }
 
     /* Km */
-    public static float calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
-        float[] aux = new float[1];
-        Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, aux);
-        float distance = aux[0] / 1000f;
-        return Math.round(distance * 10000.0) / 10000.0f;
+    fun calculateDistance(
+        startLatitude: Double,
+        startLongitude: Double,
+        endLatitude: Double,
+        endLongitude: Double
+    ): Float {
+        val aux = FloatArray(1)
+        Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, aux)
+        val distance = aux[0] / 1000f
+        return (distance * 10000.0).roundToLong() / 10000.0f
     }
 
     /* Km/H */
-    public static float calculateVelocity(float distanceKm, long timeMillis) {
-        return (distanceKm * (18000 / 5f)) / (float) (timeMillis / 1000);
+    fun calculateVelocity(distanceKm: Float, timeMillis: Long): Float {
+        return distanceKm * (18000 / 5f) / (timeMillis / 1000).toFloat()
     }
 
     /* Ms */
-    public static long calculatePace(float distanceKm, long timeMillis) {
-        return (long) (distanceKm != 0F ? (timeMillis / distanceKm) : 0L);
+    fun calculatePace(distanceKm: Float, timeMillis: Long): Long {
+        return (if (distanceKm != 0f) (timeMillis / distanceKm).toLong() else 0L)
     }
 
-    public static int calculateCalories(float distanceKm) {
+    @JvmStatic
+    fun calculateCalories(distanceKm: Float): Int {
         /*
          * https://fitness.stackexchange.com/questions/15608/energy-expenditure-calories-burned-equation-for-running/25564#25564
          * calories burned = distance run (kilometres) x weight of runner (kilograms) x 1.036
@@ -53,7 +64,6 @@ public class RunMetrics {
          * Broadly speaking, the estimate of 62 calories oer kilometer is more like a minimum of what
          * you can expect to burn while running.
          * ref: coachmag.co.uk */
-        return Math.round(distanceKm * 62.0F);
+        return (distanceKm * 62.0f).roundToInt()
     }
-
 }
