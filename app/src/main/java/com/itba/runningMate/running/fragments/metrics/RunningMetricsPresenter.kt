@@ -1,199 +1,187 @@
-package com.itba.runningMate.running.fragments.metrics;
+package com.itba.runningMate.running.fragments.metrics
 
-import androidx.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting
+import com.itba.runningMate.domain.Run
+import com.itba.runningMate.repository.achievements.AchievementsStorage
+import com.itba.runningMate.repository.run.RunRepository
+import com.itba.runningMate.services.location.Tracker
+import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener
+import com.itba.runningMate.utils.Constants.DISTANCE_EPSILON
+import com.itba.runningMate.utils.Formatters
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
+import com.itba.runningMate.utils.run.RunMetrics.calculateCalories
+import io.reactivex.disposables.Disposable
+import timber.log.Timber
+import java.lang.ref.WeakReference
+import java.util.*
 
-import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.repository.achievements.AchievementsStorage;
-import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.services.location.Tracker;
-import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener;
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
-import com.itba.runningMate.utils.run.RunMetrics;
+class RunningMetricsPresenter(
+    private val runRepository: RunRepository,
+    private val schedulers: SchedulerProvider,
+    private val achievementsStorage: AchievementsStorage,
+    view: RunningMetricsView?
+) : OnTrackingMetricsUpdateListener {
 
-import java.lang.ref.WeakReference;
-import java.util.Date;
+    private val view: WeakReference<RunningMetricsView> = WeakReference(view)
 
-import io.reactivex.disposables.Disposable;
-import timber.log.Timber;
+    private var disposable: Disposable? = null
 
-import static com.itba.runningMate.utils.Constants.DISTANCE_EPSILON;
-import static com.itba.runningMate.utils.Formatters.dateFormat;
+    @get:VisibleForTesting
+    var tracker: Tracker? = null
+        private set
 
-public class RunningMetricsPresenter implements OnTrackingMetricsUpdateListener {
+    @get:VisibleForTesting
+    var isTrackerAttached = false
+        private set
 
-    private final WeakReference<RunningMetricsView> view;
-    private final RunRepository runRepository;
-    private final SchedulerProvider schedulers;
-    private final AchievementsStorage achievementsStorage;
 
-    private Tracker tracker;
-    private boolean isTrackerAttached;
-    private Disposable disposable;
-
-    public RunningMetricsPresenter(final RunRepository runRepository,
-                                   final SchedulerProvider schedulers,
-                                   AchievementsStorage achievementsStorage, final RunningMetricsView view) {
-        this.isTrackerAttached = false;
-        this.view = new WeakReference<>(view);
-        this.runRepository = runRepository;
-        this.schedulers = schedulers;
-        this.achievementsStorage = achievementsStorage;
-    }
-
-    public void onViewAttached() {
+    fun onViewAttached() {
         if (view.get() == null) {
-            return;
+            return
         }
-        view.get().attachTrackingService();
+        view.get()!!.attachTrackingService()
     }
 
-    public void onViewDetached() {
+    fun onViewDetached() {
         if (isTrackerAttached) {
-            tracker.removeTrackingMetricsUpdateListener(this);
+            tracker!!.removeTrackingMetricsUpdateListener(this)
         }
         if (view.get() != null) {
-            view.get().detachTrackingService();
+            view.get()!!.detachTrackingService()
         }
         if (disposable != null) {
-            disposable.dispose();
+            disposable!!.dispose()
         }
     }
 
-    public void onTrackingServiceAttached(Tracker tracker) {
-        this.tracker = tracker;
-        this.isTrackerAttached = true;
-        tracker.setTrackingMetricsUpdateListener(this);
+    fun onTrackingServiceAttached(tracker: Tracker) {
+        this.tracker = tracker
+        isTrackerAttached = true
+        tracker.setTrackingMetricsUpdateListener(this)
         if (tracker.isTracking() && view.get() != null) {
-            onPaceUpdate(tracker.queryPace());
-            onDistanceUpdate(tracker.queryDistance());
-            onStopWatchUpdate(tracker.queryElapsedTime());
+            onPaceUpdate(tracker.queryPace())
+            onDistanceUpdate(tracker.queryDistance())
+            onStopWatchUpdate(tracker.queryElapsedTime())
         }
     }
 
-    public void onTrackingServiceDetached() {
-        this.tracker = null;
-        this.isTrackerAttached = false;
+    fun onTrackingServiceDetached() {
+        tracker = null
+        isTrackerAttached = false
     }
 
-    public void stopRun() {
+    fun stopRun() {
         if (!isTrackerAttached) {
-            return;
+            return
         }
-        tracker.stopTracking();
-        float distKm = tracker.queryDistance();
-        if (tracker.queryDistance() < DISTANCE_EPSILON && view.get() != null) {
-            view.get().finishActivity();
+        tracker!!.stopTracking()
+        val distKm = tracker!!.queryDistance()
+        if (tracker!!.queryDistance() < DISTANCE_EPSILON && view.get() != null) {
+            view.get()!!.finishActivity()
         } else {
-            long timeMillis = tracker.queryElapsedTime();
-            achievementsStorage.increaseTotalDistance(distKm);
-            achievementsStorage.persistState();
-            Run run = new Run()
-                    .title("Run on ".concat(dateFormat.format(new Date(tracker.queryStartTime()))))
-                    .startTime(new Date(tracker.queryStartTime()))
-                    .endTime(new Date(tracker.queryEndTime()))
-                    .runningTime(timeMillis)
-                    .route(tracker.queryRoute().getLocations())
-                    .distance(distKm)
-                    .pace(tracker.queryPace())
-                    .velocity(tracker.queryVelocity())
-                    .calories(RunMetrics.calculateCalories(distKm));
-            saveRun(run);
+            val timeMillis = tracker!!.queryElapsedTime()
+            achievementsStorage.increaseTotalDistance(distKm.toDouble())
+            achievementsStorage.persistState()
+            val run = Run()
+                .title("Run on " + Formatters.dateFormat.format(Date(tracker!!.queryStartTime())))
+                .startTime(Date(tracker!!.queryStartTime()))
+                .endTime(Date(tracker!!.queryEndTime()))
+                .runningTime(timeMillis)
+                .route(tracker!!.queryRoute().locations)
+                .distance(distKm)
+                .pace(tracker!!.queryPace())
+                .velocity(tracker!!.queryVelocity())
+                .calories(calculateCalories(distKm))
+            saveRun(run)
         }
     }
 
-    @Override
-    public void onStopWatchUpdate(long elapsedTime) {
+    override fun onStopWatchUpdate(elapsedTime: Long) {
         if (view.get() == null) {
-            return;
+            return
         }
-        view.get().updateStopwatch(elapsedTime);
+        view.get()!!.updateStopwatch(elapsedTime)
     }
 
-    @Override
-    public void onDistanceUpdate(float elapsedDistance) {
+    override fun onDistanceUpdate(elapsedDistance: Float) {
         if (view.get() == null) {
-            return;
+            return
         }
-        view.get().updateDistance(elapsedDistance);
-        view.get().updateCalories(RunMetrics.calculateCalories(elapsedDistance));
+        view.get()!!.updateDistance(elapsedDistance)
+        view.get()!!.updateCalories(calculateCalories(elapsedDistance))
     }
 
-    @Override
-    public void onPaceUpdate(long pace) {
+    override fun onPaceUpdate(pace: Long) {
         if (view.get() == null) {
-            return;
+            return
         }
-        view.get().updatePace(pace);
+        view.get()!!.updatePace(pace)
     }
 
-    public void onStopButtonClick() {
+    fun onStopButtonClick() {
         if (view.get() == null || !isTrackerAttached) {
-            return;
+            return
         }
-        if (tracker.queryDistance() < DISTANCE_EPSILON) {
-            view.get().showStopConfirm();
+        if (tracker!!.queryDistance() < DISTANCE_EPSILON) {
+            view.get()!!.showStopConfirm()
         } else {
-            stopRun();
+            stopRun()
         }
     }
 
-    public void onPlayButtonClick() {
+    fun onPlayButtonClick() {
         if (view.get() == null || !isTrackerAttached) {
-            return;
+            return
         }
-        if (!tracker.isTracking()) {
-            tracker.newLap();
-            tracker.resumeTracking();
-            view.get().hidePlayBtn();
-            view.get().hideStopBtn();
-            view.get().showPauseBtn();
+        if (!tracker!!.isTracking()) {
+            tracker!!.newLap()
+            tracker!!.resumeTracking()
+            view.get()!!.hidePlayBtn()
+            view.get()!!.hideStopBtn()
+            view.get()!!.showPauseBtn()
         }
     }
 
-    public void onPauseButtonClick() {
+    fun onPauseButtonClick() {
         if (view.get() == null || !isTrackerAttached) {
-            return;
+            return
         }
-        if (tracker.isTracking()) {
-            tracker.stopTracking();
-            view.get().hidePauseBtn();
-            view.get().showPlayBtn();
-            view.get().showStopBtn();
+        if (tracker!!.isTracking()) {
+            tracker!!.stopTracking()
+            view.get()!!.hidePauseBtn()
+            view.get()!!.showPlayBtn()
+            view.get()!!.showStopBtn()
         }
     }
 
-    private void saveRun(Run run) {
-        if (run.getDistance() > 0F) {
+    private fun saveRun(run: Run) {
+        if (run.distance > 0f) {
             disposable = runRepository.insertRun(run)
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.ui())
-                    .subscribe(this::onRunSaved, this::onRunSavedError);
+                .subscribeOn(schedulers.io())
+                .observeOn(schedulers.ui())
+                .subscribe({ runId: Long -> onRunSaved(runId) }) { e: Throwable -> onRunSavedError(e) }
         }
     }
 
-    private void onRunSaved(final long runId) {
+    private fun onRunSaved(runId: Long) {
         if (view.get() == null) {
-            return;
+            return
         }
-        view.get().launchRunActivity(runId);
-        Timber.d("Successfully saved run in db for run-id: %d", runId);
+        view.get()!!.launchRunActivity(runId)
+        Timber.d("Successfully saved run in db for run-id: %d", runId)
     }
 
-    private void onRunSavedError(final Throwable e) {
+    private fun onRunSavedError(e: Throwable) {
         if (view.get() == null) {
-            return;
+            return
         }
-        Timber.d("Failed to save run\n".concat(e.getMessage()));
-        view.get().showSaveRunError();
+        Timber.d(
+            """
+    Failed to save run
+    ${e.message}
+    """.trimIndent()
+        )
+        view.get()!!.showSaveRunError()
     }
 
-    @VisibleForTesting
-    public Tracker getTracker() {
-        return tracker;
-    }
-
-    @VisibleForTesting
-    public boolean isTrackerAttached() {
-        return isTrackerAttached;
-    }
 }

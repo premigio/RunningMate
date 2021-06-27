@@ -1,34 +1,27 @@
-package com.itba.runningMate.running.adapters;
+package com.itba.runningMate.running.adapters
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
+class ScreenSlidePagerAdapter(fa: FragmentActivity?) : FragmentStateAdapter(fa!!) {
 
-public class ScreenSlidePagerAdapter extends FragmentStateAdapter {
+    private val fragments: MutableList<Fragment>
 
-    private final List<Fragment> fragments;
-
-    public ScreenSlidePagerAdapter(FragmentActivity fa) {
-        super(fa);
-        fragments = new ArrayList<>();
+    fun addFragment(fragment: Fragment) {
+        fragments.add(fragment)
     }
 
-    public void addFragment(Fragment fragment) {
-        fragments.add(fragment);
+    override fun createFragment(position: Int): Fragment {
+        return fragments[position]
     }
 
-    @NonNull
-    @Override
-    public Fragment createFragment(int position) {
-        return fragments.get(position);
+    override fun getItemCount(): Int {
+        return fragments.size
     }
 
-    @Override
-    public int getItemCount() {
-        return fragments.size();
+    init {
+        fragments = ArrayList()
     }
 }

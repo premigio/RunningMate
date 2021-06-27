@@ -1,4 +1,3 @@
-package com.itba.runningMate.running;
+package com.itba.runningMate.running
 
-public interface RunningView {
-}
+interface RunningView 

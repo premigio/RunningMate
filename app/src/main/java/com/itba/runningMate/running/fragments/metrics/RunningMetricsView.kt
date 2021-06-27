@@ -1,39 +1,38 @@
-package com.itba.runningMate.running.fragments.metrics;
+package com.itba.runningMate.running.fragments.metrics
 
-public interface RunningMetricsView {
+interface RunningMetricsView {
 
-    void attachTrackingService();
+    fun attachTrackingService()
 
-    void detachTrackingService();
+    fun detachTrackingService()
 
-    void updateDistance(float elapsedDistance);
+    fun updateDistance(elapsedDistance: Float)
 
-    void updateCalories(int calories);
+    fun updateCalories(calories: Int)
 
-    void updateStopwatch(long elapsedTime);
+    fun updateStopwatch(elapsedTime: Long)
 
-    void updatePace(long pace);
+    fun updatePace(pace: Long)
 
-    void showInitialMetrics();
+    fun showInitialMetrics()
 
-    void showSaveRunError();
+    fun showSaveRunError()
 
-    void launchRunActivity(long runId);
+    fun launchRunActivity(runId: Long)
 
-    void finishActivity();
+    fun finishActivity()
 
-    void showStopConfirm();
+    fun showStopConfirm()
 
-    void showStopBtn();
+    fun showStopBtn()
 
-    void showPlayBtn();
+    fun showPlayBtn()
 
-    void showPauseBtn();
+    fun showPauseBtn()
 
-    void hideStopBtn();
+    fun hideStopBtn()
 
-    void hidePlayBtn();
+    fun hidePlayBtn()
 
-    void hidePauseBtn();
-
+    fun hidePauseBtn()
 }

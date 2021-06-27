@@ -1,9 +1,8 @@
-package com.itba.runningMate.running;
+package com.itba.runningMate.running
 
-public class RunningPresenter {
-    public void onViewAttached() {
-    }
+class RunningPresenter {
 
-    public void onViewDetached() {
-    }
+    fun onViewAttached() {}
+
+    fun onViewDetached() {}
 }

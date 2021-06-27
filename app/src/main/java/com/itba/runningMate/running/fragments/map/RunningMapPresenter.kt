@@ -1,110 +1,98 @@
-package com.itba.runningMate.running.fragments.map;
+package com.itba.runningMate.running.fragments.map
 
-import androidx.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting
+import com.itba.runningMate.domain.Route
+import com.itba.runningMate.repository.runningstate.RunningStateStorage
+import com.itba.runningMate.services.location.Tracker
+import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener
+import java.lang.ref.WeakReference
 
-import com.itba.runningMate.domain.Route;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
-import com.itba.runningMate.services.location.listeners.OnTrackingLocationUpdateListener;
-import com.itba.runningMate.services.location.Tracker;
+class RunningMapPresenter(private val stateStorage: RunningStateStorage, view: RunningMapView?) :
+    OnTrackingLocationUpdateListener {
 
-import java.lang.ref.WeakReference;
+    private val view: WeakReference<RunningMapView> = WeakReference(view)
 
-public class RunningMapPresenter implements OnTrackingLocationUpdateListener {
+    @get:VisibleForTesting
+    var tracker: Tracker? = null
+        private set
 
-    private final WeakReference<RunningMapView> view;
-    private final RunningStateStorage stateStorage;
+    @get:VisibleForTesting
+    var isTrackerAttached = false
+        private set
 
-    private Tracker tracker;
-    private boolean isTrackerAttached;
-
-    public RunningMapPresenter(final RunningStateStorage stateStorage,
-                               final RunningMapView view) {
-        this.isTrackerAttached = false;
-        this.view = new WeakReference<>(view);
-        this.stateStorage = stateStorage;
-    }
-
-    public void onViewAttached() {
+    fun onViewAttached() {
         if (view.get() == null) {
-            return;
+            return
         }
-        view.get().attachTrackingService();
+        view.get()!!.attachTrackingService()
     }
 
-    public void onViewDetached() {
-        stateStorage.persistState();
+    fun onViewDetached() {
+        stateStorage.persistState()
         if (isTrackerAttached) {
-            tracker.removeTrackingLocationUpdateListener(this);
+            tracker!!.removeTrackingLocationUpdateListener(this)
         }
         if (view.get() != null) {
-            view.get().detachTrackingService();
+            view.get()!!.detachTrackingService()
         }
     }
 
-    public void onMapAttached() {
+    fun onMapAttached() {
         if (view.get() == null) {
-            return;
+            return
         }
         if (stateStorage.hasLastKnownLocation()) {
-            view.get().showLocation(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude());
+            view.get()!!
+                .showLocation(stateStorage.lastKnownLatitude, stateStorage.lastKnownLongitude)
         } else {
-            view.get().showDefaultLocation();
+            view.get()!!.showDefaultLocation()
         }
     }
 
-    public void onTrackingServiceAttached(Tracker tracker) {
-        this.tracker = tracker;
-        this.isTrackerAttached = true;
-        tracker.setOnTrackingLocationUpdateListener(this);
+    fun onTrackingServiceAttached(tracker: Tracker) {
+        this.tracker = tracker
+        isTrackerAttached = true
+        tracker.setOnTrackingLocationUpdateListener(this)
         if (tracker.isTracking() && view.get() != null) {
             // recuperamos la ruta y actualizamos LastKnownLocation
-            Route route = tracker.queryRoute();
-            if (!route.isEmpty()) {
-                stateStorage.setLastKnownLocation(route.getLastLatitude(), route.getLastLongitude());
-                view.get().showRoute(route);
+            val route = tracker.queryRoute()
+            if (!route.isEmpty) {
+                stateStorage.setLastKnownLocation(route.lastLatitude, route.lastLongitude)
+                view.get()!!.showRoute(route)
             }
         }
     }
 
-    public void onTrackingServiceDetached() {
-        this.tracker = null;
-        this.isTrackerAttached = false;
+    fun onTrackingServiceDetached() {
+        tracker = null
+        isTrackerAttached = false
     }
 
-    public void centerCamera() {
-        stateStorage.setCenterCamera(true);
+    fun centerCamera() {
+        stateStorage.isCenterCamera = true
         if (stateStorage.hasLastKnownLocation()) {
-            view.get().showLocation(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude());
+            view.get()!!
+                .showLocation(stateStorage.lastKnownLatitude, stateStorage.lastKnownLongitude)
         }
     }
 
-    public void freeCamera() {
-        stateStorage.setCenterCamera(false);
+    fun freeCamera() {
+        stateStorage.isCenterCamera = false
     }
 
-    @Override
-    public void onLocationUpdate(double latitude, double longitude) {
-        if (isTrackerAttached && tracker.isTracking() && view.get() != null) {
+    override fun onLocationUpdate(latitude: Double, longitude: Double) {
+        if (isTrackerAttached && tracker!!.isTracking() && view.get() != null) {
             if (stateStorage.hasLastKnownLocation()) {
-                Route route = new Route()
-                        .addToRoute(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude())
-                        .addToRoute(latitude, longitude);
-                view.get().showRoute(route);
+                val route = Route()
+                    .addToRoute(stateStorage.lastKnownLatitude, stateStorage.lastKnownLongitude)
+                    .addToRoute(latitude, longitude)
+                view.get()!!.showRoute(route)
             }
         }
-        if (stateStorage.isCenterCamera() && view.get() != null) {
-            view.get().showLocation(latitude, longitude);
+        if (stateStorage.isCenterCamera && view.get() != null) {
+            view.get()!!.showLocation(latitude, longitude)
         }
-        stateStorage.setLastKnownLocation(latitude, longitude);
+        stateStorage.setLastKnownLocation(latitude, longitude)
     }
 
-    @VisibleForTesting
-    public Tracker getTracker() {
-        return tracker;
-    }
-
-    @VisibleForTesting
-    public boolean isTrackerAttached() {
-        return isTrackerAttached;
-    }
 }

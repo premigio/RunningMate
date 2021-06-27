@@ -1,18 +1,17 @@
-package com.itba.runningMate.running.fragments.map;
+package com.itba.runningMate.running.fragments.map
 
-import com.itba.runningMate.domain.Route;
+import com.itba.runningMate.domain.Route
 
+interface RunningMapView {
 
-public interface RunningMapView {
+    fun attachTrackingService()
 
-    void attachTrackingService();
+    fun detachTrackingService()
 
-    void detachTrackingService();
+    fun showRoute(route: Route?)
 
-    void showRoute(Route route);
+    fun showDefaultLocation()
 
-    void showDefaultLocation();
-
-    void showLocation(double latitude, double longitude);
+    fun showLocation(latitude: Double, longitude: Double)
 
 }

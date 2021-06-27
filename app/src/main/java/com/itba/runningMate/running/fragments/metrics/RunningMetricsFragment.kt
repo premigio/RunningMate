@@ -1,255 +1,204 @@
-package com.itba.runningMate.running.fragments.metrics;
+package com.itba.runningMate.running.fragments.metrics
 
-import android.annotation.SuppressLint;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.annotation.SuppressLint
+import android.content.*
+import android.net.Uri
+import android.os.Bundle
+import android.os.IBinder
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.itba.runningMate.R
+import com.itba.runningMate.di.DependencyContainerLocator
+import com.itba.runningMate.services.location.Tracker
+import com.itba.runningMate.services.location.TrackingService
+import com.itba.runningMate.utils.Formatters
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
+class RunningMetricsFragment : Fragment(), RunningMetricsView, ServiceConnection {
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.itba.runningMate.R;
-import com.itba.runningMate.di.DependencyContainer;
-import com.itba.runningMate.di.DependencyContainerLocator;
-import com.itba.runningMate.repository.achievements.AchievementsStorage;
-import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.services.location.Tracker;
-import com.itba.runningMate.services.location.TrackingService;
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
+    private lateinit var pauseButton: FloatingActionButton
+    private lateinit var playButton: FloatingActionButton
+    private lateinit var stopButton: FloatingActionButton
+    private lateinit var stopWatch: TextView
+    private lateinit var distance: TextView
+    private lateinit var calories: TextView
+    private lateinit var pace: TextView
+    private lateinit var presenter: RunningMetricsPresenter
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import static com.itba.runningMate.utils.Formatters.hmsTimeFormatter;
-
-public class RunningMetricsFragment extends Fragment implements RunningMetricsView, ServiceConnection {
-
-    private static final SimpleDateFormat paceFormatter = new SimpleDateFormat("mm'' ss'\"'", Locale.getDefault());
-    private static final DecimalFormat twoDecimalPlacesFormatter = new DecimalFormat("0.00");
-
-    private FloatingActionButton pauseButton;
-    private FloatingActionButton playButton;
-    private FloatingActionButton stopButton;
-    private TextView stopWatch;
-    private TextView distance;
-    private TextView calories;
-    private TextView pace;
-
-    private RunningMetricsPresenter presenter;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_running_metrics, container, false);
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_running_metrics, container, false)
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        createPresenter();
-
-        pauseButton = view.findViewById(R.id.pause);
-        playButton = view.findViewById(R.id.play);
-        stopButton = view.findViewById(R.id.stop);
-        distance = view.findViewById(R.id.distance);
-        pace = view.findViewById(R.id.pace);
-        calories = view.findViewById(R.id.calories);
-        stopWatch = view.findViewById(R.id.running_time);
-
-        setUpButtons();
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        createPresenter()
+        pauseButton = view.findViewById(R.id.pause)
+        playButton = view.findViewById(R.id.play)
+        stopButton = view.findViewById(R.id.stop)
+        distance = view.findViewById(R.id.distance)
+        pace = view.findViewById(R.id.pace)
+        calories = view.findViewById(R.id.calories)
+        stopWatch = view.findViewById(R.id.running_time)
+        setUpButtons()
     }
 
-    private void setUpButtons() {
-        stopButton.setOnLongClickListener(l -> {
-            presenter.onStopButtonClick();
-            return true;
-        });
-        enlargeOnTouch(stopButton);
-        pauseButton.setOnClickListener(l -> presenter.onPauseButtonClick());
-        playButton.setOnClickListener(l -> presenter.onPlayButtonClick());
+    private fun setUpButtons() {
+        stopButton.setOnLongClickListener {
+            presenter.onStopButtonClick()
+            true
+        }
+        enlargeOnTouch(stopButton)
+        pauseButton.setOnClickListener { presenter.onPauseButtonClick() }
+        playButton.setOnClickListener { presenter.onPlayButtonClick() }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void enlargeOnTouch(FloatingActionButton btn) {
-        btn.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                float x = (float) 1.25;
-                float y = (float) 1.25;
-                btn.setScaleX(x);
-                btn.setScaleY(y);
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                float x = 1;
-                float y = 1;
-                btn.setScaleX(x);
-                btn.setScaleY(y);
+    private fun enlargeOnTouch(btn: FloatingActionButton) {
+        btn.setOnTouchListener { _: View?, event: MotionEvent ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val x = 1.25.toFloat()
+                val y = 1.25.toFloat()
+                btn.scaleX = x
+                btn.scaleY = y
+            } else if (event.action == MotionEvent.ACTION_UP) {
+                val x = 1f
+                val y = 1f
+                btn.scaleX = x
+                btn.scaleY = y
             }
-            return false;
-        });
+            false
+        }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    override fun onStart() {
+        super.onStart()
 
-        presenter.onViewAttached();
+        presenter.onViewAttached()
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    override fun onStop() {
+        super.onStop()
+
+        presenter.onViewDetached()
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
+    override fun attachTrackingService() {
+        val intent = Intent(activity, TrackingService::class.java)
+        this.requireActivity().bindService(intent, this, Context.BIND_AUTO_CREATE)
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        presenter.onViewDetached();
+    override fun detachTrackingService() {
+        this.requireActivity().unbindService(this)
+        presenter.onTrackingServiceDetached()
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    private fun createPresenter() {
+        val container = DependencyContainerLocator.locateComponent(this.activity)
+        val schedulerProvider = container.schedulerProvider
+        val runRepository = container.runRepository
+        val achievementsStorage = container.achievementsStorage
+        presenter =
+            RunningMetricsPresenter(runRepository, schedulerProvider, achievementsStorage, this)
     }
 
-    public void attachTrackingService() {
-        Intent intent = new Intent(getActivity(), TrackingService.class);
-        this.getActivity().bindService(intent, this, Context.BIND_AUTO_CREATE);
+    override fun updateDistance(elapsedDistance: Float) {
+        distance.text =
+            twoDecimalPlacesFormatter.format(elapsedDistance.toDouble())
     }
 
-    @Override
-    public void detachTrackingService() {
-        this.getActivity().unbindService(this);
-        presenter.onTrackingServiceDetached();
+    override fun updateCalories(calories: Int) {
+        this.calories.text = calories.toString()
     }
 
-    public void createPresenter() {
-        final DependencyContainer container = DependencyContainerLocator.locateComponent(this.getActivity());
-        final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
-        final RunRepository runRepository = container.getRunRepository();
-        final AchievementsStorage achievementsStorage = container.getAchievementsStorage();
-
-        presenter = new RunningMetricsPresenter(runRepository, schedulerProvider, achievementsStorage, this);
+    override fun updateStopwatch(elapsedTime: Long) {
+        stopWatch.text = Formatters.hmsTimeFormatter(elapsedTime)
     }
 
-    @Override
-    public void updateDistance(float elapsedDistance) {
-        distance.setText(twoDecimalPlacesFormatter.format(elapsedDistance));
+    override fun updatePace(pace: Long) {
+        this.pace.text = paceFormatter.format(Date(pace))
     }
 
-    @Override
-    public void updateCalories(int calories) {
-        this.calories.setText(String.valueOf(calories));
+    override fun showInitialMetrics() {
+        pace.setText(R.string.text_view_running_initial_pace)
+        distance.setText(R.string.text_view_running_initial_distance)
+        stopWatch.setText(R.string.text_view_running_initial_time)
+        calories.setText(R.string.text_view_running_initial_calories)
     }
 
-    @Override
-    public void updateStopwatch(long elapsedTime) {
-        stopWatch.setText(hmsTimeFormatter(elapsedTime));
+    override fun onServiceConnected(name: ComponentName, service: IBinder) {
+        val tracker = service as Tracker
+        presenter.onTrackingServiceAttached(tracker)
     }
 
-    @Override
-    public void updatePace(long pace) {
-        this.pace.setText(paceFormatter.format(new Date(pace)));
+    override fun onServiceDisconnected(name: ComponentName) {
+        presenter.onTrackingServiceDetached()
     }
 
-    @Override
-    public void showInitialMetrics() {
-        pace.setText(R.string.text_view_running_initial_pace);
-        distance.setText(R.string.text_view_running_initial_distance);
-        stopWatch.setText(R.string.text_view_running_initial_time);
-        calories.setText(R.string.text_view_running_initial_calories);
+    override fun showSaveRunError() {
+        Toast.makeText(this.activity, getText(R.string.toast_error_run_save), Toast.LENGTH_LONG)
+            .show()
     }
 
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        final Tracker tracker = (Tracker) service;
-        presenter.onTrackingServiceAttached(tracker);
+    override fun launchRunActivity(runId: Long) {
+        val uri = Uri.Builder().scheme("runningmate")
+            .authority("run")
+            .appendQueryParameter("run-id", runId.toString()).build()
+        startActivity(Intent(Intent.ACTION_VIEW, uri))
+        this.requireActivity().finish()
     }
 
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        presenter.onTrackingServiceDetached();
+    override fun finishActivity() {
+        this.requireActivity().finish()
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void showSaveRunError() {
-        Toast.makeText(this.getActivity(), getText(R.string.toast_error_run_save), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void launchRunActivity(long runId) {
-        Uri uri = new Uri.Builder().scheme("runningmate")
-                .authority("run")
-                .appendQueryParameter("run-id", String.valueOf(runId)).build();
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
-        this.getActivity().finish();
-    }
-
-    @Override
-    public void finishActivity() {
-        this.getActivity().finish();
-    }
-
-    @Override
-    public void showStopConfirm() {
-        AlertDialog.Builder alertBox = new AlertDialog.Builder(this.getActivity());
+    override fun showStopConfirm() {
+        val alertBox = AlertDialog.Builder(
+            this.requireActivity()
+        )
         alertBox.setMessage(R.string.stop_run_message)
-                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.stopRun())
-                .setNegativeButton(R.string.no, (dialog, which) -> {
-                })
-                .show();
+            .setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int -> presenter.stopRun() }
+            .setNegativeButton(R.string.no) { _: DialogInterface?, _: Int -> }
+            .show()
     }
 
-    @Override
-    public void showStopBtn() {
-        stopButton.setVisibility(View.VISIBLE);
+    override fun showStopBtn() {
+        stopButton.visibility = View.VISIBLE
     }
 
-    @Override
-    public void showPlayBtn() {
-        playButton.setVisibility(View.VISIBLE);
+    override fun showPlayBtn() {
+        playButton.visibility = View.VISIBLE
     }
 
-    @Override
-    public void showPauseBtn() {
-        pauseButton.setVisibility(View.VISIBLE);
+    override fun showPauseBtn() {
+        pauseButton.visibility = View.VISIBLE
     }
 
-    @Override
-    public void hideStopBtn() {
-        stopButton.setVisibility(View.INVISIBLE);
+    override fun hideStopBtn() {
+        stopButton.visibility = View.INVISIBLE
     }
 
-    @Override
-    public void hidePlayBtn() {
-        playButton.setVisibility(View.INVISIBLE);
+    override fun hidePlayBtn() {
+        playButton.visibility = View.INVISIBLE
     }
 
-    @Override
-    public void hidePauseBtn() {
-        pauseButton.setVisibility(View.INVISIBLE);
+    override fun hidePauseBtn() {
+        pauseButton.visibility = View.INVISIBLE
+    }
+
+    companion object {
+        private val paceFormatter = SimpleDateFormat("mm'' ss'\"'", Locale.getDefault())
+        private val twoDecimalPlacesFormatter = DecimalFormat("0.00")
     }
 }
