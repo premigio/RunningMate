@@ -1,29 +1,28 @@
-package com.itba.runningMate.rundetails;
+package com.itba.runningMate.rundetails
 
-import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.Bitmap
+import android.net.Uri
+import com.itba.runningMate.domain.Route
+import com.itba.runningMate.rundetails.model.RunMetricsDetail
 
-import com.itba.runningMate.domain.Route;
-import com.itba.runningMate.rundetails.model.RunMetricsDetail;
+interface RunDetailsView {
 
-public interface RunDetailsView {
+    fun showRoute(route: Route)
 
-    void showRoute(Route route);
+    fun showRunMetrics(runMetrics: RunMetricsDetail)
 
-    void showRunMetrics(RunMetricsDetail runMetrics);
+    fun endActivity()
 
-    void endActivity();
+    fun shareImageIntent(uri: Uri)
 
-    void shareImageIntent(Uri uri);
+    fun getMetricsImage(detail: RunMetricsDetail?): Bitmap?
 
-    Bitmap getMetricsImage(RunMetricsDetail detail);
+    fun showShareRunError()
 
-    void showShareRunError();
+    fun showUpdateTitleError()
 
-    void showUpdateTitleError();
+    fun showDeleteError()
 
-    void showDeleteError();
-
-    void showRunNotAvailableError();
+    fun showRunNotAvailableError()
 
 }

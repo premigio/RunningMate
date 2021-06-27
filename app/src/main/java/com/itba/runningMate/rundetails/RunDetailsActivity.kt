@@ -1,276 +1,250 @@
-package com.itba.runningMate.rundetails;
+package com.itba.runningMate.rundetails
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Bundle;
-import android.text.InputType;
-import android.view.KeyEvent;
-import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.annotation.SuppressLint
+import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Bundle
+import android.text.InputType
+import android.view.KeyEvent
+import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.itba.runningMate.R
+import com.itba.runningMate.di.DependencyContainerLocator
+import com.itba.runningMate.domain.Route
+import com.itba.runningMate.map.Map
+import com.itba.runningMate.rundetails.model.RunMetricsDetail
+import com.itba.runningMate.utils.ImageProcessing
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+class RunDetailsActivity : AppCompatActivity(), RunDetailsView, OnMapReadyCallback {
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.itba.runningMate.R;
-import com.itba.runningMate.di.DependencyContainer;
-import com.itba.runningMate.di.DependencyContainerLocator;
-import com.itba.runningMate.domain.Route;
-import com.itba.runningMate.map.Map;
-import com.itba.runningMate.repository.achievements.AchievementsStorage;
-import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.rundetails.model.RunMetricsDetail;
-import com.itba.runningMate.utils.ImageProcessing;
-import com.itba.runningMate.utils.providers.files.CacheFileProvider;
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
-
-public class RunDetailsActivity extends AppCompatActivity implements RunDetailsView, OnMapReadyCallback {
-
-    private static final String RUN_ID = "run-id";
-
-    private Map mapView;
-    private TextView runTimeInterval, elapsedTime, runningTime, speed, pace, distance, calories;
-    private EditText title;
-
-    private RunDetailsPresenter presenter;
+    private lateinit var mapView: Map
+    private lateinit var runTimeInterval: TextView
+    private lateinit var elapsedTime: TextView
+    private lateinit var runningTime: TextView
+    private lateinit var speed: TextView
+    private lateinit var pace: TextView
+    private lateinit var distance: TextView
+    private lateinit var calories: TextView
+    private lateinit var title: EditText
+    private lateinit var presenter: RunDetailsPresenter
 
     @SuppressLint("ClickableViewAccessibility")
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_run_details);
-        long id;
-
-        Intent intent = getIntent();
-        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            Uri uri = intent.getData();
-            String runIdString = uri.getQueryParameter(RUN_ID);
-            id = Long.parseLong(runIdString, 10);
-        } else { //todo: mejorar error
-            id = 1;
-        }
-
-        createPresenter(id);
-        setUpMap(savedInstanceState);
-        setUp();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_run_details)
+        val intent = intent
+        val uri = intent.data
+        val runIdString = uri?.getQueryParameter(RUN_ID)
+        val id: Long = runIdString!!.toLong(10)
+        createPresenter(id)
+        setUpMap(savedInstanceState)
+        setUp()
     }
 
-    private void setUpMap(Bundle savedInstanceState) {
-        mapView = findViewById(R.id.run_detail_map);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+    private fun setUpMap(savedInstanceState: Bundle?) {
+        mapView = findViewById(R.id.run_detail_map)
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
     }
 
-    private void setUp() {
-        speed = findViewById(R.id.speed);
-        pace = findViewById(R.id.pace);
-        distance = findViewById(R.id.distance);
-        title = findViewById(R.id.run_detail_title);
-        runTimeInterval = findViewById(R.id.run_detail_run_time_interval);
-        runningTime = findViewById(R.id.running_time);
-        elapsedTime = findViewById(R.id.elapsed_time);
-        calories = findViewById(R.id.calories);
+    private fun setUp() {
+        speed = findViewById(R.id.speed)
+        pace = findViewById(R.id.pace)
+        distance = findViewById(R.id.distance)
+        title = findViewById(R.id.run_detail_title)
+        runTimeInterval = findViewById(R.id.run_detail_run_time_interval)
+        runningTime = findViewById(R.id.running_time)
+        elapsedTime = findViewById(R.id.elapsed_time)
+        calories = findViewById(R.id.calories)
 
 
         //Creo el botón para volver
-        ActionBar actionBar = getSupportActionBar();
+        val actionBar = supportActionBar
         if (actionBar != null) {
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true)
+            actionBar.setDisplayHomeAsUpEnabled(true)
         }
-
-        Button deleteBtn = findViewById(R.id.btn_run_detail_delete);
-        deleteBtn.setOnClickListener(v -> deleteConfirmationMessage());
-
-        Button shareBtn = findViewById(R.id.btn_run_detail_share);
-        shareBtn.setOnClickListener(v -> presenter.onShareButtonClick());
-
-        title.setRawInputType(InputType.TYPE_CLASS_TEXT);
-        title.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
-        title.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        title.setOnEditorActionListener(this::onTextEditAction);
+        val deleteBtn = findViewById<Button>(R.id.btn_run_detail_delete)
+        deleteBtn.setOnClickListener { deleteConfirmationMessage() }
+        val shareBtn = findViewById<Button>(R.id.btn_run_detail_share)
+        shareBtn.setOnClickListener { presenter.onShareButtonClick() }
+        title.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        title.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE)
+        title.setImeOptions(EditorInfo.IME_ACTION_DONE)
+        title.setOnEditorActionListener { textView: TextView, actionId: Int, event: KeyEvent? ->
+            onTextEditAction(
+                textView,
+                actionId,
+                event
+            )
+        }
     }
 
-    private boolean onTextEditAction(TextView textView, int actionId, KeyEvent event) {
+    private fun onTextEditAction(textView: TextView, actionId: Int, event: KeyEvent?): Boolean {
         /* Ref: https://gist.github.com/Dogesmith/2b98df97b4fca849ff94 */
         if (event == null) {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                title.clearFocus();
-                InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                presenter.onRunTitleModified(textView.getText().toString());
+                title.clearFocus()
+                val inputMethodManager =
+                    this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(
+                    textView.windowToken,
+                    InputMethodManager.RESULT_UNCHANGED_SHOWN
+                )
+                presenter.onRunTitleModified(textView.text.toString())
             } else if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 // Capture soft enters in other singleLine EditTexts
             } else if (actionId == EditorInfo.IME_ACTION_GO) {
             } else {
                 // Let the system handle all other null KeyEvents
-                return false;
+                return false
             }
         } else if (actionId == EditorInfo.IME_NULL) {
-           /*  Capture most soft enters in multi-line EditTexts and all hard enters;
+            /*  Capture most soft enters in multi-line EditTexts and all hard enters;
             They supply a zero actionId and a valid keyEvent rather than
             a non-zero actionId and a null event like the previous cases.*/
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (event.action == KeyEvent.ACTION_DOWN) {
                 /*We capture the event when the key is first pressed.*/
             } else {
-                return true;
+                return true
             }
         } else {
             /*We let the system handle it when the listener is triggered by something that
             wasn't an enter.*/
-            return false;
+            return false
         }
-        return true;
+        return true
     }
 
-    private void deleteConfirmationMessage() {
-        AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
+    private fun deleteConfirmationMessage() {
+        val alertBox = AlertDialog.Builder(this)
         alertBox.setMessage(R.string.run_delete_message)
-                .setPositiveButton(R.string.yes, (dialog, which) -> presenter.onDeleteButtonClick())
-                .setNegativeButton(R.string.no, (dialog, which) -> {
-                })
-                .show();
+            .setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int -> presenter.onDeleteButtonClick() }
+            .setNegativeButton(R.string.no) { _: DialogInterface?, _: Int -> }
+            .show()
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mapView.onStart();
-
-        presenter.onViewAttached();
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+        presenter.onViewAttached()
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        mapView.onDestroy();
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        mapView.onPause();
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        presenter.onViewDetached();
-        mapView.onStop();
+    override fun onStop() {
+        super.onStop()
+        presenter.onViewDetached()
+        mapView.onStop()
     }
 
-    private void createPresenter(long runId) {
-        final DependencyContainer container = DependencyContainerLocator.locateComponent(this);
-        final SchedulerProvider schedulerProvider = container.getSchedulerProvider();
-        final RunRepository runRepository = container.getRunRepository();
-        final CacheFileProvider cacheFileProvider = container.getCacheFileProvider();
-        final AchievementsStorage achievementsStorage = container.getAchievementsStorage();
-
-        presenter = new RunDetailsPresenter(cacheFileProvider,
-                runRepository,
-                schedulerProvider,
-                achievementsStorage,
-                runId,
-                this);
+    private fun createPresenter(runId: Long) {
+        val container = DependencyContainerLocator.locateComponent(this)
+        val schedulerProvider = container.schedulerProvider
+        val runRepository = container.runRepository
+        val cacheFileProvider = container.cacheFileProvider
+        val achievementsStorage = container.achievementsStorage
+        presenter = RunDetailsPresenter(
+            cacheFileProvider,
+            runRepository,
+            schedulerProvider,
+            achievementsStorage,
+            runId,
+            this
+        )
     }
 
-    @Override
-    public void endActivity() {
-        finish();
+    override fun endActivity() {
+        finish()
     }
 
-    @Override
-    public void showRunMetrics(RunMetricsDetail runMetrics) {
-        speed.setText(runMetrics.getSpeed());
-        pace.setText(runMetrics.getPace());
-        distance.setText(runMetrics.getDistance());
-        runTimeInterval.setText(runMetrics.getRunTimeInterval());
-        elapsedTime.setText(runMetrics.getElapsedTime());
-        title.setText(runMetrics.getTitle());
-        runningTime.setText(runMetrics.getRunningTime());
-        calories.setText(runMetrics.getCalories());
+    override fun showRunMetrics(runMetrics: RunMetricsDetail) {
+        speed.text = runMetrics.speed
+        pace.text = runMetrics.pace
+        distance.text = runMetrics.distance
+        runTimeInterval.text = runMetrics.runTimeInterval
+        elapsedTime.text = runMetrics.elapsedTime
+        title.setText(runMetrics.title)
+        runningTime.text = runMetrics.runningTime
+        calories.text = runMetrics.calories
     }
 
-    @Override
-    public void showRoute(Route route) {
-        mapView.showRouteWithMarker(route);
-        mapView.centerMapOn(route);
+    override fun showRoute(route: Route) {
+        mapView.showRouteWithMarker(route)
+        mapView.centerMapOn(route)
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mapView.bind(googleMap);
-        presenter.onMapAttached();
+    override fun onMapReady(googleMap: GoogleMap) {
+        mapView.bind(googleMap)
+        presenter.onMapAttached()
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
+    override fun onBackPressed() {
+        finish()
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    public void shareImageIntent(Uri uri) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.setType("image/png");
-        startActivity(Intent.createChooser(intent, "Share Via"));
+    override fun shareImageIntent(uri: Uri) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.type = "image/png"
+        startActivity(Intent.createChooser(intent, "Share Via"))
     }
 
-    @Override
-    public Bitmap getMetricsImage(RunMetricsDetail detail) {
-        RunSummary s = new RunSummary(this);
-        s.bind(detail);
-        return ImageProcessing.createBitmapFromView(s, 390, 330);
+    override fun getMetricsImage(detail: RunMetricsDetail?): Bitmap {
+        val s = RunSummary(this)
+        s.bind(detail)
+        return ImageProcessing.createBitmapFromView(s, 390, 330)
     }
 
-    @Override
-    public void showShareRunError() {
-        Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show();
+    override fun showShareRunError() {
+        Toast.makeText(this, "Error while attempting to share run", Toast.LENGTH_LONG).show()
     }
 
-    @Override
-    public void showUpdateTitleError() {
-        Toast.makeText(this, "Error while attempting to update title", Toast.LENGTH_LONG).show();
+    override fun showUpdateTitleError() {
+        Toast.makeText(this, "Error while attempting to update title", Toast.LENGTH_LONG).show()
     }
 
-    @Override
-    public void showDeleteError() {
-        Toast.makeText(this, "Error while attempting to delete run", Toast.LENGTH_LONG).show();
+    override fun showDeleteError() {
+        Toast.makeText(this, "Error while attempting to delete run", Toast.LENGTH_LONG).show()
     }
 
-    @Override
-    public void showRunNotAvailableError() {
-        Toast.makeText(this, "Error while attempting to retrieve run", Toast.LENGTH_LONG).show();
-
+    override fun showRunNotAvailableError() {
+        Toast.makeText(this, "Error while attempting to retrieve run", Toast.LENGTH_LONG).show()
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+    public override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
 
+    companion object {
+        private const val RUN_ID = "run-id"
+    }
 }
