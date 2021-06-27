@@ -1,143 +1,148 @@
-package com.itba.runningMate.map;
+package com.itba.runningMate.map
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Color;
-import android.util.AttributeSet;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Color
+import android.util.AttributeSet
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
+import com.google.android.gms.maps.GoogleMapOptions
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.*
+import com.itba.runningMate.domain.Route
+import com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE
+import com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE
+import com.itba.runningMate.utils.Constants.DEFAULT_ZOOM
+import com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM
 
-import androidx.annotation.NonNull;
+open class Map : MapView {
+    private var googleMap: GoogleMap? = null
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.itba.runningMate.domain.Route;
+    constructor(context: Context) : super(context)
 
-import java.util.List;
+    constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
-import static com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE;
-import static com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE;
-import static com.itba.runningMate.utils.Constants.DEFAULT_ZOOM;
-import static com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM;
+    constructor(context: Context, attributeSet: AttributeSet, i: Int) : super(
+        context,
+        attributeSet,
+        i
+    )
 
-public class Map extends MapView {
+    constructor(context: Context, googleMapOptions: GoogleMapOptions) : super(
+        context,
+        googleMapOptions
+    )
 
-    private static final int PADDING = 100;
-
-    private GoogleMap googleMap;
-
-    public Map(Context context) {
-        super(context);
+    fun bind(googleMap: GoogleMap) {
+        this.googleMap = googleMap
     }
 
-    public Map(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-    }
-
-    public Map(Context context, AttributeSet attributeSet, int i) {
-        super(context, attributeSet, i);
-    }
-
-    public Map(Context context, GoogleMapOptions googleMapOptions) {
-        super(context, googleMapOptions);
-    }
-
-    public void bind(@NonNull GoogleMap googleMap) {
-        this.googleMap = googleMap;
-    }
-
-    public void showLocation(double latitude, double longitude, float zoom) {
+    @JvmOverloads
+    fun showLocation(
+        latitude: Double,
+        longitude: Double,
+        zoom: Float = MY_LOCATION_ZOOM.toFloat()
+    ) {
         if (googleMap != null) {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
+            googleMap!!.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(latitude, longitude),
+                    zoom
+                )
+            )
         }
     }
 
-    public void showDefaultLocation() {
-        showLocation(DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_ZOOM);
+    fun showDefaultLocation() {
+        showLocation(DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_ZOOM.toFloat())
     }
 
-    public void showLocation(double latitude, double longitude) {
-        showLocation(latitude, longitude, MY_LOCATION_ZOOM);
-    }
-
-    public void setOnCameraMoveStartedListener(GoogleMap.OnCameraMoveStartedListener mapCameraListener) {
+    fun setOnCameraMoveStartedListener(mapCameraListener: OnCameraMoveStartedListener?) {
         if (googleMap != null) {
-            googleMap.setOnCameraMoveStartedListener(mapCameraListener);
+            googleMap!!.setOnCameraMoveStartedListener(mapCameraListener)
         }
     }
 
-    public void setOnMyLocationButtonClickListener(GoogleMap.OnMyLocationButtonClickListener mapMyLocationButtonListener) {
+    fun setOnMyLocationButtonClickListener(mapMyLocationButtonListener: OnMyLocationButtonClickListener?) {
         if (googleMap != null) {
-            googleMap.setOnMyLocationButtonClickListener(mapMyLocationButtonListener);
+            googleMap!!.setOnMyLocationButtonClickListener(mapMyLocationButtonListener)
         }
     }
 
-    public void setCompassEnabled(boolean isCompassEnabled) {
+    fun setCompassEnabled(isCompassEnabled: Boolean) {
         if (googleMap != null) {
-            googleMap.getUiSettings().setCompassEnabled(true);
+            googleMap!!.uiSettings.isCompassEnabled = isCompassEnabled
         }
     }
 
     @SuppressLint("MissingPermission")
-    public void enableMyLocation() {
+    fun enableMyLocation() {
         if (googleMap != null) {
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap!!.isMyLocationEnabled = true
+            googleMap!!.uiSettings.isMyLocationButtonEnabled = true
         }
     }
 
     @SuppressLint("MissingPermission")
-    public void disableMyLocation() {
+    fun disableMyLocation() {
         if (googleMap != null) {
-            googleMap.setMyLocationEnabled(false);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            googleMap!!.isMyLocationEnabled = false
+            googleMap!!.uiSettings.isMyLocationButtonEnabled = false
         }
     }
 
-    public void showRoute(Route route) {
-        if (route.isEmpty() || googleMap == null) {
-            return;
+    fun showRoute(route: Route) {
+        if (route.isEmpty || googleMap == null) {
+            return
         }
-        for (List<LatLng> lap : route.getLocations()) {
-            googleMap.addPolyline(new PolylineOptions()
+        for (lap in route.locations) {
+            googleMap!!.addPolyline(
+                PolylineOptions()
                     .color(Color.BLUE)
                     .width(8f)
-                    .addAll(lap));
+                    .addAll(lap)
+            )
         }
     }
 
-    public void showRouteWithMarker(Route route) {
-        showRoute(route);
-        LatLng start = new LatLng(route.getFirstLatitude(), route.getFirstLongitude());
-        LatLng end = new LatLng(route.getLastLatitude(), route.getLastLongitude());
-
-        googleMap.addMarker(new MarkerOptions()
+    fun showRouteWithMarker(route: Route) {
+        showRoute(route)
+        val start = LatLng(route.firstLatitude, route.firstLongitude)
+        val end = LatLng(route.lastLatitude, route.lastLongitude)
+        googleMap!!.addMarker(
+            MarkerOptions()
                 .position(start)
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-        googleMap.addMarker(new MarkerOptions()
+                .icon(
+                    BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+                )
+        )
+        googleMap!!.addMarker(
+            MarkerOptions()
                 .position(end)
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
+                .icon(
+                    BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_RED)
+                )
+        )
     }
 
-    public void centerMapOn(Route route) {
-        if (route == null || route.isEmpty()) {
-            return;
+    fun centerMapOn(route: Route?) {
+        if (route == null || route.isEmpty) {
+            return
         }
-
-        LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-        for (List<LatLng> lap : route.getLocations()) {
-            for (LatLng point : lap) {
-                boundsBuilder.include(point);
+        val boundsBuilder = LatLngBounds.builder()
+        for (lap in route.locations) {
+            for (point in lap) {
+                boundsBuilder.include(point)
             }
         }
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), PADDING));
+        googleMap!!.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), PADDING))
+    }
+
+    companion object {
+        private const val PADDING = 100
     }
 }

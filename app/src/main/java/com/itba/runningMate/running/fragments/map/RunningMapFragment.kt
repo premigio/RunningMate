@@ -98,7 +98,7 @@ class RunningMapFragment : Fragment(), OnMapReadyCallback, RunningMapView, Servi
         presenter.onTrackingServiceDetached()
     }
 
-    override fun showRoute(route: Route?) {
+    override fun showRoute(route: Route) {
         mapView.showRoute(route)
     }
 

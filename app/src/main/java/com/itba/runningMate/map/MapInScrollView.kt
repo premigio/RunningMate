@@ -1,34 +1,28 @@
-package com.itba.runningMate.map;
+package com.itba.runningMate.map
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.MotionEvent
+import com.google.android.gms.maps.GoogleMapOptions
 
-import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.MapView;
+class MapInScrollView : Map {
 
-public class MapInScrollView extends Map {
+    constructor(context: Context) : super(context)
 
-    public MapInScrollView(Context context) {
-        super(context);
+    constructor(context: Context, attributeSet: AttributeSet) : super(
+        context, attributeSet
+    )
+
+    constructor(context: Context, attributeSet: AttributeSet, i: Int) : super(
+        context, attributeSet, i
+    )
+
+    constructor(context: Context, googleMapOptions: GoogleMapOptions) : super(
+        context, googleMapOptions
+    )
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        parent.requestDisallowInterceptTouchEvent(true)
+        return super.dispatchTouchEvent(ev)
     }
-
-    public MapInScrollView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-    }
-
-    public MapInScrollView(Context context, AttributeSet attributeSet, int i) {
-        super(context, attributeSet, i);
-    }
-
-    public MapInScrollView(Context context, GoogleMapOptions googleMapOptions) {
-        super(context, googleMapOptions);
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        getParent().requestDisallowInterceptTouchEvent(true);
-        return super.dispatchTouchEvent(ev);
-    }
-
 }

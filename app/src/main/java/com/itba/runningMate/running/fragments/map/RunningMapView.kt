@@ -8,7 +8,7 @@ interface RunningMapView {
 
     fun detachTrackingService()
 
-    fun showRoute(route: Route?)
+    fun showRoute(route: Route)
 
     fun showDefaultLocation()
 
