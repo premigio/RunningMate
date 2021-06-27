@@ -1,77 +1,60 @@
-package com.itba.runningMate.pastruns.runs;
+package com.itba.runningMate.pastruns.runs
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.itba.runningMate.R
+import com.itba.runningMate.domain.Run
+import java.lang.ref.WeakReference
+import java.util.*
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
 
-import com.itba.runningMate.R;
-import com.itba.runningMate.domain.Run;
+    private val currentRunList: MutableList<Run>
+    private var listener: WeakReference<OnRunClickListener>? = null
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
-import static androidx.recyclerview.widget.RecyclerView.NO_ID;
-
-public class RunAdapter extends RecyclerView.Adapter<RunViewHolder> {
-
-    private final List<Run> currentRunList;
-    private WeakReference<OnRunClickListener> listener;
-
-    public RunAdapter() {
-        currentRunList = new ArrayList<>();
-    }
-
-    public void update(List<Run> runList) {
-        this.currentRunList.clear();
+    fun update(runList: List<Run>?) {
+        currentRunList.clear()
         if (runList != null) {
-            this.currentRunList.addAll(runList);
+            currentRunList.addAll(runList)
         }
-        notifyDataSetChanged();
+        notifyDataSetChanged()
     }
 
-    public void setClickListener(OnRunClickListener listener) {
-        this.listener = new WeakReference<>(listener);
+    fun setClickListener(listener: OnRunClickListener) {
+        this.listener = WeakReference(listener)
     }
 
-    @Override
-    public int getItemViewType(final int position) {
-        return R.layout.view_run_element;
+    override fun getItemViewType(position: Int): Int {
+        return R.layout.view_run_element
     }
 
-    @NonNull
-    @Override
-    public RunViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-        return new RunViewHolder(view);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
+        return RunViewHolder(view)
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull RunViewHolder holder, int position) {
+    override fun onBindViewHolder(holder: RunViewHolder, position: Int) {
         if (listener == null) {
-            return;
+            return
         }
-        holder.bind(currentRunList.get(position));
-        holder.setOnClickListener(listener.get());
+        holder.bind(currentRunList[position])
+        holder.setOnClickListener(listener!!.get()!!)
     }
 
-    @Override
-    public long getItemId(int position) {
+    override fun getItemId(position: Int): Long {
         if (currentRunList.isEmpty()) {
-            return NO_ID;
+            return RecyclerView.NO_ID
         }
-
-        Run pos = currentRunList.get(position);
-
-        return pos == null ? NO_ID : pos.getUid();
+        val pos = currentRunList[position]
+        return pos.uid ?: RecyclerView.NO_ID
     }
 
-    @Override
-    public int getItemCount() {
-        return currentRunList.size();
+    override fun getItemCount(): Int {
+        return currentRunList.size
     }
 
+    init {
+        currentRunList = ArrayList()
+    }
 }

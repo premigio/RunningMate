@@ -1,7 +1,6 @@
-package com.itba.runningMate.pastruns.runs;
+package com.itba.runningMate.pastruns.runs
 
-public interface OnRunClickListener {
+interface OnRunClickListener {
 
-    void onRunClick(long id);
-
+    fun onRunClick(id: Long)
 }

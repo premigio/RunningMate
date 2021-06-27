@@ -1,60 +1,52 @@
-package com.itba.runningMate.pastruns.runs;
+package com.itba.runningMate.pastruns.runs
 
-import android.view.View;
-import android.widget.TextView;
+import android.view.View
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.itba.runningMate.R
+import com.itba.runningMate.domain.Run
+import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
+import java.util.*
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-import com.itba.runningMate.R;
-import com.itba.runningMate.domain.Run;
+    private val title: TextView
+    private val distance: TextView
+    private val time: TextView
+    private var id = RecyclerView.NO_ID
 
-import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+    private var listener: WeakReference<OnRunClickListener>? = null
 
-import static androidx.recyclerview.widget.RecyclerView.NO_ID;
-
-public class RunViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-    private long id = NO_ID;
-    private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
-    private WeakReference<OnRunClickListener> listener;
-
-
-    public RunViewHolder(@NonNull View itemView) {
-        super(itemView);
-        itemView.setOnClickListener(this);
+    fun bind(model: Run?) {
+        if (model == null) return
+        id = model.uid
+        title.text = model.title
+        distance.text = itemView.context.getString(R.string.distance_string, model.distance)
+        time.text = timeFormat.format(model.startTime)
     }
 
-    public void bind(Run model) {
-
-        if (model == null) return;
-
-        TextView title, distance, time;
-        id = model.getUid();
-
-        title = itemView.findViewById(R.id.run_list_card_title);
-        distance = itemView.findViewById(R.id.run_list_distance_content);
-        time = itemView.findViewById(R.id.run_list_time_run);
-
-        title.setText(model.getTitle());
-        distance.setText(itemView.getContext().getString(R.string.distance_string, model.getDistance()));
-        time.setText(timeFormat.format(model.getStartTime()));
-    }
-
-    @Override
-    public void onClick(View v) {
+    override fun onClick(v: View) {
         //todo: hacer que se lea el getItemId() del adapter
         if (listener == null) {
-            return;
+            return
         }
-        listener.get().onRunClick(id);
+        listener!!.get()!!.onRunClick(id)
     }
 
-    public void setOnClickListener(OnRunClickListener listener) {
-        this.listener = new WeakReference<>(listener);
+    fun setOnClickListener(listener: OnRunClickListener) {
+        this.listener = WeakReference(listener)
     }
 
+    companion object {
+        private val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+        private val timeFormat = SimpleDateFormat("hh:mm", Locale.getDefault())
+    }
+
+    init {
+        title = itemView.findViewById(R.id.run_list_card_title)
+        distance = itemView.findViewById(R.id.run_list_distance_content)
+        time = itemView.findViewById(R.id.run_list_time_run)
+        itemView.setOnClickListener(this)
+    }
 }

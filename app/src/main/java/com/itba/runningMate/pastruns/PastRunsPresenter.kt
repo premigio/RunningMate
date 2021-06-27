@@ -1,71 +1,63 @@
-package com.itba.runningMate.pastruns;
+package com.itba.runningMate.pastruns
 
-import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
+import com.itba.runningMate.domain.Run
+import com.itba.runningMate.repository.run.RunRepository
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
+import io.reactivex.disposables.Disposable
+import timber.log.Timber
+import java.lang.ref.WeakReference
+import java.util.*
 
-import java.lang.ref.WeakReference;
-import java.util.LinkedList;
-import java.util.List;
+class PastRunsPresenter(
+    private val schedulerProvider: SchedulerProvider,
+    private val runRepository: RunRepository,
+    view: PastRunsView
+) {
+    private val view: WeakReference<PastRunsView> = WeakReference(view)
+    private var disposable: Disposable? = null
 
-import io.reactivex.disposables.Disposable;
-import timber.log.Timber;
-
-public class PastRunsPresenter {
-
-    private final WeakReference<PastRunsView> view;
-    private final RunRepository runRepository;
-    private final SchedulerProvider schedulerProvider;
-
-    private Disposable disposable;
-
-
-    public PastRunsPresenter(final SchedulerProvider schedulerProvider, final RunRepository runRepository, PastRunsView view) {
-        this.view = new WeakReference<>(view);
-        this.runRepository = runRepository;
-        this.schedulerProvider = schedulerProvider;
+    fun onViewAttached() {
+        disposable = runRepository.runLazy
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe({ runs: List<Run>? -> receivedRunList(runs) }) { err: Throwable ->
+                onRunListError(
+                    err
+                )
+            }
     }
 
-    public void onViewAttached() {
-        disposable = runRepository.getRunLazy()
-                .subscribeOn(schedulerProvider.computation())
-                .observeOn(schedulerProvider.ui())
-                .subscribe(this::receivedRunList, this::onRunListError);
-
-    }
-
-    private void onRunListError(final Throwable err) {
-        Timber.d("Failed to retrieve runs from db");
+    private fun onRunListError(err: Throwable) {
+        Timber.d("Failed to retrieve runs from db")
         if (view.get() != null) {
-            view.get().showNoPastRunsMessage();
+            view.get()!!.showNoPastRunsMessage()
         }
     }
 
-    public void onViewDetached() {
-        disposable.dispose();
+    fun onViewDetached() {
+        disposable!!.dispose()
     }
 
-    public void receivedRunList(List<Run> runs) {
+    private fun receivedRunList(runs: List<Run>?) {
         if (view.get() == null) {
-            return;
+            return
         }
         if (runs == null || runs.isEmpty()) {
-            view.get().showNoPastRunsMessage();
-            view.get().updatePastRuns(new LinkedList<>());
+            view.get()!!.showNoPastRunsMessage()
+            view.get()!!.updatePastRuns(LinkedList())
         } else {
-            view.get().hideNoPastRunsMessage();
-            view.get().updatePastRuns(runs);
+            view.get()!!.hideNoPastRunsMessage()
+            view.get()!!.updatePastRuns(runs)
         }
     }
 
-    public void refreshAction() {
-        this.onViewAttached();
+    fun refreshAction() {
+        onViewAttached()
     }
 
-    public void onRunClick(long id) {
+    fun onRunClick(id: Long) {
         if (view.get() != null) {
-            view.get().launchRunDetails(id);
+            view.get()!!.launchRunDetails(id)
         }
     }
-
 }

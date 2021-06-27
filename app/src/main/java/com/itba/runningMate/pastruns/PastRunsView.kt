@@ -1,16 +1,14 @@
-package com.itba.runningMate.pastruns;
+package com.itba.runningMate.pastruns
 
-import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.domain.Run
 
-import java.util.List;
+interface PastRunsView {
 
-public interface PastRunsView {
+    fun updatePastRuns(list: List<Run>)
 
-    void updatePastRuns(List<Run> list);
+    fun showNoPastRunsMessage()
 
-    void showNoPastRunsMessage();
+    fun hideNoPastRunsMessage()
 
-    void hideNoPastRunsMessage();
-
-    void launchRunDetails(long id);
+    fun launchRunDetails(id: Long)
 }
