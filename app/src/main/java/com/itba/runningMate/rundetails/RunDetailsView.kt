@@ -15,7 +15,7 @@ interface RunDetailsView {
 
     fun shareImageIntent(uri: Uri)
 
-    fun getMetricsImage(detail: RunMetricsDetail?): Bitmap?
+    fun getMetricsImage(detail: RunMetricsDetail): Bitmap
 
     fun showShareRunError()
 

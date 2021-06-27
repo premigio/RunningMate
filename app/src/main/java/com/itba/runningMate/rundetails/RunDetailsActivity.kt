@@ -217,7 +217,7 @@ class RunDetailsActivity : AppCompatActivity(), RunDetailsView, OnMapReadyCallba
         startActivity(Intent.createChooser(intent, "Share Via"))
     }
 
-    override fun getMetricsImage(detail: RunMetricsDetail?): Bitmap {
+    override fun getMetricsImage(detail: RunMetricsDetail): Bitmap {
         val s = RunSummary(this)
         s.bind(detail)
         return ImageProcessing.createBitmapFromView(s, 390, 330)
