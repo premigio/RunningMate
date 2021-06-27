@@ -45,7 +45,10 @@ class RunningPresenter(
             view.get()!!.mapEnableMyLocation()
             if (stateStorage.hasLastKnownLocation()) {
                 view.get()!!
-                    .showLocation(stateStorage.lastKnownLatitude, stateStorage.lastKnownLongitude)
+                    .showLocation(
+                        stateStorage.getLastKnownLatitude(),
+                        stateStorage.getLastKnownLongitude()
+                    )
             }
         } else {
             view.get()!!.mapDisableMyLocation()
@@ -65,15 +68,18 @@ class RunningPresenter(
     }
 
     fun centerCamera() {
-        stateStorage.isCenterCamera = true
+        stateStorage.setCenterCamera(true)
         if (stateStorage.hasLastKnownLocation()) {
             view.get()!!
-                .showLocation(stateStorage.lastKnownLatitude, stateStorage.lastKnownLongitude)
+                .showLocation(
+                    stateStorage.getLastKnownLatitude(),
+                    stateStorage.getLastKnownLongitude()
+                )
         }
     }
 
     fun freeCamera() {
-        stateStorage.isCenterCamera = false
+        stateStorage.setCenterCamera(false)
     }
 
     fun onRequestLocationPermissionResult(grantedPermission: Boolean) {
@@ -106,7 +112,7 @@ class RunningPresenter(
         if (view.get() == null) {
             return
         }
-        if (stateStorage.isCenterCamera) {
+        if (stateStorage.isCenterCamera()) {
             view.get()!!.showLocation(latitude, longitude)
         }
         stateStorage.setLastKnownLocation(latitude, longitude)

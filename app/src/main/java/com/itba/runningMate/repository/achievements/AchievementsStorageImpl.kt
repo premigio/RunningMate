@@ -1,44 +1,37 @@
-package com.itba.runningMate.repository.achievements;
+package com.itba.runningMate.repository.achievements
 
-import android.content.SharedPreferences;
+import android.content.SharedPreferences
 
-public class AchievementsStorageImpl implements AchievementsStorage {
+class AchievementsStorageImpl(private val preferences: SharedPreferences) : AchievementsStorage {
 
-    private static final String KEY_TOTAL_DISTANCE = "total_distance";
+    private var totalDistance: Double
 
-    private Double totalDistance;
-
-    private SharedPreferences preferences;
-
-    public AchievementsStorageImpl(final SharedPreferences preferences) {
-        this.preferences = preferences;
-        totalDistance = (double) preferences.getFloat(KEY_TOTAL_DISTANCE, 0.0f);
-    }
-
-    @Override
-    public void persistState() {
-        SharedPreferences.Editor editor = preferences.edit();
+    override fun persistState() {
+        val editor = preferences.edit()
         if (totalDistance != null) {
-            editor.putFloat(KEY_TOTAL_DISTANCE, totalDistance.floatValue());
+            editor.putFloat(KEY_TOTAL_DISTANCE, totalDistance.toFloat())
         }
-        editor.apply();
+        editor.apply()
     }
 
-    @Override
-    public double getTotalDistance() {
-        return totalDistance;
+    override fun getTotalDistance(): Double {
+        return totalDistance
     }
 
-    @Override
-    public void decreaseTotalDistance(double distance) {
-        if (this.totalDistance - distance < 0.0)
-            this.totalDistance = 0.0;
-        else
-            this.totalDistance -= distance;
+    override fun decreaseTotalDistance(distance: Double) {
+        if (totalDistance - distance < 0.0) totalDistance = 0.0 else totalDistance -= distance
     }
 
-    @Override
-    public void increaseTotalDistance(double distance) {
-        this.totalDistance += distance;
+    override fun increaseTotalDistance(distance: Double) {
+        totalDistance += distance
+    }
+
+    companion object {
+        private const val KEY_TOTAL_DISTANCE = "total_distance"
+    }
+
+    init {
+        totalDistance = preferences.getFloat(KEY_TOTAL_DISTANCE, 0.0f)
+            .toDouble()
     }
 }

@@ -1,86 +1,81 @@
-package com.itba.runningMate.repository.runningstate;
+package com.itba.runningMate.repository.runningstate
 
-import android.content.SharedPreferences;
+import android.content.SharedPreferences
+import com.google.android.gms.maps.model.LatLng
+import com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE
+import com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE
 
-import com.google.android.gms.maps.model.LatLng;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
+class RunningStateStorageImpl(private val preferences: SharedPreferences) : RunningStateStorage {
 
-import java.util.Date;
+    private var centerCamera: Boolean
+    private var lastKnownLatitude: Double? = null
+    private var lastKnownLongitude: Double? = null
 
-import static com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE;
-import static com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE;
-
-public class RunningStateStorageImpl implements RunningStateStorage {
-
-    public static final String KEY_CENTER_CAMERA = "is_camera_centered";
-    public static final String KEY_LOCATION_LATITUDE = "location_lat";
-    public static final String KEY_LOCATION_LONGITUDE = "location_long";
-
-    private SharedPreferences preferences;
-
-    private Boolean centerCamera;
-    private Double lastKnownLatitude;
-    private Double lastKnownLongitude;
-
-    public RunningStateStorageImpl(final SharedPreferences preferences) {
-        this.preferences = preferences;
-        centerCamera = preferences.getBoolean(KEY_CENTER_CAMERA, true);
-        if (preferences.contains(KEY_LOCATION_LATITUDE)) {
-            lastKnownLatitude = (double) preferences.getFloat(KEY_LOCATION_LATITUDE, (float) DEFAULT_LATITUDE);
-        }
-        if (preferences.contains(KEY_LOCATION_LONGITUDE)) {
-            lastKnownLongitude = (double) preferences.getFloat(KEY_LOCATION_LONGITUDE, (float) DEFAULT_LONGITUDE);
-        }
+    override fun isCenterCamera(): Boolean {
+        return centerCamera
     }
 
-    public boolean isCenterCamera() {
-        return centerCamera;
+    override fun setCenterCamera(centerCamera: Boolean) {
+        this.centerCamera = centerCamera
     }
 
-    public void setCenterCamera(final boolean centerCamera) {
-        this.centerCamera = centerCamera;
-    }
-
-    public LatLng getLastKnownLocation() {
-        if (hasLastKnownLocation()) {
-            return new LatLng(lastKnownLatitude, lastKnownLongitude);
+    val lastKnownLocation: LatLng
+        get() = if (hasLastKnownLocation()) {
+            LatLng(lastKnownLatitude!!, lastKnownLongitude!!)
         } else {
-            return new LatLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
+            LatLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE)
         }
+
+    override fun setLastKnownLocation(latitude: Double, longitude: Double) {
+        lastKnownLatitude = latitude
+        lastKnownLongitude = longitude
     }
 
-    public void setLastKnownLocation(final double latitude, final double longitude) {
-        this.lastKnownLatitude = latitude;
-        this.lastKnownLongitude = longitude;
+    override fun getLastKnownLatitude(): Double {
+        return lastKnownLatitude!!
     }
 
-    @Override
-    public double getLastKnownLatitude() {
-        return this.lastKnownLatitude;
+    override fun getLastKnownLongitude(): Double {
+        return lastKnownLongitude!!
     }
 
-    @Override
-    public double getLastKnownLongitude() {
-        return this.lastKnownLongitude;
+    override fun hasLastKnownLocation(): Boolean {
+        return lastKnownLongitude != null && lastKnownLatitude != null
     }
 
-    @Override
-    public boolean hasLastKnownLocation() {
-        return lastKnownLongitude != null && lastKnownLatitude != null;
-    }
-
-    @Override
-    public void persistState() {
-        SharedPreferences.Editor editor = preferences.edit();
+    override fun persistState() {
+        val editor = preferences.edit()
         if (lastKnownLatitude != null) {
-            editor.putFloat(KEY_LOCATION_LATITUDE, lastKnownLatitude.floatValue());
+            editor.putFloat(KEY_LOCATION_LATITUDE, lastKnownLatitude!!.toFloat())
         }
         if (lastKnownLongitude != null) {
-            editor.putFloat(KEY_LOCATION_LONGITUDE, lastKnownLongitude.floatValue());
+            editor.putFloat(KEY_LOCATION_LONGITUDE, lastKnownLongitude!!.toFloat())
         }
         if (centerCamera != null) {
-            editor.putBoolean(KEY_CENTER_CAMERA, centerCamera);
+            editor.putBoolean(KEY_CENTER_CAMERA, centerCamera)
         }
-        editor.apply();
+        editor.apply()
+    }
+
+    companion object {
+        const val KEY_CENTER_CAMERA = "is_camera_centered"
+        const val KEY_LOCATION_LATITUDE = "location_lat"
+        const val KEY_LOCATION_LONGITUDE = "location_long"
+    }
+
+    init {
+        centerCamera = preferences.getBoolean(KEY_CENTER_CAMERA, true)
+        if (preferences.contains(KEY_LOCATION_LATITUDE)) {
+            lastKnownLatitude = preferences.getFloat(
+                KEY_LOCATION_LATITUDE,
+                DEFAULT_LATITUDE.toFloat()
+            ).toDouble()
+        }
+        if (preferences.contains(KEY_LOCATION_LONGITUDE)) {
+            lastKnownLongitude = preferences.getFloat(
+                KEY_LOCATION_LONGITUDE,
+                DEFAULT_LONGITUDE.toFloat()
+            ).toDouble()
+        }
     }
 }

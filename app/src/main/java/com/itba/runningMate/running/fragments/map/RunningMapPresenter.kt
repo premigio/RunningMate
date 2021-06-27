@@ -43,7 +43,10 @@ class RunningMapPresenter(private val stateStorage: RunningStateStorage, view: R
         }
         if (stateStorage.hasLastKnownLocation()) {
             view.get()!!
-                .showLocation(stateStorage.lastKnownLatitude, stateStorage.lastKnownLongitude)
+                .showLocation(
+                    stateStorage.getLastKnownLatitude(),
+                    stateStorage.getLastKnownLongitude()
+                )
         } else {
             view.get()!!.showDefaultLocation()
         }
@@ -69,27 +72,33 @@ class RunningMapPresenter(private val stateStorage: RunningStateStorage, view: R
     }
 
     fun centerCamera() {
-        stateStorage.isCenterCamera = true
+        stateStorage.setCenterCamera(true)
         if (stateStorage.hasLastKnownLocation()) {
             view.get()!!
-                .showLocation(stateStorage.lastKnownLatitude, stateStorage.lastKnownLongitude)
+                .showLocation(
+                    stateStorage.getLastKnownLatitude(),
+                    stateStorage.getLastKnownLongitude()
+                )
         }
     }
 
     fun freeCamera() {
-        stateStorage.isCenterCamera = false
+        stateStorage.setCenterCamera(false)
     }
 
     override fun onLocationUpdate(latitude: Double, longitude: Double) {
         if (isTrackerAttached && tracker!!.isTracking() && view.get() != null) {
             if (stateStorage.hasLastKnownLocation()) {
                 val route = Route()
-                    .addToRoute(stateStorage.lastKnownLatitude, stateStorage.lastKnownLongitude)
+                    .addToRoute(
+                        stateStorage.getLastKnownLatitude(),
+                        stateStorage.getLastKnownLongitude()
+                    )
                     .addToRoute(latitude, longitude)
                 view.get()!!.showRoute(route)
             }
         }
-        if (stateStorage.isCenterCamera && view.get() != null) {
+        if (stateStorage.isCenterCamera() && view.get() != null) {
             view.get()!!.showLocation(latitude, longitude)
         }
         stateStorage.setLastKnownLocation(latitude, longitude)

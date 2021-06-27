@@ -1,15 +1,16 @@
-package com.itba.runningMate.repository.achievements;
+package com.itba.runningMate.repository.achievements
 
-public interface AchievementsStorage {
+interface AchievementsStorage {
 
-    String ACHIEVEMENTS_PREFERENCES_FILE = "PREF_RUNNING_MATE_ACHIEVEMENTS";
+    fun persistState()
 
-    void persistState();
+    fun getTotalDistance(): Double
 
-    double getTotalDistance();
+    fun decreaseTotalDistance(distance: Double)
 
-    void decreaseTotalDistance(double distance);
+    fun increaseTotalDistance(distance: Double)
 
-    void increaseTotalDistance(double distance);
-
+    companion object {
+        const val ACHIEVEMENTS_PREFERENCES_FILE = "PREF_RUNNING_MATE_ACHIEVEMENTS"
+    }
 }

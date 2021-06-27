@@ -1,20 +1,22 @@
-package com.itba.runningMate.repository.runningstate;
+package com.itba.runningMate.repository.runningstate
 
-public interface RunningStateStorage {
+interface RunningStateStorage {
 
-    String LANDING_STATE_PREFERENCES_FILE = "PREF_RUNNING_MATE_RUNNING_STATE";
+    fun isCenterCamera(): Boolean
 
-    boolean isCenterCamera();
+    fun setCenterCamera(centerCamera: Boolean)
 
-    void setCenterCamera(final boolean centerCamera);
+    fun getLastKnownLatitude(): Double
 
-    double getLastKnownLatitude();
+    fun getLastKnownLongitude(): Double
 
-    double getLastKnownLongitude();
+    fun hasLastKnownLocation(): Boolean
 
-    boolean hasLastKnownLocation();
+    fun setLastKnownLocation(latitude: Double, longitude: Double)
 
-    void setLastKnownLocation(final double latitude, final double longitude);
+    fun persistState()
 
-    void persistState();
+    companion object {
+        const val LANDING_STATE_PREFERENCES_FILE = "PREF_RUNNING_MATE_RUNNING_STATE"
+    }
 }
