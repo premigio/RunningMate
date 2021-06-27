@@ -1,244 +1,244 @@
-package com.itba.runningMate.mainpage.fragments.running;
+package com.itba.runningMate.mainpage.fragments.running
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.*
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Bundle
+import android.os.IBinder
+import android.provider.Settings
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.itba.runningMate.R
+import com.itba.runningMate.di.DependencyContainerLocator
+import com.itba.runningMate.map.MapInViewPager
+import com.itba.runningMate.services.location.Tracker
+import com.itba.runningMate.services.location.TrackingService
+import com.itba.runningMate.utils.Constants
+import com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
+class RunningFragment : Fragment(), OnMapReadyCallback, RunningView, ServiceConnection {
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.itba.runningMate.R;
-import com.itba.runningMate.di.DependencyContainer;
-import com.itba.runningMate.di.DependencyContainerLocator;
-import com.itba.runningMate.mainpage.fragments.running.RunningPresenter;
-import com.itba.runningMate.mainpage.fragments.running.RunningView;
-import com.itba.runningMate.map.MapInViewPager;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
-import com.itba.runningMate.services.location.Tracker;
-import com.itba.runningMate.services.location.TrackingService;
-import com.itba.runningMate.utils.Constants;
+    private lateinit var mapView: MapInViewPager
+    private lateinit var presenter: RunningPresenter
 
-import static com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM;
-
-public class RunningFragment extends Fragment implements OnMapReadyCallback, RunningView, ServiceConnection {
-
-    private MapInViewPager mapView;
-    private RunningPresenter presenter;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mainpage_running, container, false);
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_mainpage_running, container, false)
     }
 
-    private final GoogleMap.OnCameraMoveStartedListener mapCameraListener = (i) -> {
-        if (i == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION
-                || i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            presenter.freeCamera();
+    private val mapCameraListener = OnCameraMoveStartedListener { i: Int ->
+        if (i == OnCameraMoveStartedListener.REASON_API_ANIMATION
+            || i == OnCameraMoveStartedListener.REASON_GESTURE
+        ) {
+            presenter.freeCamera()
         }
-    };
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mapView.onStart();
-
-        presenter.onViewAttached();
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
     }
 
-    @Override
-    public void onResume() {
-        mapView.onResume();
-        super.onResume();
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+        presenter.onViewAttached()
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
+    override fun onResume() {
+        mapView.onResume()
+        super.onResume()
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapView.onStop();
-
-        presenter.onViewDetached();
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
+    override fun onStop() {
+        super.onStop()
+        mapView.onStop()
+        presenter.onViewDetached()
     }
 
-    public void launchAndAttachTrackingService() {
-        Intent intent = new Intent(getActivity(), TrackingService.class);
-        this.getActivity().startService(intent);
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
+
+    override fun launchAndAttachTrackingService() {
+        val intent = Intent(activity, TrackingService::class.java)
+        requireActivity().startService(intent)
         // The binding is asynchronous, and bindService() returns immediately without returning the IBinder to the client.
-        this.getActivity().bindService(intent, this, Context.BIND_AUTO_CREATE);
+        requireActivity().bindService(intent, this, Context.BIND_AUTO_CREATE)
     }
 
-    private final GoogleMap.OnMyLocationButtonClickListener mapMyLocationButtonListener = () -> {
-        presenter.centerCamera();
-        return true;
-    };
+    private val mapMyLocationButtonListener = OnMyLocationButtonClickListener {
+        presenter.centerCamera()
+        true
+    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == Constants.PERMISSION_LOCATION) {
             // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                presenter.onRequestLocationPermissionResult(true);
+            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                presenter.onRequestLocationPermissionResult(true)
             } else {
-                presenter.onRequestLocationPermissionResult(false);
-                showLocationPermissionNotGrantedError();
+                presenter.onRequestLocationPermissionResult(false)
+                showLocationPermissionNotGrantedError()
             }
         }
     }
 
-    @Override
-    public void detachTrackingService() {
-        this.getActivity().unbindService(this);
-        presenter.onTrackingServiceDetached();
+    override fun detachTrackingService() {
+        requireActivity().unbindService(this)
+        presenter.onTrackingServiceDetached()
     }
 
-    public void requestLocationPermission() {
-        boolean shouldRequestRationale1 = ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
-        boolean shouldRequestRationale2 = ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+    override fun requestLocationPermission() {
+        val shouldRequestRationale1 = ActivityCompat.shouldShowRequestPermissionRationale(
+            requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        val shouldRequestRationale2 = ActivityCompat.shouldShowRequestPermissionRationale(
+            requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION
+        )
         if (shouldRequestRationale1 || shouldRequestRationale2) {
-            showLocationPermissionRationale();
+            showLocationPermissionRationale()
         } else {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.PERMISSION_LOCATION);
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ), Constants.PERMISSION_LOCATION
+            )
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        createPresenter();
-
-        mapView = view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
-
-        FloatingActionButton startButton = view.findViewById(R.id.start);
-        startButton.setOnClickListener(l -> presenter.onStartButtonClick());
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        createPresenter()
+        mapView = view.findViewById(R.id.map)
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
+        val startButton: FloatingActionButton = view.findViewById(R.id.start)
+        startButton.setOnClickListener { presenter.onStartButtonClick() }
     }
 
-    @Override
-    public void showDefaultLocation() {
-        mapView.showDefaultLocation();
+    override fun showDefaultLocation() {
+        mapView.showDefaultLocation()
     }
 
-    @Override
-    public void showLocation(double latitude, double longitude) {
-        mapView.showLocation(latitude, longitude, MY_LOCATION_ZOOM);
+    override fun showLocation(latitude: Double, longitude: Double) {
+        mapView.showLocation(latitude, longitude, MY_LOCATION_ZOOM.toFloat())
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mapView.bind(googleMap);
-        setupGoogleMap();
-        presenter.onMapAttached();
+    override fun onMapReady(googleMap: GoogleMap) {
+        mapView.bind(googleMap)
+        setupGoogleMap()
+        presenter.onMapAttached()
     }
 
-    private void setupGoogleMap() {
-        mapView.setOnCameraMoveStartedListener(mapCameraListener);
-        mapView.setOnMyLocationButtonClickListener(mapMyLocationButtonListener);
-        mapView.setCompassEnabled(true);
+    private fun setupGoogleMap() {
+        mapView.setOnCameraMoveStartedListener(mapCameraListener)
+        mapView.setOnMyLocationButtonClickListener(mapMyLocationButtonListener)
+        mapView.setCompassEnabled(true)
     }
 
-    @Override
     @SuppressLint("MissingPermission")
-    public void mapEnableMyLocation() {
-        mapView.enableMyLocation();
+    override fun mapEnableMyLocation() {
+        mapView.enableMyLocation()
     }
 
-    @Override
     @SuppressLint("MissingPermission")
-    public void mapDisableMyLocation() {
-        mapView.disableMyLocation();
+    override fun mapDisableMyLocation() {
+        mapView.disableMyLocation()
     }
 
-    public void showLocationPermissionRationale() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getText(R.string.alertdialog_rationale_location_title))
-                .setMessage(getText(R.string.alertdialog_rationale_location_message))
-                .setPositiveButton("ok", ((dialog, which) -> requestPermissions(
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                        Constants.PERMISSION_LOCATION)))
-                .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
-                .create().show();
+    override fun showLocationPermissionRationale() {
+        AlertDialog.Builder(requireActivity())
+            .setTitle(getText(R.string.alertdialog_rationale_location_title))
+            .setMessage(getText(R.string.alertdialog_rationale_location_message))
+            .setPositiveButton("ok") { _: DialogInterface?, _: Int ->
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    Constants.PERMISSION_LOCATION
+                )
+            }
+            .setNegativeButton("cancel") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+            .create().show()
     }
 
-    public void showLocationPermissionNotGrantedError() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getText(R.string.alertdialog_denied_location_title))
-                .setMessage(getText(R.string.alertdialog_denied_location_message))
-                .setNegativeButton("Dismiss", (dialog, which) -> dialog.dismiss())
-                .setPositiveButton("Settings", (dialog, id) -> startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
-                .create().show();
+    override fun showLocationPermissionNotGrantedError() {
+        AlertDialog.Builder(requireActivity())
+            .setTitle(getText(R.string.alertdialog_denied_location_title))
+            .setMessage(getText(R.string.alertdialog_denied_location_message))
+            .setNegativeButton("Dismiss") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+            .setPositiveButton("Settings") { _: DialogInterface?, _: Int ->
+                startActivity(
+                    Intent(
+                        Settings.ACTION_LOCATION_SOURCE_SETTINGS
+                    )
+                )
+            }
+            .create().show()
     }
 
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        final Tracker tracker = (Tracker) service;
-        presenter.onTrackingServiceAttached(tracker);
+    override fun onServiceConnected(name: ComponentName, service: IBinder) {
+        val tracker = service as Tracker
+        presenter.onTrackingServiceAttached(tracker)
     }
 
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        presenter.onTrackingServiceDetached();
+    override fun onServiceDisconnected(name: ComponentName) {
+        presenter.onTrackingServiceDetached()
     }
 
-    public boolean areLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    override fun areLocationPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
     }
 
-    @Override
-    public void launchRunningActivity() {
-        Uri uri = new Uri.Builder().scheme("runningmate")
-                .authority("running")
-                .build();
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    override fun launchRunningActivity() {
+        val uri = Uri.Builder().scheme("runningmate")
+            .authority("running")
+            .build()
+        startActivity(Intent(Intent.ACTION_VIEW, uri))
     }
 
-    public void createPresenter() {
-        final DependencyContainer container = DependencyContainerLocator.locateComponent(this.getActivity());
-        final RunningStateStorage stateStorage = container.getRunningStateStorage();
-        presenter = new RunningPresenter(stateStorage, this);
+    private fun createPresenter() {
+        val container = DependencyContainerLocator.locateComponent(this.activity)
+        val stateStorage = container.runningStateStorage
+        presenter = RunningPresenter(stateStorage, this)
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
-
 }

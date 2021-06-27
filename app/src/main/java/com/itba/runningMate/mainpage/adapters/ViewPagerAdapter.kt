@@ -1,35 +1,27 @@
-package com.itba.runningMate.mainpage.adapters;
+package com.itba.runningMate.mainpage.adapters
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
+class ViewPagerAdapter(fa: FragmentActivity?) : FragmentStateAdapter(fa!!) {
 
-public class ViewPagerAdapter extends FragmentStateAdapter {
+    private val fragList: MutableList<Fragment>
 
-    private List<Fragment> fragList;
-
-    public ViewPagerAdapter(FragmentActivity fa) {
-        super(fa);
-        fragList = new ArrayList<>();
+    override fun createFragment(position: Int): Fragment {
+        return fragList[position]
     }
 
-    @NonNull
-    @Override
-    public Fragment createFragment(int position) {
-        return fragList.get(position);
+    override fun getItemCount(): Int {
+        return fragList.size
     }
 
-    @Override
-    public int getItemCount() {
-        return fragList.size();
+    fun addFragment(fragment: Fragment) {
+        fragList.add(fragment)
     }
 
-    public void addFragment(Fragment fragment) {
-        fragList.add(fragment);
+    init {
+        fragList = ArrayList()
     }
-
 }

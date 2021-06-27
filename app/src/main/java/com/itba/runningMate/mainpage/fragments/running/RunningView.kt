@@ -1,27 +1,27 @@
-package com.itba.runningMate.mainpage.fragments.running;
+package com.itba.runningMate.mainpage.fragments.running
 
-public interface RunningView {
+interface RunningView {
 
-    void showLocation(double latitude, double longitude);
+    fun showLocation(latitude: Double, longitude: Double)
 
-    void showDefaultLocation();
+    fun showDefaultLocation()
 
-    void mapEnableMyLocation();
+    fun mapEnableMyLocation()
 
-    void mapDisableMyLocation();
+    fun mapDisableMyLocation()
 
-    void launchAndAttachTrackingService();
+    fun launchAndAttachTrackingService()
 
-    void detachTrackingService();
+    fun detachTrackingService()
 
-    void requestLocationPermission();
+    fun requestLocationPermission()
 
-    boolean areLocationPermissionGranted();
+    fun areLocationPermissionGranted(): Boolean
 
-    void showLocationPermissionNotGrantedError();
+    fun showLocationPermissionNotGrantedError()
 
-    void showLocationPermissionRationale();
+    fun showLocationPermissionRationale()
 
-    void launchRunningActivity();
+    fun launchRunningActivity()
 
 }
