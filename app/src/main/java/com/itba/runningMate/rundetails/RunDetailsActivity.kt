@@ -159,10 +159,10 @@ class RunDetailsActivity : AppCompatActivity(), RunDetailsView, OnMapReadyCallba
 
     private fun createPresenter(runId: Long) {
         val container = DependencyContainerLocator.locateComponent(this)
-        val schedulerProvider = container.schedulerProvider
-        val runRepository = container.runRepository
-        val cacheFileProvider = container.cacheFileProvider
-        val achievementsStorage = container.achievementsStorage
+        val schedulerProvider = container.getSchedulerProvider()
+        val runRepository = container.getRunRepository()
+        val cacheFileProvider = container.getCacheFileProvider()
+        val achievementsStorage = container.getAchievementsStorage()
         presenter = RunDetailsPresenter(
             cacheFileProvider,
             runRepository,

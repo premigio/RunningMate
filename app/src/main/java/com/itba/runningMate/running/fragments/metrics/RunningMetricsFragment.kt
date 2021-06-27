@@ -105,10 +105,10 @@ class RunningMetricsFragment : Fragment(), RunningMetricsView, ServiceConnection
     }
 
     private fun createPresenter() {
-        val container = DependencyContainerLocator.locateComponent(this.activity)
-        val schedulerProvider = container.schedulerProvider
-        val runRepository = container.runRepository
-        val achievementsStorage = container.achievementsStorage
+        val container = DependencyContainerLocator.locateComponent(requireContext())
+        val schedulerProvider = container.getSchedulerProvider()
+        val runRepository = container.getRunRepository()
+        val achievementsStorage = container.getAchievementsStorage()
         presenter =
             RunningMetricsPresenter(runRepository, schedulerProvider, achievementsStorage, this)
     }

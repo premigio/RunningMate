@@ -1,68 +1,66 @@
-package com.itba.runningMate.di;
+package com.itba.runningMate.di
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Context
+import androidx.room.Room
+import com.itba.runningMate.db.RunDao
+import com.itba.runningMate.db.RunDb
+import com.itba.runningMate.repository.achievements.AchievementsStorage
+import com.itba.runningMate.repository.achievements.AchievementsStorageImpl
+import com.itba.runningMate.repository.run.RunRepository
+import com.itba.runningMate.repository.run.RunRepositoryImpl
+import com.itba.runningMate.repository.runningstate.RunningStateStorage
+import com.itba.runningMate.repository.runningstate.RunningStateStorageImpl
+import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher
+import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcherImpl
+import com.itba.runningMate.utils.providers.files.CacheFileProvider
+import com.itba.runningMate.utils.providers.files.CacheFileProviderImpl
+import com.itba.runningMate.utils.providers.schedulers.AndroidSchedulerProvider
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
 
-import androidx.room.Room;
+class Dependency(context: Context) {
 
-import com.itba.runningMate.db.RunDao;
-import com.itba.runningMate.db.RunDb;
-import com.itba.runningMate.repository.achievements.AchievementsStorage;
-import com.itba.runningMate.repository.achievements.AchievementsStorageImpl;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
-import com.itba.runningMate.repository.runningstate.RunningStateStorageImpl;
-import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.repository.run.RunRepositoryImpl;
-import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher;
-import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcherImpl;
-import com.itba.runningMate.utils.providers.files.CacheFileProvider;
-import com.itba.runningMate.utils.providers.files.CacheFileProviderImpl;
-import com.itba.runningMate.utils.providers.schedulers.AndroidSchedulerProvider;
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
+    val applicationContext: Context = context.applicationContext
 
-public class Dependency {
-
-    private final Context context;
-
-    public Dependency(Context context) {
-        this.context = context.getApplicationContext();
+    fun provideSchedulerProvider(): SchedulerProvider {
+        return AndroidSchedulerProvider()
     }
 
-    public Context getApplicationContext() {
-        return context;
+    fun provideCacheFileProvider(): CacheFileProvider {
+        return CacheFileProviderImpl(applicationContext)
     }
 
-    public SchedulerProvider provideSchedulerProvider() {
-        return new AndroidSchedulerProvider();
+    fun provideRunningStateStorage(): RunningStateStorage {
+        val preferences = applicationContext
+            .getSharedPreferences(
+                RunningStateStorage.LANDING_STATE_PREFERENCES_FILE,
+                Context.MODE_PRIVATE
+            )
+        return RunningStateStorageImpl(preferences)
     }
 
-    public CacheFileProvider provideCacheFileProvider() {
-        return new CacheFileProviderImpl(getApplicationContext());
+    fun provideRunRepository(
+        runDao: RunDao
+    ): RunRepository {
+        return RunRepositoryImpl(runDao)
     }
 
-    public RunningStateStorage provideRunningStateStorage() {
-        final SharedPreferences preferences = getApplicationContext()
-                .getSharedPreferences(RunningStateStorage.LANDING_STATE_PREFERENCES_FILE, Context.MODE_PRIVATE);
-        return new RunningStateStorageImpl(preferences);
+    fun provideRunDb(): RunDb {
+        return Room.databaseBuilder(applicationContext, RunDb::class.java, RunDb.NAME)
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
-    public RunRepository provideRunRepository(RunDao runDao, SchedulerProvider schedulerProvider) {
-        return new RunRepositoryImpl(runDao, schedulerProvider);
+    fun provideAchievementsStorage(): AchievementsStorage {
+        val preferences = applicationContext
+            .getSharedPreferences(
+                AchievementsStorage.ACHIEVEMENTS_PREFERENCES_FILE,
+                Context.MODE_PRIVATE
+            )
+        return AchievementsStorageImpl(preferences)
     }
 
-    public RunDb provideRunDb() {
-        return Room.databaseBuilder(getApplicationContext(), RunDb.class, RunDb.NAME)
-                .fallbackToDestructiveMigration()
-                .build();
+    fun provideTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher {
+        return TrackingLocationUpdatesDispatcherImpl()
     }
 
-    public AchievementsStorage provideAchievementsStorage() {
-        final SharedPreferences preferences = getApplicationContext()
-                .getSharedPreferences(AchievementsStorage.ACHIEVEMENTS_PREFERENCES_FILE, Context.MODE_PRIVATE);
-        return new AchievementsStorageImpl(preferences);
-    }
-
-    public TrackingLocationUpdatesDispatcher provideTrackingLocationUpdatesDispatcher() {
-        return new TrackingLocationUpdatesDispatcherImpl();
-    }
 }

@@ -2,7 +2,6 @@ package com.itba.runningMate.repository.run;
 
 import com.itba.runningMate.db.RunDao;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
 
 import java.util.List;
 
@@ -13,11 +12,9 @@ import io.reactivex.Single;
 public class RunRepositoryImpl implements RunRepository {
 
     private final RunDao runDao;
-    private final SchedulerProvider scheduler;
 
-    public RunRepositoryImpl(final RunDao runDao, final SchedulerProvider scheduler) {
+    public RunRepositoryImpl(final RunDao runDao) {
         this.runDao = runDao;
-        this.scheduler = scheduler;
     }
 
     @Override

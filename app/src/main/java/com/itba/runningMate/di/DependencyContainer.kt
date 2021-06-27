@@ -1,28 +1,27 @@
-package com.itba.runningMate.di;
+package com.itba.runningMate.di
 
-import android.content.Context;
+import android.content.Context
+import com.itba.runningMate.repository.achievements.AchievementsStorage
+import com.itba.runningMate.repository.run.RunRepository
+import com.itba.runningMate.repository.runningstate.RunningStateStorage
+import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher
+import com.itba.runningMate.utils.providers.files.CacheFileProvider
+import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
 
-import com.itba.runningMate.repository.achievements.AchievementsStorage;
-import com.itba.runningMate.repository.run.RunRepository;
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
-import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher;
-import com.itba.runningMate.utils.providers.files.CacheFileProvider;
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider;
+interface DependencyContainer {
 
-public interface DependencyContainer {
+    fun getApplicationContext(): Context
 
-    Context getApplicationContext();
+    fun getSchedulerProvider(): SchedulerProvider
 
-    SchedulerProvider getSchedulerProvider();
+    fun getCacheFileProvider(): CacheFileProvider
 
-    CacheFileProvider getCacheFileProvider();
+    fun getRunRepository(): RunRepository
 
-    RunRepository getRunRepository();
+    fun getRunningStateStorage(): RunningStateStorage
 
-    RunningStateStorage getRunningStateStorage();
+    fun getTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher
 
-    TrackingLocationUpdatesDispatcher getTrackingLocationUpdatesDispatcher();
-
-    AchievementsStorage getAchievementsStorage();
+    fun getAchievementsStorage(): AchievementsStorage
 
 }

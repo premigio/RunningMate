@@ -1,26 +1,22 @@
-package com.itba.runningMate.di;
+package com.itba.runningMate.di
 
-import android.content.Context;
+import android.content.Context
+import androidx.annotation.VisibleForTesting
 
-import androidx.annotation.VisibleForTesting;
+object DependencyContainerLocator {
 
-public class DependencyContainerLocator {
+    private var dependencyContainer: DependencyContainer? = null
 
-    private static DependencyContainer dependencyContainer;
-
-    private DependencyContainerLocator() {
-    }
-
-    public static DependencyContainer locateComponent(final Context context) {
+    @JvmStatic
+    fun locateComponent(context: Context): DependencyContainer {
         if (dependencyContainer == null) {
-            dependencyContainer = new ProductionDependencyContainer(context);
+            dependencyContainer = ProductionDependencyContainer(context)
         }
-        return dependencyContainer;
+        return dependencyContainer!!
     }
 
     @VisibleForTesting
-    public static void setComponent(final DependencyContainer dependencyContainer) {
-        DependencyContainerLocator.dependencyContainer = dependencyContainer;
+    fun setComponent(dependencyContainer: DependencyContainer?) {
+        DependencyContainerLocator.dependencyContainer = dependencyContainer
     }
-
 }

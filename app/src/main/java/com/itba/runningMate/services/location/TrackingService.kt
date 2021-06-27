@@ -68,13 +68,13 @@ class TrackingService : Service() {
     override fun onCreate() {
         super.onCreate()
         val container = DependencyContainerLocator.locateComponent(this)
-        updatesDispatcher = container.trackingLocationUpdatesDispatcher
+        updatesDispatcher = container.getTrackingLocationUpdatesDispatcher()
         isTracking = false
         notificationManager = NotificationManagerCompat.from(this)
         serviceHandlerThread =
             HandlerThread(HANDLER_THREAD_NAME, Process.THREAD_PRIORITY_BACKGROUND)
-        serviceHandlerThread!!.start()
-        serviceHandler = Handler(serviceHandlerThread!!.looper)
+        serviceHandlerThread.start()
+        serviceHandler = Handler(serviceHandlerThread.looper)
         mainHandler = Handler(Looper.getMainLooper())
         initLocationUpdates()
         Timber.i("Tracking service is up")

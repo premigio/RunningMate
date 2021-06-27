@@ -232,8 +232,8 @@ class RunningFragment : Fragment(), OnMapReadyCallback, RunningView, ServiceConn
     }
 
     private fun createPresenter() {
-        val container = DependencyContainerLocator.locateComponent(this.activity)
-        val stateStorage = container.runningStateStorage
+        val container = DependencyContainerLocator.locateComponent(this.requireContext())
+        val stateStorage = container.getRunningStateStorage()
         presenter = RunningPresenter(stateStorage, this)
     }
 
