@@ -1,36 +1,34 @@
-package com.itba.runningMate.repository.run;
+package com.itba.runningMate.repository.run
 
-import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.domain.Run
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Single
 
-import java.util.List;
+interface RunRepository {
 
-import io.reactivex.Completable;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
+    fun getRun(): Flowable<List<Run>>
 
-public interface RunRepository {
+    fun getRunLazy(): Flowable<List<Run>>
 
-    Flowable<List<Run>> getRun();
+    fun getRun(uid: Long): Single<Run>
 
-    Flowable<List<Run>> getRunLazy();
+    fun getRunMetrics(uid: Long): Single<Run>
 
-    Single<Run> getRun(final long uid);
+    fun insertRun(run: Run): Single<Long>
 
-    Single<Run> getRunMetrics(final long uid);
+    fun getTotalDistance(): Single<Double>
 
-    Single<Long> insertRun(Run run);
+    fun getMaxTime(): Single<Long>
 
-    Single<Double> getTotalDistance();
+    fun getMaxKcal(): Single<Double>
 
-    Single<Long> getMaxTime();
+    fun getMaxSpeed(): Single<Double>
 
-    Single<Double> getMaxKcal();
+    fun deleteRun(run: Run): Completable
 
-    Single<Double> getMaxSpeed();
+    fun deleteRun(runId: Long): Completable
 
-    Completable deleteRun(Run run);
+    fun updateTitle(runId: Long, title: String): Completable
 
-    Completable deleteRun(long runId);
-
-    Completable updateTitle(long runId, String title);
 }

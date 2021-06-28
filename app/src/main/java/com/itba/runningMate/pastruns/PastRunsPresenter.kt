@@ -17,7 +17,7 @@ class PastRunsPresenter(
     private var disposable: Disposable? = null
 
     fun onViewAttached() {
-        disposable = runRepository.runLazy
+        disposable = runRepository.getRunLazy()
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
             .subscribe({ runs: List<Run>? -> receivedRunList(runs) }) { err: Throwable ->

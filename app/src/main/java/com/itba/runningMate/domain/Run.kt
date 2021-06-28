@@ -46,7 +46,7 @@ data class Run(
             title
         )
 
-        fun uid(uid: Long) = apply { this.uid = uid }
+        fun uid(uid: Long?) = apply { this.uid = uid }
 
         fun route(route: List<List<LatLng>>?) = apply { this.route = route }
 
@@ -54,15 +54,15 @@ data class Run(
 
         fun endTime(endTime: Date?) = apply { this.endTime = endTime }
 
-        fun distance(distance: Float) = apply { this.distance = distance }
+        fun distance(distance: Float?) = apply { this.distance = distance }
 
-        fun velocity(velocity: Float) = apply { this.velocity = velocity }
+        fun velocity(velocity: Float?) = apply { this.velocity = velocity }
 
-        fun pace(pace: Long) = apply { this.pace = pace }
+        fun pace(pace: Long?) = apply { this.pace = pace }
 
-        fun runningTime(runningTime: Long) = apply { this.runningTime = runningTime }
+        fun runningTime(runningTime: Long?) = apply { this.runningTime = runningTime }
 
-        fun calories(calories: Int) = apply { this.calories = calories }
+        fun calories(calories: Int?) = apply { this.calories = calories }
 
         fun title(title: String?) = apply { this.title = title }
     }

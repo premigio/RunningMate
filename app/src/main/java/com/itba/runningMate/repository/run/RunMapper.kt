@@ -1,59 +1,60 @@
-package com.itba.runningMate.repository.run;
+package com.itba.runningMate.repository.run
 
-import com.itba.runningMate.db.RunEntity;
-import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.db.RunEntityBuilder;
+import com.itba.runningMate.db.RunEntity
+import com.itba.runningMate.db.RunEntityBuilder
+import com.itba.runningMate.domain.Run
+import java.util.*
 
-import java.util.LinkedList;
-import java.util.List;
+class RunMapper {
 
-public class RunMapper {
+    companion object {
 
-    public static Run toModel(final RunEntity entity) {
-        return new Run.Builder()
-                .uid(entity.getUid())
-                .title(entity.getTitle())
-                .route(entity.getRoute())
-                .startTime(entity.getStartTime())
-                .endTime(entity.getEndTime())
-                .runningTime(entity.getElapsedTime())
-                .distance(entity.getDistance())
-                .pace(entity.getPace())
-                .velocity(entity.getVelocity())
-                .calories(entity.getCalories())
-                .build();
-    }
-
-    public static RunEntity toEntity(final Run model) {
-        return new RunEntityBuilder()
-                .uid(model.getUid())
-                .title(model.getTitle())
-                .route(model.getRoute())
-                .startTime(model.getStartTime())
-                .endTime(model.getEndTime())
-                .elapsedTime(model.getRunningTime())
-                .distance(model.getDistance())
-                .pace(model.getPace())
-                .velocity(model.getVelocity())
-                .calories(model.getCalories())
-                .build();
-    }
-
-    public static List<Run> toModel(final List<RunEntity> entities) {
-        final List<Run> aux = new LinkedList<>();
-        for (RunEntity entity : entities) {
-            aux.add(RunMapper.toModel(entity));
+        fun toModel(entity: RunEntity): Run {
+            return Run.Builder()
+                .uid(entity.uid)
+                .title(entity.title)
+                .route(entity.route)
+                .startTime(entity.startTime)
+                .endTime(entity.endTime)
+                .runningTime(entity.elapsedTime)
+                .distance(entity.distance)
+                .pace(entity.pace)
+                .velocity(entity.velocity)
+                .calories(entity.calories)
+                .build()
         }
-        return aux;
-    }
 
-
-    public static List<RunEntity> toEntity(final List<Run> models) {
-        final List<RunEntity> aux = new LinkedList<>();
-        for (Run model : models) {
-            aux.add(RunMapper.toEntity(model));
+        fun toEntity(model: Run): RunEntity {
+            return RunEntityBuilder()
+                .uid(model.uid)
+                .title(model.title)
+                .route(model.route)
+                .startTime(model.startTime)
+                .endTime(model.endTime)
+                .elapsedTime(model.runningTime)
+                .distance(model.distance)
+                .pace(model.pace)
+                .velocity(model.velocity)
+                .calories(model.calories)
+                .build()
         }
-        return aux;
-    }
 
+        @JvmStatic
+        fun toModel(entities: List<RunEntity>): List<Run> {
+            val aux: MutableList<Run> = LinkedList()
+            for (entity in entities) {
+                aux.add(toModel(entity))
+            }
+            return aux
+        }
+
+        @JvmStatic
+        fun toEntity(models: List<Run>): List<RunEntity> {
+            val aux: MutableList<RunEntity> = LinkedList()
+            for (model in models) {
+                aux.add(toEntity(model))
+            }
+            return aux
+        }
+    }
 }

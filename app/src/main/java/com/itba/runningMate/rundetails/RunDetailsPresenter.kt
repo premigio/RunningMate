@@ -85,7 +85,7 @@ class RunDetailsPresenter(
             .subscribe({ onRunDeleted() }) { throwable: Throwable -> onRunDeleteError(throwable) })
     }
 
-    fun onRunTitleModified(newTitle: String?) {
+    fun onRunTitleModified(newTitle: String) {
         disposables.add(runRepository.updateTitle(runId, newTitle)
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.computation())

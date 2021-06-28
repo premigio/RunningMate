@@ -1,79 +1,63 @@
-package com.itba.runningMate.repository.run;
+package com.itba.runningMate.repository.run
 
-import com.itba.runningMate.db.RunDao;
-import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.db.RunDao
+import com.itba.runningMate.db.RunEntity
+import com.itba.runningMate.domain.Run
+import com.itba.runningMate.repository.run.RunMapper.Companion.toEntity
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Single
 
-import java.util.List;
-
-import io.reactivex.Completable;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-
-public class RunRepositoryImpl implements RunRepository {
-
-    private final RunDao runDao;
-
-    public RunRepositoryImpl(final RunDao runDao) {
-        this.runDao = runDao;
+class RunRepositoryImpl(private val runDao: RunDao) : RunRepository {
+    override fun getRun(): Flowable<List<Run>> {
+        return runDao.getRoutes()
+            .map { obj: List<RunEntity> -> RunMapper.toModel(obj) }
     }
 
-    @Override
-    public Flowable<List<Run>> getRun() {
-        return runDao.getRoutes().map(RunMapper::toModel);
+    override fun getRunLazy(): Flowable<List<Run>> {
+        return runDao.getRoutesLazy()
+            .map { obj: List<RunEntity> -> RunMapper.toModel(obj) }
     }
 
-    @Override
-    public Flowable<List<Run>> getRunLazy() {
-        return runDao.getRoutesLazy().map(RunMapper::toModel);
+    override fun getRunMetrics(uid: Long): Single<Run> {
+        return runDao.getRouteMetrics(uid)
+            .map { entity: RunEntity -> RunMapper.toModel(entity) }
     }
 
-    @Override
-    public Single<Run> getRunMetrics(long uid) {
-        return runDao.getRouteMetrics(uid).map(RunMapper::toModel);
+    override fun getRun(uid: Long): Single<Run> {
+        return runDao.getRoute(uid)
+            .map { entity: RunEntity -> RunMapper.toModel(entity) }
     }
 
-    @Override
-    public Single<Run> getRun(long uid) {
-        return runDao.getRoute(uid).map(RunMapper::toModel);
+    override fun insertRun(run: Run): Single<Long> {
+        return runDao.insertRoute(toEntity(run))
     }
 
-    @Override
-    public Single<Long> insertRun(Run run) {
-        return runDao.insertRoute(RunMapper.toEntity(run));
+    override fun getTotalDistance(): Single<Double> {
+        return runDao.getTotalDistance()
     }
 
-    @Override
-    public Single<Double> getTotalDistance() {
-        return runDao.getTotalDistance();
+    override fun getMaxTime(): Single<Long> {
+        return runDao.getMaxTime()
     }
 
-    @Override
-    public Single<Long> getMaxTime() {
-        return runDao.getMaxTime();
+    override fun getMaxKcal(): Single<Double> {
+        return runDao.getMaxKcal()
     }
 
-    @Override
-    public Single<Double> getMaxKcal() {
-        return runDao.getMaxKcal();
+    override fun getMaxSpeed(): Single<Double> {
+        return runDao.getMaxSpeed()
     }
 
-    @Override
-    public Single<Double> getMaxSpeed() {
-        return runDao.getMaxSpeed();
+    override fun updateTitle(runId: Long, title: String): Completable {
+        return runDao.updateTitle(runId, title)
     }
 
-    @Override
-    public Completable updateTitle(long runId, String title) {
-        return runDao.updateTitle(runId, title);
+    override fun deleteRun(run: Run): Completable {
+        return runDao.deleteRoute(toEntity(run))
     }
 
-    @Override
-    public Completable deleteRun(Run run) {
-        return runDao.deleteRoute(RunMapper.toEntity(run));
-    }
-
-
-    public Completable deleteRun(long runId) {
-        return runDao.deleteRoute(runId);
+    override fun deleteRun(runId: Long): Completable {
+        return runDao.deleteRoute(runId)
     }
 }
