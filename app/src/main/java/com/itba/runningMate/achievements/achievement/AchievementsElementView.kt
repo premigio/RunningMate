@@ -1,9 +1,8 @@
-package com.itba.runningMate.achievements.achievement;
+package com.itba.runningMate.achievements.achievement
 
-public interface AchievementsElementView {
+interface AchievementsElementView {
 
-    void bind(String title, String description);
+    fun bind(title: String, description: String)
 
-    void setBadgeVisibility(boolean achieved);
-
+    fun setBadgeVisibility(achieved: Boolean)
 }

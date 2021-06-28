@@ -1,16 +1,17 @@
-package com.itba.runningMate.achievements;
+package com.itba.runningMate.achievements
 
-import com.itba.runningMate.achievements.achievement.Achievements;
+import com.itba.runningMate.achievements.achievement.Achievements
 
-public interface AchievementsView {
+interface AchievementsView {
 
-    void setGoalTitle(int title);
+    fun setGoalTitle(title: Int)
 
-    void setGoalSubtitle(int subtitle);
+    fun setGoalSubtitle(subtitle: Int)
 
-    void setGoalImage(int image);
+    fun setGoalImage(image: Int)
 
-    void setProgressBar(double distance, double max);
+    fun setProgressBar(distance: Double, max: Double)
 
-    void setAchievement(Achievements achievementNumber, boolean achieved);
+    fun setAchievement(achievementNumber: Achievements, achieved: Boolean)
+
 }

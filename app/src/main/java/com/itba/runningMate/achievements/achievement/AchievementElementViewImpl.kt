@@ -1,63 +1,61 @@
-package com.itba.runningMate.achievements.achievement;
+package com.itba.runningMate.achievements.achievement
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.Context
+import android.util.AttributeSet
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
+import com.itba.runningMate.R
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+class AchievementElementViewImpl : FrameLayout, AchievementsElementView {
 
-import com.itba.runningMate.R;
+    private lateinit var titleTextView: TextView
+    private lateinit var descriptionTextView: TextView
+    private lateinit var imageView: ImageView
 
-public class AchievementElementViewImpl extends FrameLayout implements AchievementsElementView {
-
-    private TextView titleTextView;
-    private TextView descriptionTextView;
-    private ImageView imageView;
-
-    public AchievementElementViewImpl(@NonNull Context context) {
-        super(context);
-        inflate(context, R.layout.view_achievement_element, this);
-        setUp();
+    constructor(context: Context) : super(context) {
+        inflate(context, R.layout.view_achievement_element, this)
+        setUp()
     }
 
-    public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        inflate(context, R.layout.view_achievement_element, this);
-        setUp();
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        inflate(context, R.layout.view_achievement_element, this)
+        setUp()
     }
 
-    public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        inflate(context, R.layout.view_achievement_element, this);
-        setUp();
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        inflate(context, R.layout.view_achievement_element, this)
+        setUp()
     }
 
-    public AchievementElementViewImpl(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        inflate(context, R.layout.view_achievement_element, this);
-        setUp();
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(context, attrs, defStyleAttr, defStyleRes) {
+        inflate(context, R.layout.view_achievement_element, this)
+        setUp()
     }
 
-    private void setUp() {
-        imageView = this.findViewById(R.id.badge_icon);
-
-        titleTextView = this.findViewById(R.id.achievement_title_name);
-        descriptionTextView = this.findViewById(R.id.achievement_description);
+    private fun setUp() {
+        imageView = findViewById(R.id.badge_icon)
+        titleTextView = findViewById(R.id.achievement_title_name)
+        descriptionTextView = findViewById(R.id.achievement_description)
     }
 
-    @Override
-    public void bind(String title, String description) {
-        titleTextView.setText(title);
-        descriptionTextView.setText(description);
+    override fun bind(title: String, description: String) {
+        titleTextView.text = title
+        descriptionTextView.text = description
     }
 
-    @Override
-    public void setBadgeVisibility(boolean achieved) {
+    override fun setBadgeVisibility(achieved: Boolean) {
         if (achieved) {
-            imageView.setAlpha(1.0F);
+            imageView.alpha = 1.0f
         }
     }
 }
