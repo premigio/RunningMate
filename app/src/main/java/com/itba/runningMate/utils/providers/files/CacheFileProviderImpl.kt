@@ -1,31 +1,23 @@
-package com.itba.runningMate.utils.providers.files;
+package com.itba.runningMate.utils.providers.files
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Context
+import android.net.Uri
+import androidx.core.content.FileProvider
+import timber.log.Timber
+import java.io.File
 
-import androidx.core.content.FileProvider;
+class CacheFileProviderImpl(context: Context) : CacheFileProvider {
 
-import java.io.File;
+    private val appContext: Context = context.applicationContext
 
-import timber.log.Timber;
-
-public class CacheFileProviderImpl implements CacheFileProvider {
-
-    private final Context appContext;
-
-    public CacheFileProviderImpl(final Context context) {
-        this.appContext = context.getApplicationContext();
+    override fun getFile(fileName: String): File {
+        val file = File(appContext.cacheDir, fileName)
+        Timber.i("New file: %s created in cache", fileName)
+        return file
     }
 
-    @Override
-    public File getFile(String fileName) {
-        File file = new File(appContext.getCacheDir(), fileName);
-        Timber.i("New file: %s created in cache", fileName);
-        return file;
+    override fun getUriForFile(file: File): Uri {
+        return FileProvider.getUriForFile(appContext, "com.itba.runningMate", file)
     }
 
-    @Override
-    public Uri getUriForFile(File file) {
-        return FileProvider.getUriForFile(appContext, "com.itba.runningMate", file);
-    }
 }

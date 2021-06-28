@@ -1,13 +1,11 @@
-package com.itba.runningMate.utils.providers.files;
+package com.itba.runningMate.utils.providers.files
 
-import android.net.Uri;
+import android.net.Uri
+import java.io.File
 
-import java.io.File;
+interface CacheFileProvider {
 
-public interface CacheFileProvider {
+    fun getFile(fileName: String): File
 
-    File getFile(String fileName);
-
-    Uri getUriForFile(File file);
-
+    fun getUriForFile(file: File): Uri
 }
