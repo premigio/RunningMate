@@ -2,6 +2,7 @@ package com.itba.runningMate.repository.run;
 
 import com.itba.runningMate.db.RunEntity;
 import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.db.RunEntityBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public class RunMapper {
 
     public static Run toModel(final RunEntity entity) {
-        return new Run()
+        return new Run.Builder()
                 .uid(entity.getUid())
                 .title(entity.getTitle())
                 .route(entity.getRoute())
@@ -19,11 +20,12 @@ public class RunMapper {
                 .distance(entity.getDistance())
                 .pace(entity.getPace())
                 .velocity(entity.getVelocity())
-                .calories(entity.getCalories());
+                .calories(entity.getCalories())
+                .build();
     }
 
     public static RunEntity toEntity(final Run model) {
-        return new RunEntity()
+        return new RunEntityBuilder()
                 .uid(model.getUid())
                 .title(model.getTitle())
                 .route(model.getRoute())
@@ -33,7 +35,8 @@ public class RunMapper {
                 .distance(model.getDistance())
                 .pace(model.getPace())
                 .velocity(model.getVelocity())
-                .calories(model.getCalories());
+                .calories(model.getCalories())
+                .build();
     }
 
     public static List<Run> toModel(final List<RunEntity> entities) {

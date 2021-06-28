@@ -94,10 +94,10 @@ open class Map : MapView {
     }
 
     fun showRoute(route: Route) {
-        if (route.isEmpty || googleMap == null) {
+        if (route.isEmpty() || googleMap == null) {
             return
         }
-        for (lap in route.locations) {
+        for (lap in route.getLocations()) {
             googleMap!!.addPolyline(
                 PolylineOptions()
                     .color(Color.BLUE)
@@ -109,8 +109,8 @@ open class Map : MapView {
 
     fun showRouteWithMarker(route: Route) {
         showRoute(route)
-        val start = LatLng(route.firstLatitude, route.firstLongitude)
-        val end = LatLng(route.lastLatitude, route.lastLongitude)
+        val start = LatLng(route.firstLatitude(), route.firstLongitude())
+        val end = LatLng(route.lastLatitude(), route.lastLongitude())
         googleMap!!.addMarker(
             MarkerOptions()
                 .position(start)
@@ -130,11 +130,11 @@ open class Map : MapView {
     }
 
     fun centerMapOn(route: Route?) {
-        if (route == null || route.isEmpty) {
+        if (route == null || route.isEmpty()) {
             return
         }
         val boundsBuilder = LatLngBounds.builder()
-        for (lap in route.locations) {
+        for (lap in route.getLocations()) {
             for (point in lap) {
                 boundsBuilder.include(point)
             }

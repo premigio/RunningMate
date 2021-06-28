@@ -59,8 +59,8 @@ class RunningMapPresenter(private val stateStorage: RunningStateStorage, view: R
         if (tracker.isTracking() && view.get() != null) {
             // recuperamos la ruta y actualizamos LastKnownLocation
             val route = tracker.queryRoute()
-            if (!route.isEmpty) {
-                stateStorage.setLastKnownLocation(route.lastLatitude, route.lastLongitude)
+            if (!route.isEmpty()) {
+                stateStorage.setLastKnownLocation(route.lastLatitude(), route.lastLongitude())
                 view.get()!!.showRoute(route)
             }
         }

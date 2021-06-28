@@ -1,152 +1,69 @@
-package com.itba.runningMate.domain;
+package com.itba.runningMate.domain
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLng
+import java.util.*
 
-import java.util.Date;
-import java.util.List;
-
-public class Run {
-
-    private long uid;
-    private List<List<LatLng>> route;
-    private Date startTime;
-    private Date endTime;
+data class Run(
+    val uid: Long?,
+    val route: List<List<LatLng>>?,
+    val startTime: Date?,
+    val endTime: Date?,
     /* km */
-    private float distance;
+    val distance: Float?,
     /* km/h */
-    private float velocity;
-    private long pace;
-    private long runningTime;
-    private int calories;
-    private String title;
+    val velocity: Float?,
+    val pace: Long?,
+    val runningTime: Long?,
+    val calories: Int?,
+    val title: String?
+) {
 
-    public Run() {
+    data class Builder(
+        var uid: Long? = null,
+        var route: List<List<LatLng>>? = null,
+        var startTime: Date? = null,
+        var endTime: Date? = null,
+        /* km */
+        var distance: Float? = null,
+        /* km/h */
+        var velocity: Float? = null,
+        var pace: Long? = null,
+        var runningTime: Long? = null,
+        var calories: Int? = null,
+        var title: String? = null
+    ) {
+
+        fun build() = Run(
+            uid,
+            route,
+            startTime,
+            endTime,
+            distance,
+            velocity,
+            pace,
+            runningTime,
+            calories,
+            title
+        )
+
+        fun uid(uid: Long) = apply { this.uid = uid }
+
+        fun route(route: List<List<LatLng>>?) = apply { this.route = route }
+
+        fun startTime(startTime: Date?) = apply { this.startTime = startTime }
+
+        fun endTime(endTime: Date?) = apply { this.endTime = endTime }
+
+        fun distance(distance: Float) = apply { this.distance = distance }
+
+        fun velocity(velocity: Float) = apply { this.velocity = velocity }
+
+        fun pace(pace: Long) = apply { this.pace = pace }
+
+        fun runningTime(runningTime: Long) = apply { this.runningTime = runningTime }
+
+        fun calories(calories: Int) = apply { this.calories = calories }
+
+        fun title(title: String?) = apply { this.title = title }
     }
-
-    public Run uid(long uid) {
-        this.uid = uid;
-        return this;
-    }
-
-    public long getUid() {
-        return uid;
-    }
-
-    public Run route(List<List<LatLng>> route) {
-        this.route = route;
-        return this;
-    }
-
-    public List<List<LatLng>> getRoute() {
-        return route;
-    }
-
-    public void setRoute(List<List<LatLng>> route) {
-        this.route = route;
-    }
-
-    public Run startTime(Date startTime) {
-        this.startTime = startTime;
-        return this;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public Run endTime(Date endTime) {
-        this.endTime = endTime;
-        return this;
-    }
-
-    public Run distance(float distance) {
-        this.distance = distance;
-        return this;
-    }
-
-    public float getDistance() {
-        return distance;
-    }
-
-    public void setDistance(float distance) {
-        this.distance = distance;
-    }
-
-    public Run velocity(float velocity) {
-        this.velocity = velocity;
-        return this;
-    }
-
-    public float getVelocity() {
-        return velocity;
-    }
-
-    public void setVelocity(float velocity) {
-        this.velocity = velocity;
-    }
-
-    public Run pace(long pace) {
-        this.pace = pace;
-        return this;
-    }
-
-    public long getPace() {
-        return pace;
-    }
-
-    public void setPace(long pace) {
-        this.pace = pace;
-    }
-
-    public Run runningTime(long runningTime) {
-        this.runningTime = runningTime;
-        return this;
-    }
-
-    public long getRunningTime() {
-        return runningTime;
-    }
-
-    public void setRunningTime(long runningTime) {
-        this.runningTime = runningTime;
-    }
-
-    public int getCalories() {
-        return calories;
-    }
-
-    public void setCalories(int calories) {
-        this.calories = calories;
-    }
-
-    public Run calories(int calories) {
-        this.calories = calories;
-        return this;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Run title(String title) {
-        this.title = title;
-        return this;
-    }
-
 }

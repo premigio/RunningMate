@@ -1,71 +1,76 @@
-package com.itba.runningMate.domain;
+package com.itba.runningMate.domain
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLng
+import java.util.*
 
-import java.util.LinkedList;
-import java.util.List;
+class Route {
 
-public class Route {
+    private val locations: MutableList<MutableList<LatLng>>
 
-    private final List<List<LatLng>> locations;
-
-    public Route() {
-        locations = new LinkedList<>();
+    fun getLocations(): List<MutableList<LatLng>> {
+        return locations
     }
 
-    public static Route from(List<List<LatLng>> latLngs) {
-        Route route = new Route();
-        route.addLatLngsToRoute(latLngs);
-        return route;
+    fun addToRoute(latitude: Double, longitude: Double): Route {
+        return addToRoute(LatLng(latitude, longitude))
     }
 
-    public List<List<LatLng>> getLocations() {
-        return locations;
-    }
-
-    public Route addToRoute(double latitude, double longitude) {
-        return addToRoute(new LatLng(latitude, longitude));
-    }
-
-    public Route addToRoute(LatLng location) {
+    fun addToRoute(location: LatLng): Route {
         if (locations.isEmpty()) {
-            this.locations.add(new LinkedList<>());
+            locations.add(LinkedList())
         }
-        locations.get(length() - 1).add(location);
-        return this;
+        locations[length() - 1].add(location)
+        return this
     }
 
-    public Route addLatLngsToRoute(List<List<LatLng>> locations) {
-        this.locations.addAll(locations);
-        return this;
+    fun addLatLngsToRoute(locations: List<List<LatLng>>?): Route {
+        if (locations == null) {
+            return this
+        }
+        for (l in locations) {
+            this.locations.add(l.toMutableList())
+        }
+        return this
     }
 
-    public boolean isEmpty() {
-        return locations.isEmpty();
+    fun isEmpty(): Boolean {
+        return locations.isEmpty()
     }
 
-    public int length() {
-        return locations.size();
+    fun length(): Int {
+        return locations.size
     }
 
-    public double getLastLatitude() {
-        List<LatLng> lastLap = locations.get(length() - 1);
-        return lastLap.get(lastLap.size() - 1).latitude;
+    fun lastLatitude(): Double {
+        val lastLap: List<LatLng> = locations[length() - 1]
+        return lastLap[lastLap.size - 1].latitude
     }
 
-    public double getLastLongitude() {
-        List<LatLng> lastLap = locations.get(length() - 1);
-        return lastLap.get(lastLap.size() - 1).longitude;
+    fun lastLongitude(): Double {
+        val lastLap: List<LatLng> = locations[length() - 1]
+        return lastLap[lastLap.size - 1].longitude
     }
 
-    public double getFirstLatitude() {
-        List<LatLng> firstLap = locations.get(0);
-        return firstLap.get(0).latitude;
+    fun firstLatitude(): Double {
+        val firstLap: List<LatLng> = locations[0]
+        return firstLap[0].latitude
     }
 
-    public double getFirstLongitude() {
-        List<LatLng> firstLap = locations.get(0);
-        return firstLap.get(0).longitude;
+    fun firstLongitude(): Double {
+        val firstLap: List<LatLng> = locations[0]
+        return firstLap[0].longitude
     }
 
+    companion object {
+        @JvmStatic
+        fun from(latLngs: List<List<LatLng>>?): Route {
+            val route = Route()
+            route.addLatLngsToRoute(latLngs)
+            return route
+        }
+    }
+
+    init {
+        locations = LinkedList()
+    }
 }

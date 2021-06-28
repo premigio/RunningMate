@@ -82,16 +82,17 @@ class RunningMetricsPresenter(
             val timeMillis = tracker!!.queryElapsedTime()
             achievementsStorage.increaseTotalDistance(distKm.toDouble())
             achievementsStorage.persistState()
-            val run = Run()
+            val run = Run.Builder()
                 .title("Run on " + Formatters.dateFormat.format(Date(tracker!!.queryStartTime())))
                 .startTime(Date(tracker!!.queryStartTime()))
                 .endTime(Date(tracker!!.queryEndTime()))
                 .runningTime(timeMillis)
-                .route(tracker!!.queryRoute().locations)
+                .route(tracker!!.queryRoute().getLocations())
                 .distance(distKm)
                 .pace(tracker!!.queryPace())
                 .velocity(tracker!!.queryVelocity())
                 .calories(calculateCalories(distKm))
+                .build()
             saveRun(run)
         }
     }
@@ -155,7 +156,7 @@ class RunningMetricsPresenter(
     }
 
     private fun saveRun(run: Run) {
-        if (run.distance > 0f) {
+        if (run.distance!! > 0f) {
             disposable = runRepository.insertRun(run)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())

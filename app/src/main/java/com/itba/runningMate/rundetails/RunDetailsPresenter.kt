@@ -43,7 +43,7 @@ class RunDetailsPresenter(
         if (view.get() == null) {
             return
         }
-        distance = run.distance.toDouble()
+        distance = run.distance!!.toDouble()
         detail = from(run)
         view.get()!!.showRunMetrics(detail)
     }

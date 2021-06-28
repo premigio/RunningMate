@@ -20,7 +20,7 @@ class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.On
 
     fun bind(model: Run?) {
         if (model == null) return
-        id = model.uid
+        id = model.uid!!
         title.text = model.title
         distance.text = itemView.context.getString(R.string.distance_string, model.distance)
         time.text = timeFormat.format(model.startTime)
