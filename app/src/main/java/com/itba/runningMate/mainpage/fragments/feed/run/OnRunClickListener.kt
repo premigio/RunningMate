@@ -1,7 +1,7 @@
-package com.itba.runningMate.mainpage.fragments.feed.run;
+package com.itba.runningMate.mainpage.fragments.feed.run
 
-public interface OnRunClickListener {
+fun interface OnRunClickListener {
 
-    void onRunClick(long id);
+    fun onRunClick(id: Long)
 
 }

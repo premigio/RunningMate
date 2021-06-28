@@ -1,9 +1,8 @@
-package com.itba.runningMate.mainpage.fragments.feed.cards;
+package com.itba.runningMate.mainpage.fragments.feed.cards
 
-public interface OnSeeAllClickListener {
+interface OnSeeAllClickListener {
 
-    void onSeeAllAchievementsClick();
+    fun onSeeAllAchievementsClick()
 
-    void onSeeAllPastRunsClick();
-
+    fun onSeeAllPastRunsClick()
 }

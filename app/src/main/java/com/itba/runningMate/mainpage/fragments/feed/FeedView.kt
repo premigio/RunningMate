@@ -1,26 +1,27 @@
-package com.itba.runningMate.mainpage.fragments.feed;
+package com.itba.runningMate.mainpage.fragments.feed
 
-import com.itba.runningMate.domain.Run;
+import com.itba.runningMate.domain.Run
 
-public interface FeedView {
+interface FeedView {
 
-    void setPastRunCardsNoText();
+    fun setPastRunCardsNoText()
 
-    void addRunToCard(int i, Run run);
+    fun addRunToCard(i: Int, run: Run)
 
-    void disappearRuns(int abs);
+    fun disappearRuns(abs: Int)
 
-    void disappearNoText();
+    fun disappearNoText()
 
-    void setGoalTitle(int title);
+    fun setGoalTitle(title: Int)
 
-    void setGoalSubtitle(int subtitle);
+    fun setGoalSubtitle(subtitle: Int)
 
-    void setGoalImage(int image);
+    fun setGoalImage(image: Int)
 
-    void launchAchievementsActivity();
+    fun launchAchievementsActivity()
 
-    void launchRunDetailActivity(long runId);
+    fun launchRunDetailActivity(runId: Long)
 
-    void launchPastRunsActivity();
+    fun launchPastRunsActivity()
+
 }

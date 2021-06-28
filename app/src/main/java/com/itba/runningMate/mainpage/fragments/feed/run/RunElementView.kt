@@ -1,66 +1,63 @@
-package com.itba.runningMate.mainpage.fragments.feed.run;
+package com.itba.runningMate.mainpage.fragments.feed.run
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
+import android.widget.FrameLayout
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.itba.runningMate.R
+import com.itba.runningMate.domain.Run
+import com.itba.runningMate.utils.Formatters.timeFormat
+import java.lang.ref.WeakReference
 
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+class RunElementView : FrameLayout {
 
-import com.itba.runningMate.R;
-import com.itba.runningMate.domain.Run;
+    private lateinit var title: TextView
+    private lateinit var distance: TextView
+    private lateinit var time: TextView
+    private var ID: Long = 0
+    private lateinit var listener: WeakReference<OnRunClickListener>
 
-import java.lang.ref.WeakReference;
-
-import static com.itba.runningMate.utils.Formatters.timeFormat;
-
-public class RunElementView extends FrameLayout {
-
-    private TextView title, distance, time;
-
-    private long ID;
-
-    private WeakReference<OnRunClickListener> listener;
-
-    public RunElementView(Context context) {
-        super(context);
-        inflate(context, R.layout.view_run_element, this);
-        setUp();
+    constructor(context: Context?) : super(context!!) {
+        inflate(context, R.layout.view_run_element, this)
+        setUp()
     }
 
-    public RunElementView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        inflate(context, R.layout.view_run_element, this);
-        setUp();
+    constructor(context: Context?, attrs: AttributeSet?) : super(
+        context!!, attrs
+    ) {
+        inflate(context, R.layout.view_run_element, this)
+        setUp()
     }
 
-    public RunElementView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        inflate(context, R.layout.view_run_element, this);
-        setUp();
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context!!, attrs, defStyleAttr
+    ) {
+        inflate(context, R.layout.view_run_element, this)
+        setUp()
     }
 
-    public void setOnClick(OnRunClickListener listener) {
-        this.listener = new WeakReference<>(listener);
+    fun setOnClick(listener: OnRunClickListener?) {
+        this.listener = WeakReference(listener)
     }
 
-    private void setUp() {
-        title = findViewById(R.id.run_list_card_title);
-        distance = findViewById(R.id.run_list_distance_content);
-        time = findViewById(R.id.run_list_time_run);
+    private fun setUp() {
+        title = findViewById(R.id.run_list_card_title)
+        distance = findViewById(R.id.run_list_distance_content)
+        time = findViewById(R.id.run_list_time_run)
     }
 
-    public void bind(Run model) {
-        if (model == null) return;
-
-        ID = model.getUid();
-        title.setText(model.getTitle());
-        distance.setText(getContext().getString(R.string.distance_string, model.getDistance()));
-        time.setText(timeFormat.format(model.getStartTime()));
-
-        ConstraintLayout cl = this.findViewById(R.id.old_run_row_ll);
-        if (listener.get() != null)
-            cl.setOnClickListener(l -> listener.get().onRunClick(ID));
+    fun bind(model: Run?) {
+        if (model == null) return
+        ID = model.uid!!
+        title.text = model.title
+        distance.text = context.getString(R.string.distance_string, model.distance)
+        time.setText(timeFormat.format(model.startTime))
+        val cl: ConstraintLayout = findViewById(R.id.old_run_row_ll)
+        if (listener.get() != null) cl.setOnClickListener { l: View? ->
+            listener.get()!!
+                .onRunClick(ID)
+        }
     }
 }
