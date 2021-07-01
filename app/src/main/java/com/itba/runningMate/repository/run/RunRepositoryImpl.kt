@@ -37,15 +37,15 @@ class RunRepositoryImpl(private val runDao: RunDao) : RunRepository {
         return runDao.getTotalDistance()
     }
 
-    override fun getMaxTime(): Single<Long> {
+    override suspend fun getMaxTime(): Long? {
         return runDao.getMaxTime()
     }
 
-    override fun getMaxKcal(): Single<Double> {
+    override suspend fun getMaxKcal(): Double? {
         return runDao.getMaxKcal()
     }
 
-    override fun getMaxSpeed(): Single<Double> {
+    override suspend fun getMaxSpeed(): Double? {
         return runDao.getMaxSpeed()
     }
 

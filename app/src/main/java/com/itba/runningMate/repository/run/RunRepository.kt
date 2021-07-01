@@ -19,11 +19,11 @@ interface RunRepository {
 
     fun getTotalDistance(): Single<Double>
 
-    fun getMaxTime(): Single<Long>
+    suspend fun getMaxTime(): Long?
 
-    fun getMaxKcal(): Single<Double>
+    suspend fun getMaxKcal(): Double?
 
-    fun getMaxSpeed(): Single<Double>
+    suspend fun getMaxSpeed(): Double?
 
     fun deleteRun(run: Run): Completable
 

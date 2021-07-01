@@ -10,6 +10,9 @@ import com.itba.runningMate.R
 import com.itba.runningMate.achievements.achievement.Achievements
 import com.itba.runningMate.achievements.achievement.AchievementsElementView
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.util.*
 
 class AchievementsActivity : AppCompatActivity(), AchievementsView {
@@ -30,10 +33,10 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
 
     private fun createPresenter() {
         val container = locateComponent(this)
-        val schedulerProvider = container.getSchedulerProvider()
         val runRepository = container.getRunRepository()
         val stateStorage = container.getAchievementsStorage()
-        presenter = AchievementsPresenter(runRepository, schedulerProvider, stateStorage, this)
+        val scope = CoroutineScope(Dispatchers.IO + CoroutineName("AchievementsScope"))
+        presenter = AchievementsPresenter(runRepository, stateStorage, scope, this)
     }
 
     private fun setUp() {
@@ -44,26 +47,26 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
         achievements = ArrayList()
         var achievement: AchievementsElementView = findViewById(R.id.achievement1)
         achievement.bind(
-            getString(R.string.total_distance_achievement_title),
-            getString(R.string.total_distance_achievement_subtitle)
+                getString(R.string.total_distance_achievement_title),
+                getString(R.string.total_distance_achievement_subtitle)
         )
         achievements.add(achievement)
         achievement = findViewById(R.id.achievement2)
         achievement.bind(
-            getString(R.string.max_kcal_achievement_title),
-            getString(R.string.max_kcal_achievement_subtitle)
+                getString(R.string.max_kcal_achievement_title),
+                getString(R.string.max_kcal_achievement_subtitle)
         )
         achievements.add(achievement)
         achievement = findViewById(R.id.achievement3)
         achievement.bind(
-            getString(R.string.max_speed_achievement_title),
-            getString(R.string.max_speed_achievement_subtitle)
+                getString(R.string.max_speed_achievement_title),
+                getString(R.string.max_speed_achievement_subtitle)
         )
         achievements.add(achievement)
         achievement = findViewById(R.id.achievement4)
         achievement.bind(
-            getString(R.string.max_time_achievement_title),
-            getString(R.string.max_time_achievement_subtitle)
+                getString(R.string.max_time_achievement_title),
+                getString(R.string.max_time_achievement_subtitle)
         )
         achievements.add(achievement)
     }
