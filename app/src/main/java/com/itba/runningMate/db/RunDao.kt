@@ -27,10 +27,10 @@ interface RunDao {
     fun getTotalDistance(): Single<Double>
 
     @Query("SELECT MAX(elapsed_time) FROM runs")
-    suspend fun getMaxTime(): Long
+    suspend fun getMaxTime(): Long?
 
     @Query("SELECT MAX(calories) FROM runs")
-    suspend fun getMaxKcal(): Double
+    suspend fun getMaxKcal(): Double?
 
     @Query("SELECT MAX(velocity) FROM runs")
     suspend fun getMaxSpeed(): Double?
