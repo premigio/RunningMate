@@ -1,31 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/md_grey_300">
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_marginTop="50dp"
+            android:elevation="8dp"
+            android:focusable="true"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="5dp">
 
             <com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard
                 android:id="@+id/past_run_card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_marginTop="50dp"
+            android:focusable="true"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="5dp">
 
             <com.itba.runningMate.mainpage.fragments.feed.cards.GoalsCard
                 android:id="@+id/goals_card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    </androidx.core.widget.NestedScrollView>
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_marginTop="50dp"
+            android:focusable="true"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="5dp">
 
-</LinearLayout>
+            <include
+                android:id="@+id/achievements_card"
+                layout="@layout/card_achievements" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

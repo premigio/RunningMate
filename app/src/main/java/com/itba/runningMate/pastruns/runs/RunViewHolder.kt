@@ -39,7 +39,6 @@ class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.On
     }
 
     companion object {
-        private val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         private val timeFormat = SimpleDateFormat("hh:mm", Locale.getDefault())
     }
 

@@ -3,7 +3,6 @@ package com.itba.runningMate.mainpage.fragments.feed.cards
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -27,7 +26,7 @@ class PastRunsCard : CardView {
     }
 
     private fun prepareFromConstructor(context: Context) {
-        inflate(context, R.layout.card_past_runs, this)
+        inflate(context, R.layout.card_recent_activity, this)
         runs = ArrayList()
         runs.add(findViewById(R.id.past_run_card_1))
         runs.add(findViewById(R.id.past_run_card_2))

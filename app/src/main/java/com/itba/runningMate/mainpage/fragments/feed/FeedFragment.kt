@@ -40,7 +40,7 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickList
     }
 
     private fun createPresenter() {
-        val container = locateComponent(context!!)
+        val container = locateComponent(requireContext())
         presenter = FeedPresenter(
             container.getRunRepository(),
             container.getSchedulerProvider(),
