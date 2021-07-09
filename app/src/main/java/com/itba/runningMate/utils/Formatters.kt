@@ -13,7 +13,7 @@ object Formatters {
     val dateFormat = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
 
     @JvmField
-    val timeFormat = SimpleDateFormat("hh:mm", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     val datetimeFormat = SimpleDateFormat("d/M/y HH:mm", Locale.getDefault())
 
     @SuppressLint("DefaultLocale")

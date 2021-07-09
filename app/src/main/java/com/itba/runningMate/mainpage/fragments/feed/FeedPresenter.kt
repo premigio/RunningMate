@@ -69,6 +69,9 @@ class FeedPresenter(
 
     private fun recentActivity() {
         disposables.add(repo.getRunLazy()
+//            Para cancherear un rato
+//            .debounce(2, TimeUnit.SECONDS)
+            .limit(3)
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
             .subscribe({ runs: List<Run> -> receivedRunList(runs) }) { throwable: Throwable ->
