@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.itba.runningMate.R
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
@@ -15,6 +16,7 @@ import java.util.*
 
 class PastRunsCard : CardView {
 
+    private lateinit var shimmer: ShimmerFrameLayout
     private lateinit var pastRunsEmptyMessage: TextView
     private lateinit var runs: MutableList<RunElementView>
     private lateinit var seeAll: Button
@@ -27,6 +29,7 @@ class PastRunsCard : CardView {
 
     private fun prepareFromConstructor(context: Context) {
         inflate(context, R.layout.card_recent_activity, this)
+        shimmer = findViewById(R.id.recent_activity_shimmer_view)
         runs = ArrayList()
         runs.add(findViewById(R.id.past_run_card_1))
         runs.add(findViewById(R.id.past_run_card_2))
@@ -84,5 +87,14 @@ class PastRunsCard : CardView {
 
     fun setSeeAllListener(onSeeAllClickListener: OnSeeAllClickListener?) {
         this.onSeeAllClickListener = WeakReference(onSeeAllClickListener)
+    }
+
+    fun startShimmerAnimation() {
+        shimmer.startShimmerAnimation()
+    }
+
+    fun stopShimmerAnimation() {
+        shimmer.stopShimmerAnimation()
+        shimmer.visibility = GONE
     }
 }

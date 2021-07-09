@@ -18,15 +18,10 @@ class FeedPresenter(
     private val disposables: CompositeDisposable = CompositeDisposable()
 
     fun onViewAttached() {
-        disposables.add(repo.getRunLazy()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ runs: List<Run> -> receivedRunList(runs) }) { throwable: Throwable ->
-                onRunListError(
-                    throwable
-                )
-            })
-        goalLevel()
+        view.get()?.startLevelShimmerAnimation()
+        view.get()?.startRecentActivityShimmerAnimation()
+        recentActivity()
+        level()
     }
 
     fun onViewDetached() {
@@ -43,6 +38,7 @@ class FeedPresenter(
     private fun receivedRunList(runs: List<Run>) {
         Timber.i("Runs %d", runs.size)
         if (view.get() != null) {
+            view.get()?.stopRecentActivityShimmerAnimation()
             if (runs.isEmpty()) {
                 view.get()!!.setPastRunCardsNoText()
                 view.get()!!.disappearRuns(0)
@@ -71,7 +67,18 @@ class FeedPresenter(
         }
     }
 
-    private fun goalLevel() {
+    private fun recentActivity() {
+        disposables.add(repo.getRunLazy()
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe({ runs: List<Run> -> receivedRunList(runs) }) { throwable: Throwable ->
+                onRunListError(
+                    throwable
+                )
+            })
+    }
+
+    private fun level() {
         disposables.add(repo.getTotalDistance()
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
@@ -84,6 +91,7 @@ class FeedPresenter(
 
     private fun receivedTotalDistance(distance: Double) {
         if (view.get() != null) {
+            view.get()?.stopLevelShimmerAnimation()
             if (distance < 100.0) { // Taragui
                 view.get()!!.setGoalTitle(R.string.taragui)
                 view.get()!!.setGoalSubtitle(R.string.taragui_subtitle)
@@ -114,11 +122,6 @@ class FeedPresenter(
 
     private fun onRunListErrorGoals(throwable: Throwable) {
         Timber.d("Failed to retrieve total distance from db")
-        if (view.get() != null) {
-            view.get()!!.setGoalTitle(R.string.taragui)
-            view.get()!!.setGoalSubtitle(R.string.taragui_subtitle)
-            view.get()!!.setGoalImage(R.drawable.taragui)
-        }
     }
 
     fun goToAchievementsActivity() {

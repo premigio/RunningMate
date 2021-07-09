@@ -23,7 +23,7 @@ interface RunDao {
     @Insert
     fun insertRoute(route: RunEntity): Single<Long>
 
-    @Query("SELECT SUM(distance) FROM runs")
+    @Query("SELECT TOTAL(distance) FROM runs")
     fun getTotalDistance(): Single<Double>
 
     @Query("SELECT MAX(elapsed_time) FROM runs")

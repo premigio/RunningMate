@@ -24,4 +24,12 @@ interface FeedView {
 
     fun launchPastRunsActivity()
 
+    fun startLevelShimmerAnimation()
+
+    fun stopLevelShimmerAnimation()
+
+    fun startRecentActivityShimmerAnimation()
+
+    fun stopRecentActivityShimmerAnimation()
+
 }

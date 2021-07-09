@@ -119,4 +119,20 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickList
     override fun onSeeAllAchievementsClick() {
         presenter.goToAchievementsActivity()
     }
+
+    override fun startLevelShimmerAnimation() {
+        goalsCard.startShimmerAnimation()
+    }
+
+    override fun stopLevelShimmerAnimation() {
+        goalsCard.stopShimmerAnimation()
+    }
+
+    override fun startRecentActivityShimmerAnimation() {
+        pastRunsCard.startShimmerAnimation()
+    }
+
+    override fun stopRecentActivityShimmerAnimation() {
+        pastRunsCard.stopShimmerAnimation()
+    }
 }
