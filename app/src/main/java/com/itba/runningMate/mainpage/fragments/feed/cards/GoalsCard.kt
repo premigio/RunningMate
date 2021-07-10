@@ -47,7 +47,7 @@ class GoalsCard : CardView {
 
     private fun onSeeAllButtonClicked() {
         if (onSeeAllClickListener!!.get() != null) {
-            onSeeAllClickListener!!.get()!!.onSeeAllAchievementsClick()
+            onSeeAllClickListener!!.get()!!.onSeeAllLevelsClick()
         }
     }
 

@@ -18,6 +18,8 @@ interface FeedView {
 
     fun setGoalImage(image: Int)
 
+    fun launchLevelsActivity()
+
     fun launchAchievementsActivity()
 
     fun launchRunDetailActivity(runId: Long)

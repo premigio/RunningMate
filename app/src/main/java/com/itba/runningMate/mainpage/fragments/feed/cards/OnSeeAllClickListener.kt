@@ -4,5 +4,7 @@ interface OnSeeAllClickListener {
 
     fun onSeeAllAchievementsClick()
 
+    fun onSeeAllLevelsClick()
+
     fun onSeeAllPastRunsClick()
 }

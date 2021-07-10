@@ -11,9 +11,9 @@ import java.util.*
 
 class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-    private val title: TextView
-    private val distance: TextView
-    private val time: TextView
+    private val title: TextView = itemView.findViewById(R.id.run_list_card_title)
+    private val distance: TextView = itemView.findViewById(R.id.run_list_distance_content)
+    private val time: TextView = itemView.findViewById(R.id.run_list_time_run)
     private var id = RecyclerView.NO_ID
 
     private var listener: WeakReference<OnRunClickListener>? = null
@@ -43,9 +43,6 @@ class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.On
     }
 
     init {
-        title = itemView.findViewById(R.id.run_list_card_title)
-        distance = itemView.findViewById(R.id.run_list_distance_content)
-        time = itemView.findViewById(R.id.run_list_time_run)
         itemView.setOnClickListener(this)
     }
 }

@@ -70,6 +70,13 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickList
         startActivity(Intent(Intent.ACTION_VIEW, uriBuilder.build()))
     }
 
+    override fun launchLevelsActivity() {
+        val uriBuilder = Uri.Builder()
+            .scheme("runningmate")
+            .encodedAuthority("levels")
+        startActivity(Intent(Intent.ACTION_VIEW, uriBuilder.build()))
+    }
+
     override fun onStart() {
         super.onStart()
         presenter.onViewAttached()
@@ -118,6 +125,10 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickList
 
     override fun onSeeAllAchievementsClick() {
         presenter.goToAchievementsActivity()
+    }
+
+    override fun onSeeAllLevelsClick() {
+        presenter.goToLevelsActivity()
     }
 
     override fun startLevelShimmerAnimation() {

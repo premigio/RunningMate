@@ -1,6 +1,6 @@
 package com.itba.runningMate.mainpage.fragments.feed
 
-import com.itba.runningMate.R
+import com.itba.runningMate.domain.Level
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
@@ -95,31 +95,10 @@ class FeedPresenter(
     private fun receivedTotalDistance(distance: Double) {
         if (view.get() != null) {
             view.get()?.stopLevelShimmerAnimation()
-            if (distance < 100.0) { // Taragui
-                view.get()!!.setGoalTitle(R.string.taragui)
-                view.get()!!.setGoalSubtitle(R.string.taragui_subtitle)
-                view.get()!!.setGoalImage(R.drawable.taragui)
-            } else if (distance < 200.0) { // CBSé
-                view.get()!!.setGoalTitle(R.string.cbse)
-                view.get()!!.setGoalSubtitle(R.string.cbse_subtitle)
-                view.get()!!.setGoalImage(R.drawable.cbse)
-            } else if (distance < 300.0) { // Cruz de Malta
-                view.get()!!.setGoalTitle(R.string.cruz_de_malta)
-                view.get()!!.setGoalSubtitle(R.string.cruz_de_malta_subtitle)
-                view.get()!!.setGoalImage(R.drawable.cruzdemalta)
-            } else if (distance < 500.0) { // Playadito
-                view.get()!!.setGoalTitle(R.string.playadito)
-                view.get()!!.setGoalSubtitle(R.string.playadito_subtitle)
-                view.get()!!.setGoalImage(R.drawable.playadito)
-            } else if (distance < 750.0) { // Rosamonte
-                view.get()!!.setGoalTitle(R.string.rosamonte)
-                view.get()!!.setGoalSubtitle(R.string.rosamonte_subtitle)
-                view.get()!!.setGoalImage(R.drawable.rosamonte)
-            } else { // La Merced
-                view.get()!!.setGoalTitle(R.string.merced)
-                view.get()!!.setGoalSubtitle(R.string.merced_subtitle)
-                view.get()!!.setGoalImage(R.drawable.lamerced)
-            }
+            val level = Level.from(distance)
+            view.get()!!.setGoalTitle(level.title)
+            view.get()!!.setGoalSubtitle(level.subTitle)
+            view.get()!!.setGoalImage(level.image)
         }
     }
 
@@ -131,6 +110,10 @@ class FeedPresenter(
         if (view.get() != null) {
             view.get()!!.launchAchievementsActivity()
         }
+    }
+
+    fun goToLevelsActivity() {
+        view.get()?.launchLevelsActivity()
     }
 
 }
