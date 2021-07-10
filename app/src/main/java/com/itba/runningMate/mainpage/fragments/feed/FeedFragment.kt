@@ -10,16 +10,21 @@ import androidx.fragment.app.Fragment
 import com.itba.runningMate.R
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.mainpage.fragments.feed.cards.GoalsCard
-import com.itba.runningMate.mainpage.fragments.feed.cards.OnSeeAllClickListener
+import com.itba.runningMate.mainpage.fragments.feed.cards.AchievementsCard
+import com.itba.runningMate.mainpage.fragments.feed.cards.LevelsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard
+import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllAchievementsListener
+import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
+import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllPastRunsListener
 import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
 
-class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickListener {
+class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsListener,
+    OnSeeAllLevelsListener, OnSeeAllAchievementsListener {
 
     private lateinit var presenter: FeedPresenter
     private lateinit var pastRunsCard: PastRunsCard
-    private lateinit var goalsCard: GoalsCard
+    private lateinit var goalsCard: LevelsCard
+    private lateinit var achievementsCard: AchievementsCard
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,10 +38,12 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickList
         super.onCreate(savedInstanceState)
         createPresenter()
         pastRunsCard = view.findViewById(R.id.past_run_card)
-        goalsCard = view.findViewById(R.id.goals_card)
+        goalsCard = view.findViewById(R.id.level_card)
+        achievementsCard = view.findViewById(R.id.achievements_card)
         pastRunsCard.setElementListener(this)
         pastRunsCard.setSeeAllListener(this)
         goalsCard.setSeeAllListener(this)
+        achievementsCard.setSeeAllListener(this)
     }
 
     private fun createPresenter() {
@@ -59,7 +66,7 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickList
         val uriBuilder = Uri.Builder()
             .scheme("runningmate")
             .encodedAuthority("run")
-            .appendQueryParameter("run-id", java.lang.Long.toString(runId))
+            .appendQueryParameter("run-id", runId.toString())
         startActivity(Intent(Intent.ACTION_VIEW, uriBuilder.build()))
     }
 
@@ -95,8 +102,8 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickList
         pastRunsCard.addRunToCard(i, run)
     }
 
-    override fun disappearRuns(i: Int) {
-        pastRunsCard.disappearRuns(i)
+    override fun disappearRuns(abs: Int) {
+        pastRunsCard.disappearRuns(abs)
     }
 
     override fun disappearNoText() {

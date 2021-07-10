@@ -8,16 +8,17 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.itba.runningMate.R
+import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
 import java.lang.ref.WeakReference
 
-class GoalsCard : CardView {
+class LevelsCard : CardView {
 
     private lateinit var shimmer: ShimmerFrameLayout
     private lateinit var image: ImageView
     private lateinit var title: TextView
     private lateinit var subtitle: TextView
     private lateinit var seeAll: Button
-    private var onSeeAllClickListener: WeakReference<OnSeeAllClickListener?>? = null
+    private var onSeeAllClickListener: WeakReference<OnSeeAllLevelsListener>? = null
 
     constructor(context: Context) : super(context) {
         prepareFromConstructor(context)
@@ -46,8 +47,8 @@ class GoalsCard : CardView {
     }
 
     private fun onSeeAllButtonClicked() {
-        if (onSeeAllClickListener!!.get() != null) {
-            onSeeAllClickListener!!.get()!!.onSeeAllLevelsClick()
+        if (onSeeAllClickListener?.get() != null) {
+            onSeeAllClickListener!!.get()?.onSeeAllLevelsClick()
         }
     }
 
@@ -63,8 +64,8 @@ class GoalsCard : CardView {
         image.setImageResource(imageInt)
     }
 
-    fun setSeeAllListener(onSeeAllClickListener: OnSeeAllClickListener?) {
-        this.onSeeAllClickListener = WeakReference(onSeeAllClickListener)
+    fun setSeeAllListener(onSeeAllLevelsListener: OnSeeAllLevelsListener?) {
+        this.onSeeAllClickListener = WeakReference(onSeeAllLevelsListener)
     }
 
     fun startShimmerAnimation() {

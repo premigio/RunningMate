@@ -9,6 +9,7 @@ import androidx.cardview.widget.CardView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.itba.runningMate.R
 import com.itba.runningMate.domain.Run
+import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllPastRunsListener
 import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
 import com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
 import java.lang.ref.WeakReference
@@ -21,7 +22,7 @@ class PastRunsCard : CardView {
     private lateinit var runs: MutableList<RunElementView>
     private lateinit var seeAll: Button
     private lateinit var runElementListener: WeakReference<OnRunClickListener>
-    private lateinit var onSeeAllClickListener: WeakReference<OnSeeAllClickListener>
+    private lateinit var onSeeAllClickListener: WeakReference<OnSeeAllPastRunsListener>
 
     constructor(context: Context) : super(context) {
         prepareFromConstructor(context)
@@ -81,12 +82,12 @@ class PastRunsCard : CardView {
         }
     }
 
-    fun setElementListener(feedFragment: OnRunClickListener?) {
-        runElementListener = WeakReference(feedFragment)
+    fun setElementListener(onRunClickListener: OnRunClickListener) {
+        runElementListener = WeakReference(onRunClickListener)
     }
 
-    fun setSeeAllListener(onSeeAllClickListener: OnSeeAllClickListener?) {
-        this.onSeeAllClickListener = WeakReference(onSeeAllClickListener)
+    fun setSeeAllListener(onSeeAllPastRunsListener: OnSeeAllPastRunsListener?) {
+        this.onSeeAllClickListener = WeakReference(onSeeAllPastRunsListener)
     }
 
     fun startShimmerAnimation() {

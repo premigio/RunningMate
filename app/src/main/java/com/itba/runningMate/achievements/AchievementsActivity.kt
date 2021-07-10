@@ -2,9 +2,6 @@ package com.itba.runningMate.achievements
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.itba.runningMate.R
 import com.itba.runningMate.achievements.achievement.Achievements
@@ -15,10 +12,6 @@ import java.util.*
 class AchievementsActivity : AppCompatActivity(), AchievementsView {
 
     private lateinit var presenter: AchievementsPresenter
-    private lateinit var goalTitle: TextView
-    private lateinit var goalSubtitle: TextView
-    private lateinit var goalImage: ImageView
-    private lateinit var progressBar: ProgressBar
     private lateinit var achievements: MutableList<AchievementsElementView>
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,10 +30,6 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
     }
 
     private fun setUp() {
-        goalTitle = findViewById(R.id.goal_title)
-        goalSubtitle = findViewById(R.id.goal_subtitle)
-        goalImage = findViewById(R.id.goal_image)
-        progressBar = findViewById(R.id.goal_progress_bar)
         achievements = ArrayList()
         var achievement: AchievementsElementView = findViewById(R.id.achievement1)
         achievement.bind(
@@ -76,23 +65,6 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
     override fun onStop() {
         super.onStop()
         presenter.onViewDetached()
-    }
-
-    override fun setGoalTitle(title: Int) {
-        goalTitle.setText(title)
-    }
-
-    override fun setGoalSubtitle(subtitle: Int) {
-        goalSubtitle.setText(subtitle)
-    }
-
-    override fun setGoalImage(image: Int) {
-        goalImage.setImageResource(image)
-    }
-
-    override fun setProgressBar(distance: Double, max: Double) {
-        progressBar.max = max.toInt()
-        progressBar.progress = distance.toInt()
     }
 
     override fun setAchievement(achievementNumber: Achievements, achieved: Boolean) {
