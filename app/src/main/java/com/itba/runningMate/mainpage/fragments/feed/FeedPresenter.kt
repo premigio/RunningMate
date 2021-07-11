@@ -68,6 +68,10 @@ class FeedPresenter(
     }
 
     private fun recentActivity() {
+        /*
+            ver -->
+            https://medium.com/default-to-open/smooth-loading-animations-in-android-11dcae4ecfd0
+        */
         disposables.add(repo.getRunLazy()
 //            Para cancherear un rato
 //            .debounce(2, TimeUnit.SECONDS)

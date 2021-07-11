@@ -1,9 +1,11 @@
 package com.itba.runningMate.achievements
 
-import com.itba.runningMate.achievements.achievement.Achievements
+import com.itba.runningMate.achievements.model.AggregateRunMetricsDetail
+import com.itba.runningMate.domain.Achievements
 import com.itba.runningMate.repository.achievements.AchievementsStorage
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.lang.ref.WeakReference
@@ -20,49 +22,37 @@ class AchievementsPresenter(
 
 
     fun onViewAttached() {
-        receivedTotalDistance(storage.getTotalDistance())
         achievements()
     }
 
     private fun achievements() {
-        disposables.add(repo.getMaxSpeed()
+        disposables.add(Single.zip(repo.getMaxSpeed(), repo.getMaxKcal(), repo.getMaxTime(),
+            { maxSpeed, maxKcal, maxTime ->
+                AggregateRunMetricsDetail.Builder()
+                    .speed(maxSpeed.toFloat())
+                    .calories(maxKcal.toInt())
+                    .runningTime(maxTime)
+                    .build()
+            })
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
-            .subscribe({ speed: Double -> receivedMaxSpeed(speed) }) { throwable: Throwable ->
-                onRunListErrorGoals()
-            })
-        disposables.add(repo.getMaxKcal()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ kcal: Double -> receivedMaxKcal(kcal) }) { throwable: Throwable ->
-                onRunListErrorGoals()
-            })
-        disposables.add(repo.getMaxTime()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ time: Long -> receivedMaxTime(time) }) { throwable: Throwable ->
-                onRunListErrorGoals()
-            })
+            .subscribe({ aggregate: AggregateRunMetricsDetail -> receivedAggregate(aggregate) }) { onRunListErrorGoals() }
+        )
     }
 
-    private fun receivedMaxSpeed(speed: Double) {
-        view.get()?.setAchievement(Achievements.SPEED10, speed >= 10.0)
-    }
-
-    private fun receivedMaxKcal(kcal: Double) {
-        view.get()?.setAchievement(Achievements.KCAL1000, kcal >= 1000.0)
-    }
-
-    private fun receivedMaxTime(time: Long) {
-        view.get()?.setAchievement(Achievements.TIME1H, time >= 3600000)
+    private fun receivedAggregate(aggregate: AggregateRunMetricsDetail) {
+        aggregate.distance = storage.getTotalDistance().toFloat()
+        val completedAchievements: MutableList<Achievements> = mutableListOf()
+        for (a in Achievements.values()) {
+            if (a.completed(aggregate)) {
+                completedAchievements.add(a)
+            }
+        }
+        view.get()?.showAchievements(completedAchievements.toTypedArray())
     }
 
     fun onViewDetached() {
         disposables.dispose()
-    }
-
-    private fun receivedTotalDistance(distance: Double) {
-        view.get()?.setAchievement(Achievements.DISTANCE2000, distance >= 2000.0)
     }
 
     private fun onRunListErrorGoals() {
