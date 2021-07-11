@@ -14,7 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.itba.runningMate.R
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.pastruns.runs.OnRunClickListener
+import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
 import com.itba.runningMate.pastruns.runs.RunAdapter
 
 class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
@@ -50,10 +50,10 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
                 DividerItemDecoration.VERTICAL
             )
         )
-        recyclerView.setLayoutManager(LinearLayoutManager(this))
+        recyclerView.layoutManager = LinearLayoutManager(this)
         rvRunListAdapter = RunAdapter()
         rvRunListAdapter.setClickListener(this)
-        recyclerView.setAdapter(rvRunListAdapter)
+        recyclerView.adapter = rvRunListAdapter
     }
 
     private fun setUpRefreshLayout() {
@@ -90,7 +90,7 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
         val uriBuilder = Uri.Builder()
             .scheme("runningmate")
             .encodedAuthority("run")
-            .appendQueryParameter("run-id", java.lang.Long.toString(id))
+            .appendQueryParameter("run-id", id.toString())
         startActivity(Intent(Intent.ACTION_VIEW, uriBuilder.build()))
     }
 

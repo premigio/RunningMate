@@ -1,48 +1,20 @@
 package com.itba.runningMate.pastruns.runs
 
-import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.itba.runningMate.R
 import com.itba.runningMate.domain.Run
-import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.*
+import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
+import com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
 
-class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-
-    private val title: TextView = itemView.findViewById(R.id.run_list_card_title)
-    private val distance: TextView = itemView.findViewById(R.id.run_list_distance_content)
-    private val time: TextView = itemView.findViewById(R.id.run_list_time_run)
-    private var id = RecyclerView.NO_ID
-
-    private var listener: WeakReference<OnRunClickListener>? = null
+class RunViewHolder(private val runElementView: RunElementView) :
+    RecyclerView.ViewHolder(runElementView) {
 
     fun bind(model: Run?) {
         if (model == null) return
-        id = model.uid!!
-        title.text = model.title
-        distance.text = itemView.context.getString(R.string.distance_string, model.distance)
-        time.text = timeFormat.format(model.startTime)
-    }
-
-    override fun onClick(v: View) {
-        //todo: hacer que se lea el getItemId() del adapter
-        if (listener == null) {
-            return
-        }
-        listener!!.get()!!.onRunClick(id)
+        runElementView.bind(model)
     }
 
     fun setOnClickListener(listener: OnRunClickListener) {
-        this.listener = WeakReference(listener)
+        runElementView.setOnClick(listener)
     }
 
-    companion object {
-        private val timeFormat = SimpleDateFormat("hh:mm", Locale.getDefault())
-    }
-
-    init {
-        itemView.setOnClickListener(this)
-    }
 }

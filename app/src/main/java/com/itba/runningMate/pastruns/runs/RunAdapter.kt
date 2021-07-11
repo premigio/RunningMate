@@ -1,11 +1,11 @@
 package com.itba.runningMate.pastruns.runs
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.itba.runningMate.R
 import com.itba.runningMate.domain.Run
+import com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
 import java.lang.ref.WeakReference
+import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
 import java.util.*
 
 class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
@@ -25,12 +25,8 @@ class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
         this.listener = WeakReference(listener)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return R.layout.view_run_element
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
+        val view = RunElementView(parent.context)
         return RunViewHolder(view)
     }
 
@@ -38,8 +34,8 @@ class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
         if (listener == null) {
             return
         }
-        holder.bind(currentRunList[position])
         holder.setOnClickListener(listener!!.get()!!)
+        holder.bind(currentRunList[position])
     }
 
     override fun getItemId(position: Int): Long {

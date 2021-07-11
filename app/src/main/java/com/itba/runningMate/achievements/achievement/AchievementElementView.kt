@@ -2,12 +2,12 @@ package com.itba.runningMate.achievements.achievement
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.itba.runningMate.R
 
-class AchievementElementView : FrameLayout {
+class AchievementElementView : ConstraintLayout {
 
     private lateinit var titleTextView: TextView
     private lateinit var descriptionTextView: TextView
