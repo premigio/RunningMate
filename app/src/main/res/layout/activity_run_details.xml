@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@color/mate_color">
 
-        <com.itba.runningMate.map.MapInScrollView
+        <com.itba.runningMate.components.map.MapInScrollView
             android:id="@+id/run_detail_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"

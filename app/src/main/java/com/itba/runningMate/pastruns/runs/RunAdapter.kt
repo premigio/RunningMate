@@ -3,9 +3,9 @@ package com.itba.runningMate.pastruns.runs
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
+import com.itba.runningMate.components.run.RunElementView
 import java.lang.ref.WeakReference
-import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
+import com.itba.runningMate.components.run.OnRunClickListener
 import java.util.*
 
 class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {

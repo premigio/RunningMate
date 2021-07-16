@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.itba.runningMate.R
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
+import com.itba.runningMate.components.run.OnRunClickListener
 import com.itba.runningMate.pastruns.runs.RunAdapter
 
 class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {

@@ -2,8 +2,8 @@ package com.itba.runningMate.pastruns.runs
 
 import androidx.recyclerview.widget.RecyclerView
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
-import com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
+import com.itba.runningMate.components.run.OnRunClickListener
+import com.itba.runningMate.components.run.RunElementView
 
 class RunViewHolder(private val runElementView: RunElementView) :
     RecyclerView.ViewHolder(runElementView) {

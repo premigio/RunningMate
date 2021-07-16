@@ -48,7 +48,7 @@
     </com.facebook.shimmer.ShimmerFrameLayout>
 
 
-    <com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
+    <com.itba.runningMate.components.run.RunElementView
         android:id="@+id/past_run_card_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card_title" />
 
-    <com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
+    <com.itba.runningMate.components.run.RunElementView
         android:id="@+id/past_run_card_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/past_run_card_1" />
 
-    <com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
+    <com.itba.runningMate.components.run.RunElementView
         android:id="@+id/past_run_card_3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

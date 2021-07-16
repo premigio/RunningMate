@@ -22,7 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.itba.runningMate.R
 import com.itba.runningMate.di.DependencyContainerLocator
-import com.itba.runningMate.map.MapInViewPager
+import com.itba.runningMate.components.map.MapInViewPager
 import com.itba.runningMate.services.location.Tracker
 import com.itba.runningMate.services.location.TrackingService
 import com.itba.runningMate.utils.Constants

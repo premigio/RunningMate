@@ -10,8 +10,8 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.itba.runningMate.R
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllPastRunsListener
-import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
-import com.itba.runningMate.mainpage.fragments.feed.run.RunElementView
+import com.itba.runningMate.components.run.OnRunClickListener
+import com.itba.runningMate.components.run.RunElementView
 import java.lang.ref.WeakReference
 import java.util.*
 

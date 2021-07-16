@@ -16,7 +16,7 @@ import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllAchievementsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllPastRunsListener
-import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
+import com.itba.runningMate.components.run.OnRunClickListener
 
 class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsListener,
     OnSeeAllLevelsListener, OnSeeAllAchievementsListener {

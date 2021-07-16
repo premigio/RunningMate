@@ -1,4 +1,4 @@
-package com.itba.runningMate.mainpage.fragments.feed.run
+package com.itba.runningMate.components.run
 
 import android.content.Context
 import android.util.AttributeSet

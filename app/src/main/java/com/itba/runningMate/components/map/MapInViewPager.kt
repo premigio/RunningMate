@@ -1,4 +1,4 @@
-package com.itba.runningMate.map
+package com.itba.runningMate.components.map
 
 import android.content.Context
 import android.content.res.Resources

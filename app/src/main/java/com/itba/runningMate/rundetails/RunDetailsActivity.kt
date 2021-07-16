@@ -22,7 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.itba.runningMate.R
 import com.itba.runningMate.di.DependencyContainerLocator
 import com.itba.runningMate.domain.Route
-import com.itba.runningMate.map.Map
+import com.itba.runningMate.components.map.Map
 import com.itba.runningMate.rundetails.model.RunMetricsDetail
 import com.itba.runningMate.utils.ImageProcessing
 
