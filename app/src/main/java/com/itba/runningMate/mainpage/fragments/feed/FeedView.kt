@@ -1,6 +1,7 @@
 package com.itba.runningMate.mainpage.fragments.feed
 
 import com.itba.runningMate.domain.Achievements
+import com.itba.runningMate.domain.Level
 import com.itba.runningMate.domain.Run
 
 interface FeedView {
@@ -15,11 +16,7 @@ interface FeedView {
 
     fun showAchievements(achievements: List<Achievements>)
 
-    fun setGoalTitle(title: Int)
-
-    fun setGoalSubtitle(subtitle: Int)
-
-    fun setGoalImage(image: Int)
+    fun showCurrentLevel(level: Level)
 
     fun launchLevelsActivity()
 

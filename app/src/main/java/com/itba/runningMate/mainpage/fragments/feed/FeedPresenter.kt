@@ -35,7 +35,7 @@ class FeedPresenter(
         disposables.clear()
     }
 
-    private fun onRunListError(throwable: Throwable) {
+    private fun onRunListError() {
         Timber.d("Failed to retrieve runs from db")
         if (view.get() != null) {
             view.get()!!.setPastRunCardsNoText()
@@ -85,22 +85,14 @@ class FeedPresenter(
             .limit(3)
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
-            .subscribe({ runs: List<Run> -> receivedRunList(runs) }) { throwable: Throwable ->
-                onRunListError(
-                    throwable
-                )
-            })
+            .subscribe({ runs: List<Run> -> receivedRunList(runs) }) { onRunListError() })
     }
 
     private fun level() {
         disposables.add(repo.getTotalDistance()
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
-            .subscribe({ distance: Double -> receivedTotalDistance(distance) }) { throwable: Throwable ->
-                onRunListErrorGoals(
-                    throwable
-                )
-            })
+            .subscribe({ distance: Double -> receivedTotalDistance(distance) }) { onReceivedTotalDistanceError() })
     }
 
     private fun achievements() {
@@ -139,13 +131,11 @@ class FeedPresenter(
         if (view.get() != null) {
             view.get()?.stopLevelShimmerAnimation()
             val level = Level.from(distance)
-            view.get()!!.setGoalTitle(level.title)
-            view.get()!!.setGoalSubtitle(level.subTitle)
-            view.get()!!.setGoalImage(level.image)
+            view.get()!!.showCurrentLevel(level)
         }
     }
 
-    private fun onRunListErrorGoals(throwable: Throwable) {
+    private fun onReceivedTotalDistanceError() {
         Timber.d("Failed to retrieve total distance from db")
     }
 

@@ -8,7 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.itba.runningMate.R
+import com.itba.runningMate.components.run.OnRunClickListener
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
+import com.itba.runningMate.domain.Achievements
+import com.itba.runningMate.domain.Level
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.mainpage.fragments.feed.cards.AchievementsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.LevelsCard
@@ -16,15 +19,13 @@ import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllAchievementsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllPastRunsListener
-import com.itba.runningMate.components.run.OnRunClickListener
-import com.itba.runningMate.domain.Achievements
 
 class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsListener,
     OnSeeAllLevelsListener, OnSeeAllAchievementsListener {
 
     private lateinit var presenter: FeedPresenter
     private lateinit var pastRunsCard: PastRunsCard
-    private lateinit var goalsCard: LevelsCard
+    private lateinit var levelCard: LevelsCard
     private lateinit var achievementsCard: AchievementsCard
 
     override fun onCreateView(
@@ -39,11 +40,11 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         super.onCreate(savedInstanceState)
         createPresenter()
         pastRunsCard = view.findViewById(R.id.past_run_card)
-        goalsCard = view.findViewById(R.id.level_card)
+        levelCard = view.findViewById(R.id.level_card)
         achievementsCard = view.findViewById(R.id.achievements_card)
         pastRunsCard.setElementListener(this)
         pastRunsCard.setSeeAllListener(this)
-        goalsCard.setSeeAllListener(this)
+        levelCard.setSeeAllListener(this)
         achievementsCard.setSeeAllListener(this)
     }
 
@@ -116,16 +117,8 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         achievementsCard.bind(achievements)
     }
 
-    override fun setGoalTitle(title: Int) {
-        goalsCard.setTitle(title)
-    }
-
-    override fun setGoalSubtitle(subtitle: Int) {
-        goalsCard.setSubtitle(subtitle)
-    }
-
-    override fun setGoalImage(image: Int) {
-        goalsCard.setImage(image)
+    override fun showCurrentLevel(level: Level) {
+        levelCard.bind(level)
     }
 
     override fun onRunClick(id: Long) {
@@ -145,11 +138,11 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     }
 
     override fun startLevelShimmerAnimation() {
-        goalsCard.startShimmerAnimation()
+        levelCard.startShimmerAnimation()
     }
 
     override fun stopLevelShimmerAnimation() {
-        goalsCard.stopShimmerAnimation()
+        levelCard.stopShimmerAnimation()
     }
 
     override fun startRecentActivityShimmerAnimation() {

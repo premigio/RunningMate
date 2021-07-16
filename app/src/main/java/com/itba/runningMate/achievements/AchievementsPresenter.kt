@@ -36,7 +36,7 @@ class AchievementsPresenter(
             })
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
-            .subscribe({ aggregate: AggregateRunMetricsDetail -> receivedAggregate(aggregate) }) { onRunListErrorGoals() }
+            .subscribe({ aggregate: AggregateRunMetricsDetail -> receivedAggregate(aggregate) }) { onReceivedAggregateError() }
         )
     }
 
@@ -55,7 +55,7 @@ class AchievementsPresenter(
         disposables.dispose()
     }
 
-    private fun onRunListErrorGoals() {
+    private fun onReceivedAggregateError() {
         Timber.d("Failed to retrieve total distance from db")
     }
 
