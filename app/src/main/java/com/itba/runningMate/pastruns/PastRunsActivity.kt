@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.itba.runningMate.R
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
 import com.itba.runningMate.domain.Run
@@ -20,7 +19,6 @@ import com.itba.runningMate.pastruns.runs.RunAdapter
 class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
 
     private lateinit var rvRunListAdapter: RunAdapter
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var presenter: PastRunsPresenter
     private lateinit var emptyMessage: TextView
@@ -33,8 +31,8 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
         val runRepository = container.getRunRepository()
         presenter = PastRunsPresenter(schedulerProvider, runRepository, this)
         emptyMessage = findViewById(R.id.empty_run_list)
+
         setUpRecyclerView()
-        setUpRefreshLayout()
 
         //Creo el botón para volver
         val actionBar = supportActionBar
@@ -54,14 +52,6 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
         rvRunListAdapter = RunAdapter()
         rvRunListAdapter.setClickListener(this)
         recyclerView.adapter = rvRunListAdapter
-    }
-
-    private fun setUpRefreshLayout() {
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_old_runs)
-        swipeRefreshLayout.setOnRefreshListener {
-            presenter.refreshAction()
-            swipeRefreshLayout.setRefreshing(false)
-        }
     }
 
     public override fun onStart() {

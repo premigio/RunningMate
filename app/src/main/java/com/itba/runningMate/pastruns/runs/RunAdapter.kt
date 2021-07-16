@@ -27,6 +27,10 @@ class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunViewHolder {
         val view = RunElementView(parent.context)
+        view.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         return RunViewHolder(view)
     }
 

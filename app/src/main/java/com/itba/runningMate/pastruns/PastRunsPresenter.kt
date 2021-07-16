@@ -51,10 +51,6 @@ class PastRunsPresenter(
         }
     }
 
-    fun refreshAction() {
-        onViewAttached()
-    }
-
     fun onRunClick(id: Long) {
         if (view.get() != null) {
             view.get()!!.launchRunDetails(id)
