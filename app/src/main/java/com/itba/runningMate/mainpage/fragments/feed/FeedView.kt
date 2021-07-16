@@ -1,5 +1,6 @@
 package com.itba.runningMate.mainpage.fragments.feed
 
+import com.itba.runningMate.domain.Achievements
 import com.itba.runningMate.domain.Run
 
 interface FeedView {
@@ -11,6 +12,8 @@ interface FeedView {
     fun disappearRuns(abs: Int)
 
     fun disappearNoText()
+
+    fun showAchievements(achievements: List<Achievements>)
 
     fun setGoalTitle(title: Int)
 

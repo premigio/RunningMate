@@ -17,6 +17,7 @@ import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllAchi
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllPastRunsListener
 import com.itba.runningMate.components.run.OnRunClickListener
+import com.itba.runningMate.domain.Achievements
 
 class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsListener,
     OnSeeAllLevelsListener, OnSeeAllAchievementsListener {
@@ -50,6 +51,7 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         val container = locateComponent(requireContext())
         presenter = FeedPresenter(
             container.getRunRepository(),
+            container.getAchievementsStorage(),
             container.getSchedulerProvider(),
             this
         )
@@ -108,6 +110,10 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
 
     override fun disappearNoText() {
         pastRunsCard.disappearNoText()
+    }
+
+    override fun showAchievements(achievements: List<Achievements>) {
+        achievementsCard.bind(achievements)
     }
 
     override fun setGoalTitle(title: Int) {

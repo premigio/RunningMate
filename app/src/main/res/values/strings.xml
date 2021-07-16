@@ -96,6 +96,19 @@
     <string name="max_time_achievement_subtitle">Got to run for more than 1h.</string>
     <string name="level">Level</string>
 
+    // Achievements categories
+    <string name="achievement_category_time">Run Time</string>
+    <string name="achievement_category_distance">Longest Run</string>
+    <string name="achievement_category_speed">Fastest Run</string>
+    <string name="achievement_category_calories">Calories Burned</string>
+    <string name="achievement_category_streak">Streaks</string>
+
+    TIME("Run Time"),
+    CALORIES("Calories burned"),
+    DISTANCE(),
+    SPEED(),
+    STREAKS()
+
 
     <!--    <string name="date_title">%1$s</string>-->
     <!--    <string name="speed_title">Speed</string>-->

@@ -1,15 +1,20 @@
 package com.itba.runningMate.mainpage.fragments.feed
 
+import com.itba.runningMate.achievements.model.AggregateRunMetricsDetail
+import com.itba.runningMate.domain.Achievements
 import com.itba.runningMate.domain.Level
 import com.itba.runningMate.domain.Run
+import com.itba.runningMate.repository.achievements.AchievementsStorage
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class FeedPresenter(
     private val repo: RunRepository,
+    private val storage: AchievementsStorage,
     private val schedulerProvider: SchedulerProvider,
     view: FeedView
 ) {
@@ -20,8 +25,10 @@ class FeedPresenter(
     fun onViewAttached() {
         view.get()?.startLevelShimmerAnimation()
         view.get()?.startRecentActivityShimmerAnimation()
+
         recentActivity()
         level()
+        achievements()
     }
 
     fun onViewDetached() {
@@ -94,6 +101,38 @@ class FeedPresenter(
                     throwable
                 )
             })
+    }
+
+    private fun achievements() {
+        disposables.add(
+            Single.zip(repo.getMaxSpeed(), repo.getMaxKcal(), repo.getMaxTime(),
+                { maxSpeed, maxKcal, maxTime ->
+                    AggregateRunMetricsDetail.Builder()
+                        .speed(maxSpeed.toFloat())
+                        .calories(maxKcal.toInt())
+                        .runningTime(maxTime)
+                        .build()
+                })
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ aggregate: AggregateRunMetricsDetail -> receivedAggregate(aggregate) }) { onReceivedAggregateError() }
+        )
+    }
+
+    private fun receivedAggregate(aggregate: AggregateRunMetricsDetail) {
+        aggregate.distance = storage.getTotalDistance().toFloat()
+        val completedAchievements: MutableList<Achievements> = mutableListOf()
+        for (a in Achievements.values()) {
+            if (a.completed(aggregate)) {
+                completedAchievements.add(a)
+            }
+            if (completedAchievements.size == 3) break
+        }
+        view.get()?.showAchievements(completedAchievements)
+    }
+
+    private fun onReceivedAggregateError() {
+        Timber.d("Failed to retrieve aggregate metrics from db")
     }
 
     private fun receivedTotalDistance(distance: Double) {
