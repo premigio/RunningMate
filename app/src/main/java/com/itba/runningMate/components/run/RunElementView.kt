@@ -1,9 +1,7 @@
-package com.itba.runningMate.mainpage.fragments.feed.run
+package com.itba.runningMate.components.run
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.itba.runningMate.R
@@ -11,12 +9,12 @@ import com.itba.runningMate.domain.Run
 import com.itba.runningMate.utils.Formatters.timeFormat
 import java.lang.ref.WeakReference
 
-class RunElementView : FrameLayout {
+class RunElementView : ConstraintLayout {
 
     private lateinit var title: TextView
     private lateinit var distance: TextView
     private lateinit var time: TextView
-    private var ID: Long = 0
+    private var id: Long = 0
     private lateinit var listener: WeakReference<OnRunClickListener>
 
     constructor(context: Context?) : super(context!!) {
@@ -43,21 +41,19 @@ class RunElementView : FrameLayout {
     }
 
     private fun setUp() {
-        title = findViewById(R.id.run_list_card_title)
-        distance = findViewById(R.id.run_list_distance_content)
-        time = findViewById(R.id.run_list_time_run)
+        title = findViewById(R.id.run_title)
+        distance = findViewById(R.id.run_distance)
+        time = findViewById(R.id.run_time)
     }
 
     fun bind(model: Run?) {
         if (model == null) return
-        ID = model.uid!!
+        id = model.uid!!
         title.text = model.title
         distance.text = context.getString(R.string.distance_string, model.distance)
-        time.setText(timeFormat.format(model.startTime))
-        val cl: ConstraintLayout = findViewById(R.id.old_run_row_ll)
-        if (listener.get() != null) cl.setOnClickListener { l: View? ->
-            listener.get()!!
-                .onRunClick(ID)
+        time.text = timeFormat.format(model.startTime)
+        if (listener.get() != null) {
+            this.setOnClickListener { listener.get()!!.onRunClick(id) }
         }
     }
 }

@@ -2,22 +2,23 @@ package com.itba.runningMate.mainpage.fragments.feed.cards
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.itba.runningMate.R
+import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
 import java.lang.ref.WeakReference
 
-class GoalsCard : CardView {
+class LevelsCard : CardView {
 
+    private lateinit var shimmer: ShimmerFrameLayout
     private lateinit var image: ImageView
     private lateinit var title: TextView
     private lateinit var subtitle: TextView
     private lateinit var seeAll: Button
-    private var onSeeAllClickListener: WeakReference<OnSeeAllClickListener?>? = null
+    private var onSeeAllClickListener: WeakReference<OnSeeAllLevelsListener>? = null
 
     constructor(context: Context) : super(context) {
         prepareFromConstructor(context)
@@ -36,17 +37,18 @@ class GoalsCard : CardView {
     }
 
     private fun prepareFromConstructor(context: Context) {
-        inflate(context, R.layout.card_goals, this)
+        inflate(context, R.layout.card_level, this)
+        shimmer = findViewById(R.id.level_shimmer_view)
         image = findViewById(R.id.goal_image_card)
         title = findViewById(R.id.goal_title_card)
         subtitle = findViewById(R.id.goal_subtitle_card)
         seeAll = findViewById(R.id.see_all_goals)
-        seeAll.setOnClickListener(OnClickListener { l: View? -> onSeeAllButtonClicked() })
+        seeAll.setOnClickListener { onSeeAllButtonClicked() }
     }
 
     private fun onSeeAllButtonClicked() {
-        if (onSeeAllClickListener!!.get() != null) {
-            onSeeAllClickListener!!.get()!!.onSeeAllAchievementsClick()
+        if (onSeeAllClickListener?.get() != null) {
+            onSeeAllClickListener!!.get()?.onSeeAllLevelsClick()
         }
     }
 
@@ -62,7 +64,16 @@ class GoalsCard : CardView {
         image.setImageResource(imageInt)
     }
 
-    fun setSeeAllListener(onSeeAllClickListener: OnSeeAllClickListener?) {
-        this.onSeeAllClickListener = WeakReference(onSeeAllClickListener)
+    fun setSeeAllListener(onSeeAllLevelsListener: OnSeeAllLevelsListener?) {
+        this.onSeeAllClickListener = WeakReference(onSeeAllLevelsListener)
+    }
+
+    fun startShimmerAnimation() {
+        shimmer.startShimmerAnimation()
+    }
+
+    fun stopShimmerAnimation() {
+        shimmer.stopShimmerAnimation()
+        shimmer.visibility = GONE
     }
 }

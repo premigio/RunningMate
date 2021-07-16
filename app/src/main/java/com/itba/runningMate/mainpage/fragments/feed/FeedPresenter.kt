@@ -1,6 +1,6 @@
 package com.itba.runningMate.mainpage.fragments.feed
 
-import com.itba.runningMate.R
+import com.itba.runningMate.domain.Level
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
@@ -18,15 +18,10 @@ class FeedPresenter(
     private val disposables: CompositeDisposable = CompositeDisposable()
 
     fun onViewAttached() {
-        disposables.add(repo.getRunLazy()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ runs: List<Run> -> receivedRunList(runs) }) { throwable: Throwable ->
-                onRunListError(
-                    throwable
-                )
-            })
-        goalLevel()
+        view.get()?.startLevelShimmerAnimation()
+        view.get()?.startRecentActivityShimmerAnimation()
+        recentActivity()
+        level()
     }
 
     fun onViewDetached() {
@@ -43,6 +38,7 @@ class FeedPresenter(
     private fun receivedRunList(runs: List<Run>) {
         Timber.i("Runs %d", runs.size)
         if (view.get() != null) {
+            view.get()?.stopRecentActivityShimmerAnimation()
             if (runs.isEmpty()) {
                 view.get()!!.setPastRunCardsNoText()
                 view.get()!!.disappearRuns(0)
@@ -71,7 +67,25 @@ class FeedPresenter(
         }
     }
 
-    private fun goalLevel() {
+    private fun recentActivity() {
+        /*
+            ver -->
+            https://medium.com/default-to-open/smooth-loading-animations-in-android-11dcae4ecfd0
+        */
+        disposables.add(repo.getRunLazy()
+//            Para cancherear un rato
+//            .debounce(2, TimeUnit.SECONDS)
+            .limit(3)
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe({ runs: List<Run> -> receivedRunList(runs) }) { throwable: Throwable ->
+                onRunListError(
+                    throwable
+                )
+            })
+    }
+
+    private fun level() {
         disposables.add(repo.getTotalDistance()
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
@@ -84,47 +98,26 @@ class FeedPresenter(
 
     private fun receivedTotalDistance(distance: Double) {
         if (view.get() != null) {
-            if (distance < 100.0) { // Taragui
-                view.get()!!.setGoalTitle(R.string.taragui)
-                view.get()!!.setGoalSubtitle(R.string.taragui_subtitle)
-                view.get()!!.setGoalImage(R.drawable.taragui)
-            } else if (distance < 200.0) { // CBSé
-                view.get()!!.setGoalTitle(R.string.cbse)
-                view.get()!!.setGoalSubtitle(R.string.cbse_subtitle)
-                view.get()!!.setGoalImage(R.drawable.cbse)
-            } else if (distance < 300.0) { // Cruz de Malta
-                view.get()!!.setGoalTitle(R.string.cruz_de_malta)
-                view.get()!!.setGoalSubtitle(R.string.cruz_de_malta_subtitle)
-                view.get()!!.setGoalImage(R.drawable.cruzdemalta)
-            } else if (distance < 500.0) { // Playadito
-                view.get()!!.setGoalTitle(R.string.playadito)
-                view.get()!!.setGoalSubtitle(R.string.playadito_subtitle)
-                view.get()!!.setGoalImage(R.drawable.playadito)
-            } else if (distance < 750.0) { // Rosamonte
-                view.get()!!.setGoalTitle(R.string.rosamonte)
-                view.get()!!.setGoalSubtitle(R.string.rosamonte_subtitle)
-                view.get()!!.setGoalImage(R.drawable.rosamonte)
-            } else { // La Merced
-                view.get()!!.setGoalTitle(R.string.merced)
-                view.get()!!.setGoalSubtitle(R.string.merced_subtitle)
-                view.get()!!.setGoalImage(R.drawable.lamerced)
-            }
+            view.get()?.stopLevelShimmerAnimation()
+            val level = Level.from(distance)
+            view.get()!!.setGoalTitle(level.title)
+            view.get()!!.setGoalSubtitle(level.subTitle)
+            view.get()!!.setGoalImage(level.image)
         }
     }
 
     private fun onRunListErrorGoals(throwable: Throwable) {
         Timber.d("Failed to retrieve total distance from db")
-        if (view.get() != null) {
-            view.get()!!.setGoalTitle(R.string.taragui)
-            view.get()!!.setGoalSubtitle(R.string.taragui_subtitle)
-            view.get()!!.setGoalImage(R.drawable.taragui)
-        }
     }
 
     fun goToAchievementsActivity() {
         if (view.get() != null) {
             view.get()!!.launchAchievementsActivity()
         }
+    }
+
+    fun goToLevelsActivity() {
+        view.get()?.launchLevelsActivity()
     }
 
 }

@@ -2,30 +2,32 @@ package com.itba.runningMate.achievements
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.itba.runningMate.R
-import com.itba.runningMate.achievements.achievement.Achievements
-import com.itba.runningMate.achievements.achievement.AchievementsElementView
+import com.itba.runningMate.achievements.achievement.AchievementAdapter
+import com.itba.runningMate.achievements.achievement.AchievementElementView
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
-import java.util.*
+import com.itba.runningMate.domain.Achievements
 
 class AchievementsActivity : AppCompatActivity(), AchievementsView {
 
+    private lateinit var adapter: AchievementAdapter
+    private lateinit var recyclerView: RecyclerView
     private lateinit var presenter: AchievementsPresenter
-    private lateinit var goalTitle: TextView
-    private lateinit var goalSubtitle: TextView
-    private lateinit var goalImage: ImageView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var achievements: MutableList<AchievementsElementView>
+    private lateinit var achievements: MutableList<AchievementElementView>
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_achievements)
-        createPresenter()
+
         setUp()
+
+        createPresenter()
+
+        setUpRecyclerView()
     }
 
     private fun createPresenter() {
@@ -37,62 +39,61 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
     }
 
     private fun setUp() {
-        goalTitle = findViewById(R.id.goal_title)
-        goalSubtitle = findViewById(R.id.goal_subtitle)
-        goalImage = findViewById(R.id.goal_image)
-        progressBar = findViewById(R.id.goal_progress_bar)
-        achievements = ArrayList()
-        var achievement: AchievementsElementView = findViewById(R.id.achievement1)
-        achievement.bind(
-            getString(R.string.total_distance_achievement_title),
-            getString(R.string.total_distance_achievement_subtitle)
+//        achievements = ArrayList()
+//        var achievement: AchievementElementView = findViewById(R.id.achievement1)
+//        achievement.bind(
+//            getString(R.string.total_distance_achievement_title),
+//            getString(R.string.total_distance_achievement_subtitle)
+//        )
+//        achievements.add(achievement)
+//        achievement = findViewById(R.id.achievement2)
+//        achievement.bind(
+//            getString(R.string.max_kcal_achievement_title),
+//            getString(R.string.max_kcal_achievement_subtitle)
+//        )
+//        achievements.add(achievement)
+//        achievement = findViewById(R.id.achievement3)
+//        achievement.bind(
+//            getString(R.string.max_speed_achievement_title),
+//            getString(R.string.max_speed_achievement_subtitle)
+//        )
+//        achievements.add(achievement)
+//        achievement = findViewById(R.id.achievement4)
+//        achievement.bind(
+//            getString(R.string.max_time_achievement_title),
+//            getString(R.string.max_time_achievement_subtitle)
+//        )
+//        achievements.add(achievement)
+    }
+
+    private fun setUpRecyclerView() {
+        recyclerView = findViewById(R.id.achievements_rv)
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL
+            )
         )
-        achievements.add(achievement)
-        achievement = findViewById(R.id.achievement2)
-        achievement.bind(
-            getString(R.string.max_kcal_achievement_title),
-            getString(R.string.max_kcal_achievement_subtitle)
-        )
-        achievements.add(achievement)
-        achievement = findViewById(R.id.achievement3)
-        achievement.bind(
-            getString(R.string.max_speed_achievement_title),
-            getString(R.string.max_speed_achievement_subtitle)
-        )
-        achievements.add(achievement)
-        achievement = findViewById(R.id.achievement4)
-        achievement.bind(
-            getString(R.string.max_time_achievement_title),
-            getString(R.string.max_time_achievement_subtitle)
-        )
-        achievements.add(achievement)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = AchievementAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.isNestedScrollingEnabled = false
     }
 
     override fun onStart() {
         super.onStart()
+
         presenter.onViewAttached()
     }
 
     override fun onStop() {
         super.onStop()
+
         presenter.onViewDetached()
     }
 
-    override fun setGoalTitle(title: Int) {
-        goalTitle.setText(title)
-    }
-
-    override fun setGoalSubtitle(subtitle: Int) {
-        goalSubtitle.setText(subtitle)
-    }
-
-    override fun setGoalImage(image: Int) {
-        goalImage.setImageResource(image)
-    }
-
-    override fun setProgressBar(distance: Double, max: Double) {
-        progressBar.max = max.toInt()
-        progressBar.progress = distance.toInt()
+    override fun showAchievements(achievements: Array<Achievements>) {
+        adapter.update(achievements)
     }
 
     override fun setAchievement(achievementNumber: Achievements, achieved: Boolean) {

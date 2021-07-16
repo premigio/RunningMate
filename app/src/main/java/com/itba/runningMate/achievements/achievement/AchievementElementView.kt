@@ -2,12 +2,12 @@ package com.itba.runningMate.achievements.achievement
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.itba.runningMate.R
 
-class AchievementElementViewImpl : FrameLayout, AchievementsElementView {
+class AchievementElementView : ConstraintLayout {
 
     private lateinit var titleTextView: TextView
     private lateinit var descriptionTextView: TextView
@@ -48,12 +48,18 @@ class AchievementElementViewImpl : FrameLayout, AchievementsElementView {
         descriptionTextView = findViewById(R.id.achievement_description)
     }
 
-    override fun bind(title: String, description: String) {
+    fun bind(title: String, description: String) {
         titleTextView.text = title
         descriptionTextView.text = description
     }
 
-    override fun setBadgeVisibility(achieved: Boolean) {
+    fun bind(title: String, description: String, achieved: Boolean) {
+        titleTextView.text = title
+        descriptionTextView.text = description
+        setBadgeVisibility(achieved)
+    }
+
+    fun setBadgeVisibility(achieved: Boolean) {
         if (achieved) {
             imageView.alpha = 1.0f
         }
