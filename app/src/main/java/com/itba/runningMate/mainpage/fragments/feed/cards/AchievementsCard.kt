@@ -63,11 +63,7 @@ class AchievementsCard : CardView {
         }
         for (i in 0..2) {
             if (i < achievements.size) {
-                achievementElements[i].bind(
-                    resources.getString(achievements[i].title),
-                    resources.getString(achievements[i].description),
-                    true
-                )
+                achievementElements[i].bind(achievements[i], true)
             } else {
                 achievementElements[i].visibility = GONE
             }

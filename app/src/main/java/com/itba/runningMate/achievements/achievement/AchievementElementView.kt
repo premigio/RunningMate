@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.itba.runningMate.R
+import com.itba.runningMate.domain.Achievements
 
 class AchievementElementView : ConstraintLayout {
 
@@ -48,14 +49,14 @@ class AchievementElementView : ConstraintLayout {
         descriptionTextView = findViewById(R.id.achievement_description)
     }
 
-    fun bind(title: String, description: String) {
-        titleTextView.text = title
-        descriptionTextView.text = description
+    fun bind(achievement: Achievements) {
+        titleTextView.setText(achievement.title)
+        descriptionTextView.setText(achievement.description)
     }
 
-    fun bind(title: String, description: String, achieved: Boolean) {
-        titleTextView.text = title
-        descriptionTextView.text = description
+    fun bind(achievement: Achievements, achieved: Boolean) {
+        titleTextView.setText(achievement.title)
+        descriptionTextView.setText(achievement.description)
         setBadgeVisibility(achieved)
     }
 

@@ -8,11 +8,7 @@ class AchievementViewHolder(private val achievementView: AchievementElementView)
 
 
     fun bind(achievement: Achievements, achieved: Boolean) {
-        achievementView.bind(
-            achievementView.resources.getString(achievement.title),
-            achievementView.resources.getString(achievement.description),
-            achieved
-        )
+        achievementView.bind(achievement, achieved)
     }
 
 }
