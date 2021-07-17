@@ -2,16 +2,17 @@ package com.itba.runningMate.pastruns.runs
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.itba.runningMate.domain.Run
-import com.itba.runningMate.components.run.RunElementView
-import java.lang.ref.WeakReference
 import com.itba.runningMate.components.run.OnRunClickListener
+import com.itba.runningMate.components.run.RunElementView
+import com.itba.runningMate.domain.Run
+import java.lang.ref.WeakReference
 import java.util.*
 
 class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
 
     private val currentRunList: MutableList<Run>
-    private var listener: WeakReference<OnRunClickListener>? = null
+    private var clickListener: WeakReference<OnRunClickListener>? = null
+    private var deleteListener: WeakReference<OnRunDeleteListener>? = null
 
     fun update(runList: List<Run>?) {
         currentRunList.clear()
@@ -22,7 +23,11 @@ class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
     }
 
     fun setClickListener(listener: OnRunClickListener) {
-        this.listener = WeakReference(listener)
+        this.clickListener = WeakReference(listener)
+    }
+
+    fun setSwipeRunToDeleteListener(listener: OnRunDeleteListener) {
+        this.deleteListener = WeakReference(listener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunViewHolder {
@@ -35,10 +40,10 @@ class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RunViewHolder, position: Int) {
-        if (listener == null) {
+        if (clickListener == null) {
             return
         }
-        holder.setOnClickListener(listener!!.get()!!)
+        holder.setOnClickListener(clickListener!!.get()!!)
         holder.bind(currentRunList[position])
     }
 
@@ -52,6 +57,15 @@ class RunAdapter : RecyclerView.Adapter<RunViewHolder>() {
 
     override fun getItemCount(): Int {
         return currentRunList.size
+    }
+
+    fun deleteItem(position: Int) {
+        val runId = currentRunList[position].uid!!
+        currentRunList.removeAt(position)
+        notifyDataSetChanged()
+        if (deleteListener?.get() != null) {
+            deleteListener!!.get()!!.onSwipeRunToDelete(runId)
+        }
     }
 
     init {
