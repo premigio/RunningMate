@@ -52,7 +52,7 @@ class FeedPresenter(
                 return
             }
             view.get()!!.disappearNoText()
-            val maxVal = Math.min(runs.size, 3)
+            val maxVal = runs.size.coerceAtMost(3)
             for (i in 1..maxVal) {
                 //add data to view
                 view.get()!!.addRunToCard(i - 1, runs[i - 1])
@@ -107,7 +107,11 @@ class FeedPresenter(
                 })
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
-                .subscribe({ aggregate: AggregateRunMetricsDetail -> receivedAggregate(aggregate) }) { onReceivedAggregateError() }
+                .subscribe({ aggregate: AggregateRunMetricsDetail -> receivedAggregate(aggregate) }) { thowable: Throwable ->
+                    onReceivedAggregateError(
+                        thowable
+                    )
+                }
         )
     }
 
@@ -123,7 +127,7 @@ class FeedPresenter(
         view.get()?.showAchievements(completedAchievements)
     }
 
-    private fun onReceivedAggregateError() {
+    private fun onReceivedAggregateError(thowable: Throwable) {
         Timber.d("Failed to retrieve aggregate metrics from db")
     }
 

@@ -13,7 +13,6 @@
         android:text="Achievements"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +53,7 @@
         android:layout_marginBottom="50dp"
         android:gravity="center"
         android:text="You have no achievements yet"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/card_achievements_see_all_btn"

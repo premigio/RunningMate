@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -24,16 +25,16 @@ interface RunDao {
     fun insertRoute(route: RunEntity): Single<Long>
 
     @Query("SELECT TOTAL(distance) FROM runs")
-    fun getTotalDistance(): Single<Double>
+    fun getTotalDistance(): Maybe<Double>
 
     @Query("SELECT MAX(elapsed_time) FROM runs")
-    fun getMaxTime(): Single<Long>
+    fun getMaxTime(): Maybe<Long>
 
     @Query("SELECT MAX(calories) FROM runs")
-    fun getMaxKcal(): Single<Double>
+    fun getMaxKcal(): Maybe<Double>
 
     @Query("SELECT MAX(velocity) FROM runs")
-    fun getMaxSpeed(): Single<Double>
+    fun getMaxSpeed(): Maybe<Double>
 
     @Delete
     fun deleteRoute(route: RunEntity): Completable

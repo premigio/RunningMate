@@ -34,19 +34,19 @@ class RunRepositoryImpl(private val runDao: RunDao) : RunRepository {
     }
 
     override fun getTotalDistance(): Single<Double> {
-        return runDao.getTotalDistance()
+        return runDao.getTotalDistance().switchIfEmpty(Single.just(0.0))
     }
 
     override fun getMaxTime(): Single<Long> {
-        return runDao.getMaxTime()
+        return runDao.getMaxTime().switchIfEmpty(Single.just(0))
     }
 
     override fun getMaxKcal(): Single<Double> {
-        return runDao.getMaxKcal()
+        return runDao.getMaxKcal().switchIfEmpty(Single.just(0.0))
     }
 
     override fun getMaxSpeed(): Single<Double> {
-        return runDao.getMaxSpeed()
+        return runDao.getMaxSpeed().switchIfEmpty(Single.just(0.0))
     }
 
     override fun updateTitle(runId: Long, title: String): Completable {
