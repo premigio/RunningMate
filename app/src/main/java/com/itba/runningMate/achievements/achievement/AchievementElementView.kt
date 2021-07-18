@@ -1,11 +1,13 @@
 package com.itba.runningMate.achievements.achievement
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.itba.runningMate.R
+import com.itba.runningMate.domain.AchievementLevel
 import com.itba.runningMate.domain.Achievements
 
 class AchievementElementView : ConstraintLayout {
@@ -57,12 +59,26 @@ class AchievementElementView : ConstraintLayout {
     fun bind(achievement: Achievements, achieved: Boolean) {
         titleTextView.setText(achievement.title)
         descriptionTextView.setText(achievement.description)
-        setBadgeVisibility(achieved)
-    }
-
-    fun setBadgeVisibility(achieved: Boolean) {
+        setBadgeColor(achievement.level)
         if (achieved) {
             imageView.alpha = 1.0f
+        }
+    }
+
+    private fun setBadgeColor(level: AchievementLevel) {
+        when (level) {
+            AchievementLevel.BRONZE -> {
+                imageView.background.setTint(Color.parseColor("#b08d57"))
+            }
+            AchievementLevel.SILVER -> {
+                imageView.background.setTint(Color.parseColor("#aaa9ad"))
+            }
+            AchievementLevel.GOLD -> {
+                imageView.background.setTint(Color.parseColor("#d4af37"))
+            }
+            AchievementLevel.PLATINUM -> {
+                imageView.background.setTint(Color.parseColor("#e5e4e2"))
+            }
         }
     }
 }

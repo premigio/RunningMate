@@ -6,6 +6,4 @@ interface AchievementsView {
 
     fun showAchievements(achievements: Array<Achievements>)
 
-    fun setAchievement(achievementNumber: Achievements, achieved: Boolean)
-
 }

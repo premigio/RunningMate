@@ -66,10 +66,6 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
         adapter.update(achievements)
     }
 
-    override fun setAchievement(achievementNumber: Achievements, achieved: Boolean) {
-        achievements[achievementNumber.ordinal].setBadgeVisibility(achieved)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
