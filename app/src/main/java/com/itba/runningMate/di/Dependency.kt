@@ -2,10 +2,12 @@ package com.itba.runningMate.di
 
 import android.content.Context
 import androidx.room.Room
-import com.itba.runningMate.db.RunDao
-import com.itba.runningMate.db.RunDb
-import com.itba.runningMate.repository.achievements.AchievementsStorage
-import com.itba.runningMate.repository.achievements.AchievementsStorageImpl
+import com.itba.runningMate.db.achievement.AchievementDao
+import com.itba.runningMate.db.achievement.AchievementDb
+import com.itba.runningMate.db.run.RunDao
+import com.itba.runningMate.db.run.RunDb
+import com.itba.runningMate.repository.achievements.AchievementsRepository
+import com.itba.runningMate.repository.achievements.AchievementsRepositoryImpl
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.repository.run.RunRepositoryImpl
 import com.itba.runningMate.repository.runningstate.RunningStateStorage
@@ -38,9 +40,7 @@ class Dependency(context: Context) {
         return RunningStateStorageImpl(preferences)
     }
 
-    fun provideRunRepository(
-        runDao: RunDao
-    ): RunRepository {
+    fun provideRunRepository(runDao: RunDao): RunRepository {
         return RunRepositoryImpl(runDao)
     }
 
@@ -50,13 +50,23 @@ class Dependency(context: Context) {
             .build()
     }
 
-    fun provideAchievementsStorage(): AchievementsStorage {
+    fun provideAchievementsDb(): AchievementDb {
+        return Room.databaseBuilder(
+            applicationContext,
+            AchievementDb::class.java,
+            AchievementDb.NAME
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    fun provideAchievementsStorage(achievementDao: AchievementDao): AchievementsRepository {
         val preferences = applicationContext
             .getSharedPreferences(
-                AchievementsStorage.ACHIEVEMENTS_PREFERENCES_FILE,
+                AchievementsRepository.ACHIEVEMENTS_PREFERENCES_FILE,
                 Context.MODE_PRIVATE
             )
-        return AchievementsStorageImpl(preferences)
+        return AchievementsRepositoryImpl(preferences, achievementDao)
     }
 
     fun provideTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher {

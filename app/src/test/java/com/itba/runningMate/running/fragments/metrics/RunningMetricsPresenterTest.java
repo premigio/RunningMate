@@ -2,7 +2,7 @@ package com.itba.runningMate.running.fragments.metrics;
 
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.repository.achievements.AchievementsStorage;
+import com.itba.runningMate.repository.achievements.AchievementsRepository;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.services.location.Tracker;
 import com.itba.runningMate.utils.Constants;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class RunningMetricsPresenterTest {
 
-    private AchievementsStorage achievementsStorage;
+    private AchievementsRepository achievementsRepository;
     private RunRepository runRepository;
     private SchedulerProvider schedulers;
     private RunningMetricsView view;
@@ -39,13 +39,13 @@ public class RunningMetricsPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        achievementsStorage = mock(AchievementsStorage.class);
+        achievementsRepository = mock(AchievementsRepository.class);
         runRepository = mock(RunRepository.class);
         schedulers = mock(SchedulerProvider.class);
         view = mock(RunningMetricsView.class);
         tracker = mock(Tracker.class);
 
-        presenter = new RunningMetricsPresenter(runRepository, schedulers, achievementsStorage, view);
+        presenter = new RunningMetricsPresenter(runRepository, schedulers, achievementsRepository, view);
         presenterSpy = spy(presenter);
 
         route = new Route().addToRoute(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE);

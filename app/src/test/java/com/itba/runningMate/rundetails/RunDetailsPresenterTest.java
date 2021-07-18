@@ -5,7 +5,7 @@ import android.net.Uri;
 
 import com.itba.runningMate.domain.Route;
 import com.itba.runningMate.domain.Run;
-import com.itba.runningMate.repository.achievements.AchievementsStorage;
+import com.itba.runningMate.repository.achievements.AchievementsRepository;
 import com.itba.runningMate.repository.run.RunRepository;
 import com.itba.runningMate.rundetails.model.RunMetricsDetail;
 import com.itba.runningMate.utils.providers.files.CacheFileProvider;
@@ -31,20 +31,21 @@ import static org.mockito.Mockito.when;
 
 public class RunDetailsPresenterTest {
 
-    private final Run run = new Run().calories(10)
-            .distance(10)
-            .pace(10)
+    private final Run run = new Run.Builder().calories(10)
+            .distance(10f)
+            .pace(10L)
             .startTime(new Date(System.currentTimeMillis()))
             .endTime(new Date(System.currentTimeMillis()))
-            .runningTime(10)
-            .velocity(10)
-            .uid(1)
+            .runningTime(10L)
+            .velocity(10f)
+            .uid(1L)
             .title("Test Run")
-            .route(new LinkedList<>());
+            .route(new LinkedList<>())
+            .build();
 
     private CacheFileProvider cacheFileProvider;
     private RunRepository runRepository;
-    private AchievementsStorage achievementsStorage;
+    private AchievementsRepository achievementsRepository;
     private SchedulerProvider schedulerProvider;
     private long runId;
     private RunDetailsView view;
@@ -57,11 +58,11 @@ public class RunDetailsPresenterTest {
         cacheFileProvider = mock(CacheFileProvider.class);
         runRepository = mock(RunRepository.class);
         schedulerProvider = new AndroidTestSchedulerProvider();
-        achievementsStorage = mock(AchievementsStorage.class);
+        achievementsRepository = mock(AchievementsRepository.class);
         view = mock(RunDetailsView.class);
         runId = 1;
 
-        presenter = new RunDetailsPresenter(cacheFileProvider, runRepository, schedulerProvider, achievementsStorage, runId, view);
+        presenter = new RunDetailsPresenter(cacheFileProvider, runRepository, schedulerProvider, achievementsRepository, runId, view);
         presenterSpy = spy(presenter);
     }
 

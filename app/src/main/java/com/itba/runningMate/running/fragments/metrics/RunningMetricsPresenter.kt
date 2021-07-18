@@ -2,7 +2,7 @@ package com.itba.runningMate.running.fragments.metrics
 
 import androidx.annotation.VisibleForTesting
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.repository.achievements.AchievementsStorage
+import com.itba.runningMate.repository.achievements.AchievementsRepository
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.services.location.Tracker
 import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener
@@ -18,7 +18,7 @@ import java.util.*
 class RunningMetricsPresenter(
     private val runRepository: RunRepository,
     private val schedulers: SchedulerProvider,
-    private val achievementsStorage: AchievementsStorage,
+    private val achievementsRepository: AchievementsRepository,
     view: RunningMetricsView?
 ) : OnTrackingMetricsUpdateListener {
 
@@ -80,8 +80,8 @@ class RunningMetricsPresenter(
             view.get()!!.finishActivity()
         } else {
             val timeMillis = tracker!!.queryElapsedTime()
-            achievementsStorage.increaseTotalDistance(distKm.toDouble())
-            achievementsStorage.persistState()
+            achievementsRepository.increaseTotalDistance(distKm.toDouble())
+            achievementsRepository.persistState()
             val run = Run.Builder()
                 .title("Run on " + Formatters.dateFormat.format(Date(tracker!!.queryStartTime())))
                 .startTime(Date(tracker!!.queryStartTime()))

@@ -1,9 +1,11 @@
 package com.itba.runningMate.di
 
 import android.content.Context
-import com.itba.runningMate.db.RunDao
-import com.itba.runningMate.db.RunDb
-import com.itba.runningMate.repository.achievements.AchievementsStorage
+import com.itba.runningMate.db.achievement.AchievementDao
+import com.itba.runningMate.db.achievement.AchievementDb
+import com.itba.runningMate.db.run.RunDao
+import com.itba.runningMate.db.run.RunDb
+import com.itba.runningMate.repository.achievements.AchievementsRepository
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.repository.runningstate.RunningStateStorage
 import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher
@@ -18,9 +20,10 @@ class ProductionDependencyContainer(context: Context) : DependencyContainer {
     private var schedulerProvider: SchedulerProvider? = null
     private var cacheFileProvider: CacheFileProvider? = null
     private var runningStateStorage: RunningStateStorage? = null
-    private var achievementsStorage: AchievementsStorage? = null
+    private var achievementsRepository: AchievementsRepository? = null
     private var runRepository: RunRepository? = null
     private var runDb: RunDb? = null
+    private var achievementDb: AchievementDb? = null
 
     override fun getApplicationContext(): Context {
         return dependency.applicationContext
@@ -47,11 +50,11 @@ class ProductionDependencyContainer(context: Context) : DependencyContainer {
         return runningStateStorage!!
     }
 
-    override fun getAchievementsStorage(): AchievementsStorage {
-        if (achievementsStorage == null) {
-            achievementsStorage = dependency.provideAchievementsStorage()
+    override fun getAchievementsStorage(): AchievementsRepository {
+        if (achievementsRepository == null) {
+            achievementsRepository = dependency.provideAchievementsStorage(getAchievementDao())
         }
-        return achievementsStorage!!
+        return achievementsRepository!!
     }
 
     override fun getRunRepository(): RunRepository {
@@ -67,6 +70,14 @@ class ProductionDependencyContainer(context: Context) : DependencyContainer {
         }
         return runDb!!.RunDao()
     }
+
+    private fun getAchievementDao(): AchievementDao {
+        if (achievementDb == null) {
+            achievementDb = dependency.provideAchievementsDb()
+        }
+        return achievementDb!!.AchievementDao()
+    }
+
 
     override fun getTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher {
         if (trackingLocationUpdatesDispatcher == null) {
