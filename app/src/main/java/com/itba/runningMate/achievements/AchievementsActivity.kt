@@ -22,12 +22,10 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_achievements)
-
-        setUp()
+        supportActionBar!!.setTitle(R.string.achievements)
 
         createPresenter()
-
-        setUpRecyclerView()
+        setUp()
     }
 
     private fun createPresenter() {
@@ -39,34 +37,6 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
     }
 
     private fun setUp() {
-//        achievements = ArrayList()
-//        var achievement: AchievementElementView = findViewById(R.id.achievement1)
-//        achievement.bind(
-//            getString(R.string.total_distance_achievement_title),
-//            getString(R.string.total_distance_achievement_subtitle)
-//        )
-//        achievements.add(achievement)
-//        achievement = findViewById(R.id.achievement2)
-//        achievement.bind(
-//            getString(R.string.max_kcal_achievement_title),
-//            getString(R.string.max_kcal_achievement_subtitle)
-//        )
-//        achievements.add(achievement)
-//        achievement = findViewById(R.id.achievement3)
-//        achievement.bind(
-//            getString(R.string.max_speed_achievement_title),
-//            getString(R.string.max_speed_achievement_subtitle)
-//        )
-//        achievements.add(achievement)
-//        achievement = findViewById(R.id.achievement4)
-//        achievement.bind(
-//            getString(R.string.max_time_achievement_title),
-//            getString(R.string.max_time_achievement_subtitle)
-//        )
-//        achievements.add(achievement)
-    }
-
-    private fun setUpRecyclerView() {
         recyclerView = findViewById(R.id.achievements_rv)
         recyclerView.addItemDecoration(
             DividerItemDecoration(

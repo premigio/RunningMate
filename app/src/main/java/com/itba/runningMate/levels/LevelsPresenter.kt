@@ -28,9 +28,7 @@ class LevelsPresenter(
         disposables.add(repo.getTotalDistance()
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
-            .subscribe({ distance: Double -> receivedTotalDistance(distance) }) {
-                onRunListErrorGoals()
-            })
+            .subscribe({ distance: Double -> receivedTotalDistance(distance) }) { onReceivedTotalDistanceError() })
     }
 
     private fun receivedTotalDistance(distance: Double) {
@@ -38,7 +36,7 @@ class LevelsPresenter(
         view.get()?.showCurrentLevel(level, distance)
     }
 
-    private fun onRunListErrorGoals() {
+    private fun onReceivedTotalDistanceError() {
         Timber.d("Failed to retrieve total distance from db")
     }
 }

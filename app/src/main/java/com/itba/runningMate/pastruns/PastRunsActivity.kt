@@ -6,17 +6,22 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.itba.runningMate.R
 import com.itba.runningMate.components.run.OnRunClickListener
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
 import com.itba.runningMate.domain.Run
+import com.itba.runningMate.pastruns.runs.OnRunDeleteListener
 import com.itba.runningMate.pastruns.runs.RunAdapter
+import com.itba.runningMate.pastruns.runs.SwipeToDeleteCallback
 
-class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
+class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener,
+    OnRunDeleteListener {
 
     private lateinit var rvRunListAdapter: RunAdapter
     private lateinit var recyclerView: RecyclerView
@@ -43,7 +48,8 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
         val container = locateComponent(this)
         val schedulerProvider = container.getSchedulerProvider()
         val runRepository = container.getRunRepository()
-        presenter = PastRunsPresenter(schedulerProvider, runRepository, this)
+        val achievementsStorage = container.getAchievementsStorage()
+        presenter = PastRunsPresenter(schedulerProvider, runRepository, achievementsStorage, this)
     }
 
     private fun setUpRecyclerView() {
@@ -58,7 +64,10 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
         recyclerView.layoutManager = LinearLayoutManager(this)
         rvRunListAdapter = RunAdapter()
         rvRunListAdapter.setClickListener(this)
+        rvRunListAdapter.setSwipeRunToDeleteListener(this)
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(this, rvRunListAdapter))
         recyclerView.adapter = rvRunListAdapter
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     public override fun onStart() {
@@ -95,6 +104,10 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
         presenter.onRunClick(id)
     }
 
+    override fun onSwipeRunToDelete(id: Long) {
+        presenter.onSwipeRunToDelete(id)
+    }
+
     override fun onBackPressed() {
         finish()
     }
@@ -105,5 +118,10 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun showDeleteError() {
+        presenter.fetchRuns() // refresh action
+        Toast.makeText(this, "Error while attempting to delete run", Toast.LENGTH_LONG).show()
     }
 }

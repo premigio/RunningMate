@@ -22,6 +22,7 @@
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/recent_activity_shimmer_view"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
@@ -92,7 +93,7 @@
         android:layout_marginBottom="50dp"
         android:gravity="center"
         android:text="@string/empty_list"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/see_all_past_runs"

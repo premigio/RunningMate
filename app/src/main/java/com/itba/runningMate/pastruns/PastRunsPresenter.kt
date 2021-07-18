@@ -1,9 +1,11 @@
 package com.itba.runningMate.pastruns
 
 import com.itba.runningMate.domain.Run
+import com.itba.runningMate.repository.achievements.AchievementsStorage
 import com.itba.runningMate.repository.run.RunRepository
+import com.itba.runningMate.rundetails.model.RunMetricsDetail
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.*
@@ -11,31 +13,26 @@ import java.util.*
 class PastRunsPresenter(
     private val schedulerProvider: SchedulerProvider,
     private val runRepository: RunRepository,
+    private val achievementsStorage: AchievementsStorage,
     view: PastRunsView
 ) {
     private val view: WeakReference<PastRunsView> = WeakReference(view)
-    private var disposable: Disposable? = null
+    private val disposables: CompositeDisposable = CompositeDisposable()
 
     fun onViewAttached() {
-        disposable = runRepository.getRunLazy()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ runs: List<Run>? -> receivedRunList(runs) }) { err: Throwable ->
-                onRunListError(
-                    err
-                )
-            }
-    }
-
-    private fun onRunListError(err: Throwable) {
-        Timber.d("Failed to retrieve runs from db")
-        if (view.get() != null) {
-            view.get()!!.showNoPastRunsMessage()
-        }
+        fetchRuns()
     }
 
     fun onViewDetached() {
-        disposable!!.dispose()
+        disposables.dispose()
+    }
+
+    fun fetchRuns() {
+        disposables.add(runRepository.getRunLazy()
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe({ runs: List<Run>? -> receivedRunList(runs) }) { onRunListError() }
+        )
     }
 
     private fun receivedRunList(runs: List<Run>?) {
@@ -51,9 +48,48 @@ class PastRunsPresenter(
         }
     }
 
+    private fun onRunListError() {
+        Timber.d("Failed to retrieve runs from db")
+        if (view.get() != null) {
+            view.get()!!.showNoPastRunsMessage()
+        }
+    }
+
     fun onRunClick(id: Long) {
         if (view.get() != null) {
             view.get()!!.launchRunDetails(id)
+        }
+    }
+
+    fun onSwipeRunToDelete(id: Long) {
+        disposables.add(runRepository.deleteRun(id)
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe({ onRunDeleted(id) }) { onRunDeleteError(id) })
+        disposables.add(runRepository.getRunMetrics(id)
+            .subscribeOn(schedulerProvider.computation())
+            .observeOn(schedulerProvider.ui())
+            .subscribe({ run: Run -> onReceivedRunMetrics(run) }) { onReceivedRunMetricsError() })
+    }
+
+    private fun onReceivedRunMetrics(run: Run) {
+        val distance = run.distance!!.toDouble()
+        achievementsStorage.decreaseTotalDistance(distance)
+        achievementsStorage.persistState()
+    }
+
+    private fun onReceivedRunMetricsError() {
+        Timber.d("Failed to decrease total distance when run deleted")
+    }
+
+    private fun onRunDeleted(id: Long) {
+        Timber.i("Successfully deleted run from db for run-id: %d", id)
+    }
+
+    private fun onRunDeleteError(id: Long) {
+        Timber.d("Failed to delete run from db for run-id: %d", id)
+        if (view.get() != null) {
+            view.get()!!.showDeleteError()
         }
     }
 }

@@ -11,4 +11,7 @@ interface PastRunsView {
     fun hideNoPastRunsMessage()
 
     fun launchRunDetails(id: Long)
+
+    fun showDeleteError()
+
 }
