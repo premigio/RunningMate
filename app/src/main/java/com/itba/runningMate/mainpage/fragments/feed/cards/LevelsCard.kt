@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.itba.runningMate.R
+import com.itba.runningMate.domain.Level
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
 import java.lang.ref.WeakReference
 
@@ -52,18 +53,6 @@ class LevelsCard : CardView {
         }
     }
 
-    fun setTitle(titleInt: Int) {
-        title.setText(titleInt)
-    }
-
-    fun setSubtitle(subtitleInt: Int) {
-        subtitle.setText(subtitleInt)
-    }
-
-    fun setImage(imageInt: Int) {
-        image.setImageResource(imageInt)
-    }
-
     fun setSeeAllListener(onSeeAllLevelsListener: OnSeeAllLevelsListener?) {
         this.onSeeAllClickListener = WeakReference(onSeeAllLevelsListener)
     }
@@ -75,5 +64,11 @@ class LevelsCard : CardView {
     fun stopShimmerAnimation() {
         shimmer.stopShimmerAnimation()
         shimmer.visibility = GONE
+    }
+
+    fun bind(level: Level) {
+        title.setText(level.title)
+        subtitle.setText(level.subTitle)
+        image.setImageResource(level.image)
     }
 }

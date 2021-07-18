@@ -71,6 +71,8 @@
     <string name="goal_subtitle">This is a subtitle, to explain about the goal!</string>
     <string name="goal_description">This image represents the level you are in.</string>
 
+    // Levels
+
     <string name="taragui">Taragui</string>
     <string name="taragui_subtitle">Level 1: Taragui, The "yerba" that leads in Argentina.</string>
     <string name="cbse">CBSé</string>
@@ -86,16 +88,51 @@
     <string name="achievements">Achievements</string>
     <string name="achievement_unlocked_description">Achievement Unlocked</string>
     <string name="achievement_description">Description of the achievement</string>
-    <string name="total_distance_achievement_title">Ran 2000km</string>
-    <string name="total_distance_achievement_subtitle">Ran more than a total of 2000km</string>
-    <string name="max_speed_achievement_title">Speed 10km/h</string>
-    <string name="max_speed_achievement_subtitle">Got to run at more than 10km/h</string>
-    <string name="max_kcal_achievement_title">1000 Kcal</string>
-    <string name="max_kcal_achievement_subtitle">Burned more than 1000 kcal in one run.</string>
-    <string name="max_time_achievement_title">Time 1h</string>
-    <string name="max_time_achievement_subtitle">Got to run for more than 1h.</string>
     <string name="level">Level</string>
 
+    // Achievements
+    <string name="max_distance_8_achievement_title">Run 8km</string>
+    <string name="max_distance_8_achievement_subtitle">Run for more than 8km</string>
+    <string name="max_distance_16_achievement_title">Run 16km</string>
+    <string name="max_distance_16_achievement_subtitle">Run for more than 16km</string>
+    <string name="max_distance_32_achievement_title">Run 32km</string>
+    <string name="max_distance_32_achievement_subtitle">Run for more than 32km</string>
+    <string name="max_distance_42_achievement_title">Run 42km</string>
+    <string name="max_distance_42_achievement_subtitle">Run for more than 42km</string>
+
+    <string name="max_speed_8_achievement_title">Speed 8km/h</string>
+    <string name="max_speed_8_achievement_subtitle">Run at an average of 8km/h</string>
+    <string name="max_speed_10_achievement_title">Speed 10km/h</string>
+    <string name="max_speed_10_achievement_subtitle">Run at an average of 10km/h</string>
+    <string name="max_speed_14_achievement_title">Speed 14km/h</string>
+    <string name="max_speed_14_achievement_subtitle">Run at an average of 14km/h</string>
+    <string name="max_speed_16_achievement_title">Speed 16km/h</string>
+    <string name="max_speed_16_achievement_subtitle">Run at an average of 16km/h</string>
+
+    <string name="max_kcal_500_achievement_title">500 Kcal</string>
+    <string name="max_kcal_500_achievement_subtitle">Burn more than 500 kcal in one run.</string>
+    <string name="max_kcal_1000_achievement_title">1000 Kcal</string>
+    <string name="max_kcal_1000_achievement_subtitle">Burn more than 1000 kcal in one run.</string>
+    <string name="max_kcal_2000_achievement_title">2000 Kcal</string>
+    <string name="max_kcal_2000_achievement_subtitle">Burn more than 2000 kcal in one run.</string>
+    <string name="max_kcal_3000_achievement_title">3000 Kcal</string>
+    <string name="max_kcal_3000_achievement_subtitle">Burn more than 3000 kcal in one run.</string>
+
+    <string name="max_time_30m_achievement_title">Time 00:30</string>
+    <string name="max_time_30m_achievement_subtitle">Run for more than 30 minutes</string>
+    <string name="max_time_1h_achievement_title">Time 1:00</string>
+    <string name="max_time_1h_achievement_subtitle">Run for more than 1 hour.</string>
+    <string name="max_time_1h_30m_achievement_title">Time 1:30</string>
+    <string name="max_time_1h_30m_achievement_subtitle">Run for more than 1 hour and 30 minutes</string>
+    <string name="max_time_3h_achievement_title">Time 3:00</string>
+    <string name="max_time_3h_achievement_subtitle">Run for more than 3 hours</string>
+
+    // Achievements categories
+    <string name="achievement_category_time">Run Time</string>
+    <string name="achievement_category_distance">Longest Run</string>
+    <string name="achievement_category_speed">Fastest Run</string>
+    <string name="achievement_category_calories">Calories Burned</string>
+    <string name="achievement_category_streak">Streaks</string>
 
     <!--    <string name="date_title">%1$s</string>-->
     <!--    <string name="speed_title">Speed</string>-->
