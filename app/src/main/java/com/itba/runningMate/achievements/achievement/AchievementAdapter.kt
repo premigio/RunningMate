@@ -2,38 +2,62 @@ package com.itba.runningMate.achievements.achievement
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.itba.runningMate.domain.AchievementCategory
 import com.itba.runningMate.domain.Achievements
 
-class AchievementAdapter : RecyclerView.Adapter<AchievementViewHolder>() {
+class AchievementAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val ITEM_VIEW_TYPE_HEADER = 0
+    private val ITEM_VIEW_TYPE_ITEM = 1
 
     private var completedAchievements: Array<Achievements>? = null
+    private val flatItems: MutableList<Item> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AchievementViewHolder {
-        val view = AchievementElementView(parent.context)
-        view.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        return AchievementViewHolder(view)
+    init {
+        for (category in AchievementCategory.values()) {
+            flatItems.add(Item.AchievementHeader(category))
+            AchievementCategory.getAchievements(category)
+                .forEach { a -> flatItems.add(Item.AchievementItem(a)) }
+        }
+        print(flatItems)
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (flatItems[position]) {
+            is Item.AchievementItem -> ITEM_VIEW_TYPE_ITEM
+            is Item.AchievementHeader -> ITEM_VIEW_TYPE_HEADER
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            ITEM_VIEW_TYPE_HEADER -> AchievementCategoryViewHolder.from(parent)
+            ITEM_VIEW_TYPE_ITEM -> AchievementViewHolder.from(parent)
+            else -> throw ClassCastException("Unknown viewType $viewType")
+        }
     }
 
     override fun getItemCount(): Int {
-        return Achievements.values().size
+        return flatItems.size
     }
 
-    override fun onBindViewHolder(holder: AchievementViewHolder, position: Int) {
-        val achievementAtPosition = Achievements.values()[position]
-        val isCompleted = completedAchievements?.contains(achievementAtPosition) ?: false
-        holder.bind(
-            achievementAtPosition,
-            isCompleted
-        )
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is AchievementViewHolder -> {
+                val achievement = (flatItems[position] as Item.AchievementItem).achievement
+                val isCompleted = completedAchievements?.contains(achievement) ?: false
+                holder.bind(achievement, isCompleted)
+            }
+            is AchievementCategoryViewHolder -> {
+                val category = (flatItems[position] as Item.AchievementHeader).category
+                holder.bind(category)
+            }
+        }
     }
 
     fun update(completedAchievements: Array<Achievements>) {
         this.completedAchievements = completedAchievements
         notifyDataSetChanged()
     }
-
 
 }

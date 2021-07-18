@@ -1,6 +1,7 @@
 package com.itba.runningMate.achievements
 
 import com.itba.runningMate.achievements.model.AggregateRunMetricsDetail
+import com.itba.runningMate.domain.AchievementCategory
 import com.itba.runningMate.domain.Achievements
 import com.itba.runningMate.repository.achievements.AchievementsStorage
 import com.itba.runningMate.repository.run.RunRepository
@@ -9,6 +10,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.lang.ref.WeakReference
+import java.util.*
 
 class AchievementsPresenter(
     private val repo: RunRepository,

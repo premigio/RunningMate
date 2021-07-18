@@ -12,4 +12,16 @@ enum class AchievementCategory(
     SPEED(R.string.achievement_category_speed),
     STREAKS(R.string.achievement_category_streak),
     ;
+
+    companion object {
+        fun getAchievements(category: AchievementCategory): List<Achievements> {
+            val list = mutableListOf<Achievements>()
+            for (achievement in Achievements.values()) {
+                if (achievement.category == category) {
+                    list.add(achievement)
+                }
+            }
+            return list
+        }
+    }
 }

@@ -96,6 +96,7 @@ class FeedPresenter(
     }
 
     private fun achievements() {
+        // fixme: should receive latest achievements
         disposables.add(
             Single.zip(repo.getMaxSpeed(), repo.getMaxKcal(), repo.getMaxTime(),
                 { maxSpeed, maxKcal, maxTime ->

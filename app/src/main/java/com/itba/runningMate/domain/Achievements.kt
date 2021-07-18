@@ -2,6 +2,8 @@ package com.itba.runningMate.domain
 
 import com.itba.runningMate.R
 import com.itba.runningMate.achievements.model.AggregateRunMetricsDetail
+import java.util.*
+import kotlin.collections.HashMap
 
 enum class Achievements(
     val title: Int,
