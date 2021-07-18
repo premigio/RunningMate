@@ -75,7 +75,7 @@
     <string name="goal_description">This image represents the level you are in.</string>
 
     // Levels
-
+    <string name="current_level_progress_km">%.1f/%.1fkm</string>
     <string name="taragui">Taragui</string>
     <string name="taragui_subtitle">Level 1: Taragui, The "yerba" that leads in Argentina.</string>
     <string name="cbse">CBSé</string>
