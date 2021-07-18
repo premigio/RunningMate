@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.itba.runningMate.R
+import com.itba.runningMate.components.run.OnRunClickListener
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.components.run.OnRunClickListener
 import com.itba.runningMate.pastruns.runs.RunAdapter
 
 class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
@@ -25,18 +25,25 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_mainpage_past_runs)
-        val container = locateComponent(this)
-        val schedulerProvider = container.getSchedulerProvider()
-        val runRepository = container.getRunRepository()
-        presenter = PastRunsPresenter(schedulerProvider, runRepository, this)
+        setContentView(R.layout.activity_past_runs)
+
+        createPresenter()
+
         emptyMessage = findViewById(R.id.empty_run_list)
 
         setUpRecyclerView()
 
         //Creo el botón para volver
         val actionBar = supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar!!.setTitle(R.string.past_runs)
+        actionBar.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun createPresenter() {
+        val container = locateComponent(this)
+        val schedulerProvider = container.getSchedulerProvider()
+        val runRepository = container.getRunRepository()
+        presenter = PastRunsPresenter(schedulerProvider, runRepository, this)
     }
 
     private fun setUpRecyclerView() {
