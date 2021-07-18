@@ -19,6 +19,9 @@ import com.itba.runningMate.di.DependencyContainerLocator
 import com.itba.runningMate.services.location.Tracker
 import com.itba.runningMate.services.location.TrackingService
 import com.itba.runningMate.utils.Formatters
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -106,11 +109,11 @@ class RunningMetricsFragment : Fragment(), RunningMetricsView, ServiceConnection
 
     private fun createPresenter() {
         val container = DependencyContainerLocator.locateComponent(requireContext())
-        val schedulerProvider = container.getSchedulerProvider()
         val runRepository = container.getRunRepository()
         val achievementsStorage = container.getAchievementsStorage()
+        val scope = CoroutineScope(Dispatchers.IO + CoroutineName("RunningMetricsFragment"))
         presenter =
-            RunningMetricsPresenter(runRepository, schedulerProvider, achievementsStorage, this)
+            RunningMetricsPresenter(runRepository, scope, achievementsStorage, this)
     }
 
     override fun updateDistance(elapsedDistance: Float) {

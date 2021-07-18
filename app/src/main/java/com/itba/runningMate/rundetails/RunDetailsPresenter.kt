@@ -10,53 +10,54 @@ import com.itba.runningMate.utils.ImageProcessing
 import com.itba.runningMate.utils.providers.files.CacheFileProvider
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 import java.io.FileOutputStream
 import java.lang.ref.WeakReference
 
 class RunDetailsPresenter(
-    private val cacheFileProvider: CacheFileProvider,
-    private val runRepository: RunRepository,
-    private val schedulerProvider: SchedulerProvider,
-    private val achievementsStorage: AchievementsStorage,
-    private val runId: Long,
-    view: RunDetailsView?
+        private val cacheFileProvider: CacheFileProvider,
+        private val runRepository: RunRepository,
+        private val achievementsStorage: AchievementsStorage,
+        private val runId: Long,
+        private val scope: CoroutineScope,
+        view: RunDetailsView?
 ) {
     private val view: WeakReference<RunDetailsView> = WeakReference(view)
-    private val disposables: CompositeDisposable = CompositeDisposable()
 
     private var distance = 0.0
     private lateinit var detail: RunMetricsDetail
 
     fun onViewAttached() {
-        disposables.add(runRepository.getRunMetrics(runId)
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ run: Run -> onReceivedRunMetrics(run) }) { throwable: Throwable ->
-                onReceivedRunMetricsError(
-                    throwable
-                )
-            })
+        scope.launch {
+            launch {
+                runRepository.getRunMetrics(runId).collect { rm ->
+                    onReceivedRunMetrics(rm)
+                }
+            }
+        }
     }
 
-    private fun onReceivedRunMetrics(run: Run) {
+    private fun onReceivedRunMetrics(run: Run?) {
         if (view.get() == null) {
             return
         }
-        distance = run.distance!!.toDouble()
+        distance = run?.distance!!.toDouble()
         detail = from(run)
         view.get()!!.showRunMetrics(detail)
     }
 
     fun onMapAttached() {
-        disposables.add(runRepository.getRun(runId)
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ run: Run -> onReceivedRun(run) }) { throwable: Throwable ->
-                onReceivedRunMetricsError(
-                    throwable
-                )
-            })
+        scope.launch {
+            launch {
+                runRepository.getRun(runId).collect { r ->
+                    withContext(Dispatchers.Main){
+                        onReceivedRun(r)
+                    }
+                }
+            }
+        }
     }
 
     private fun onReceivedRunMetricsError(throwable: Throwable) {
@@ -66,34 +67,34 @@ class RunDetailsPresenter(
         }
     }
 
-    private fun onReceivedRun(run: Run) {
+    private fun onReceivedRun(run: Run?) {
         if (view.get() != null) {
-            view.get()!!.showRoute(Route.from(run.route))
+            view.get()!!.showRoute(Route.from(run?.route))
         }
     }
 
     fun onViewDetached() {
-        disposables.dispose()
+        scope.cancel()
     }
 
     fun onDeleteButtonClick() {
         achievementsStorage.decreaseTotalDistance(distance)
         achievementsStorage.persistState()
-        disposables.add(runRepository.deleteRun(runId)
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ onRunDeleted() }) { throwable: Throwable -> onRunDeleteError(throwable) })
+        scope.launch {
+            launch {
+                runRepository.deleteRun(runId)
+                onRunDeleted()
+            }
+        }
     }
 
     fun onRunTitleModified(newTitle: String) {
-        disposables.add(runRepository.updateTitle(runId, newTitle)
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.computation())
-            .subscribe({ onRunTitleUpdated() }) { throwable: Throwable? ->
-                onRunTitleUpdateError(
-                    throwable
-                )
-            })
+        scope.launch {
+            launch {
+                runRepository.updateTitle(runId, newTitle)
+                onRunTitleUpdated()
+            }
+        }
     }
 
     fun onRunTitleUpdated() {

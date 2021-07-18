@@ -25,6 +25,9 @@ import com.itba.runningMate.domain.Route
 import com.itba.runningMate.map.Map
 import com.itba.runningMate.rundetails.model.RunMetricsDetail
 import com.itba.runningMate.utils.ImageProcessing
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class RunDetailsActivity : AppCompatActivity(), RunDetailsView, OnMapReadyCallback {
 
@@ -159,16 +162,15 @@ class RunDetailsActivity : AppCompatActivity(), RunDetailsView, OnMapReadyCallba
 
     private fun createPresenter(runId: Long) {
         val container = DependencyContainerLocator.locateComponent(this)
-        val schedulerProvider = container.getSchedulerProvider()
         val runRepository = container.getRunRepository()
         val cacheFileProvider = container.getCacheFileProvider()
         val achievementsStorage = container.getAchievementsStorage()
+        val scope = CoroutineScope(Dispatchers.IO + CoroutineName("RunDetailsScope"))
         presenter = RunDetailsPresenter(
             cacheFileProvider,
             runRepository,
-            schedulerProvider,
             achievementsStorage,
-            runId,
+            runId, scope,
             this
         )
     }

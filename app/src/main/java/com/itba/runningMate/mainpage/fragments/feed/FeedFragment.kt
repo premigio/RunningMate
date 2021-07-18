@@ -14,6 +14,9 @@ import com.itba.runningMate.mainpage.fragments.feed.cards.GoalsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.OnSeeAllClickListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard
 import com.itba.runningMate.mainpage.fragments.feed.run.OnRunClickListener
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickListener {
 
@@ -40,11 +43,11 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllClickList
     }
 
     private fun createPresenter() {
-        val container = locateComponent(context!!)
+        val container = locateComponent(requireContext())
         presenter = FeedPresenter(
             container.getRunRepository(),
-            container.getSchedulerProvider(),
-            this
+            CoroutineScope(Dispatchers.IO + CoroutineName("FeedScope")),
+        this
         )
     }
 

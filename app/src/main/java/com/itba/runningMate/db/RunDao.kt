@@ -4,27 +4,26 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface RunDao {
 
     @Query("SELECT * FROM runs ORDER BY start_time DESC")
-    fun getRoutes(): Flowable<List<RunEntity>>
+    fun getRoutes(): StateFlow<List<RunEntity>>
 
     @Query("SELECT * FROM runs WHERE runs.run_id = :id")
-    fun getRoute(id: Long): Single<RunEntity>
+    fun getRoute(id: Long): StateFlow<RunEntity?>
 
     @Query("SELECT run_id, start_time, end_time, elapsed_time, distance, velocity, pace, calories, title FROM runs WHERE runs.run_id = :id")
-    fun getRouteMetrics(id: Long): Single<RunEntity>
+    fun getRouteMetrics(id: Long): StateFlow<RunEntity?>
 
     @Insert
-    fun insertRoute(route: RunEntity): Single<Long>
+    suspend fun insertRoute(route: RunEntity): Long?
 
     @Query("SELECT SUM(distance) FROM runs")
-    fun getTotalDistance(): Single<Double>
+    fun getTotalDistance(): StateFlow<Double?>
 
     @Query("SELECT MAX(elapsed_time) FROM runs")
     suspend fun getMaxTime(): Long?
@@ -36,14 +35,14 @@ interface RunDao {
     suspend fun getMaxSpeed(): Double?
 
     @Delete
-    fun deleteRoute(route: RunEntity): Completable
+    suspend fun deleteRoute(route: RunEntity): Void
 
     @Query("DELETE FROM runs WHERE runs.run_id = :id")
-    fun deleteRoute(id: Long): Completable
+    suspend fun deleteRoute(id: Long): Void
 
     @Query("SELECT run_id, start_time, end_time, elapsed_time, distance, velocity, pace, calories, title FROM runs ORDER BY start_time DESC")
-    fun getRoutesLazy(): Flowable<List<RunEntity>>
+    fun getRoutesLazy(): StateFlow<List<RunEntity>>
 
     @Query("UPDATE runs SET title=:title WHERE run_id = :id")
-    fun updateTitle(id: Long, title: String): Completable
+    suspend fun updateTitle(id: Long, title: String): Void
 }

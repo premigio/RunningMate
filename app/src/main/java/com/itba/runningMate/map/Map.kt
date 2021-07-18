@@ -16,6 +16,7 @@ import com.itba.runningMate.utils.Constants.DEFAULT_LATITUDE
 import com.itba.runningMate.utils.Constants.DEFAULT_LONGITUDE
 import com.itba.runningMate.utils.Constants.DEFAULT_ZOOM
 import com.itba.runningMate.utils.Constants.MY_LOCATION_ZOOM
+import timber.log.Timber
 
 open class Map : MapView {
     private var googleMap: GoogleMap? = null
@@ -139,6 +140,7 @@ open class Map : MapView {
                 boundsBuilder.include(point)
             }
         }
+        Timber.d("-------> %s <-------", boundsBuilder.build().toString())
         googleMap!!.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), PADDING))
     }
 

@@ -1,39 +1,36 @@
 package com.itba.runningMate.repository.run
 
 import com.itba.runningMate.db.RunDao
-import com.itba.runningMate.db.RunEntity
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.repository.run.RunMapper.Companion.toEntity
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RunRepositoryImpl(private val runDao: RunDao) : RunRepository {
-    override fun getRun(): Flowable<List<Run>> {
+    override suspend fun getRun(): Flow<List<Run?>> {
         return runDao.getRoutes()
-            .map { obj: List<RunEntity> -> RunMapper.toModel(obj) }
+            .map { obj -> RunMapper.toModel(obj) }
     }
 
-    override fun getRunLazy(): Flowable<List<Run>> {
-        return runDao.getRoutesLazy()
-            .map { obj: List<RunEntity> -> RunMapper.toModel(obj) }
+    override suspend fun getRunLazy(): Flow<List<Run?>> {
+        return runDao.getRoutesLazy().map { r -> RunMapper.toModel(r) }
     }
 
-    override fun getRunMetrics(uid: Long): Single<Run> {
-        return runDao.getRouteMetrics(uid)
-            .map { entity: RunEntity -> RunMapper.toModel(entity) }
+    override suspend fun getRunMetrics(uid: Long): Flow<Run?> {
+        val runMetrics =  runDao.getRouteMetrics(uid)
+        return runMetrics.map { value -> RunMapper.toModel(value)}
     }
 
-    override fun getRun(uid: Long): Single<Run> {
-        return runDao.getRoute(uid)
-            .map { entity: RunEntity -> RunMapper.toModel(entity) }
+    override suspend fun getRun(uid: Long): Flow<Run?> {
+        val run = runDao.getRoute(uid)
+        return run.map{running -> RunMapper.toModel(running)}
     }
 
-    override fun insertRun(run: Run): Single<Long> {
+    override suspend fun insertRun(run: Run): Long? {
         return runDao.insertRoute(toEntity(run))
     }
 
-    override fun getTotalDistance(): Single<Double> {
+    override suspend fun getTotalDistance(): Flow<Double?> {
         return runDao.getTotalDistance()
     }
 
@@ -49,15 +46,15 @@ class RunRepositoryImpl(private val runDao: RunDao) : RunRepository {
         return runDao.getMaxSpeed()
     }
 
-    override fun updateTitle(runId: Long, title: String): Completable {
+    override suspend fun updateTitle(runId: Long, title: String): Void {
         return runDao.updateTitle(runId, title)
     }
 
-    override fun deleteRun(run: Run): Completable {
+    override suspend fun deleteRun(run: Run): Void {
         return runDao.deleteRoute(toEntity(run))
     }
 
-    override fun deleteRun(runId: Long): Completable {
+    override suspend fun deleteRun(runId: Long): Void {
         return runDao.deleteRoute(runId)
     }
 }

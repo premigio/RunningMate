@@ -16,6 +16,9 @@ import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.pastruns.runs.OnRunClickListener
 import com.itba.runningMate.pastruns.runs.RunAdapter
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
 
@@ -29,9 +32,9 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_mainpage_past_runs)
         val container = locateComponent(this)
-        val schedulerProvider = container.getSchedulerProvider()
+        val scope = CoroutineScope(Dispatchers.IO + CoroutineName("PastRunsScope"))
         val runRepository = container.getRunRepository()
-        presenter = PastRunsPresenter(schedulerProvider, runRepository, this)
+        presenter = PastRunsPresenter(scope, runRepository, this)
         emptyMessage = findViewById(R.id.empty_run_list)
         setUpRecyclerView()
         setUpRefreshLayout()

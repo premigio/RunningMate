@@ -4,27 +4,29 @@ import com.itba.runningMate.domain.Run
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.*
 
 class PastRunsPresenter(
-    private val schedulerProvider: SchedulerProvider,
+    private val scope: CoroutineScope,
     private val runRepository: RunRepository,
     view: PastRunsView
 ) {
     private val view: WeakReference<PastRunsView> = WeakReference(view)
-    private var disposable: Disposable? = null
 
     fun onViewAttached() {
-        disposable = runRepository.getRunLazy()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ runs: List<Run>? -> receivedRunList(runs) }) { err: Throwable ->
-                onRunListError(
-                    err
-                )
+        scope.launch {
+            launch {
+                runRepository.getRunLazy().collect{r ->
+                    withContext(Dispatchers.Main){
+                        receivedRunList(r.filterNotNull())
+                    }
+                }
             }
+        }
     }
 
     private fun onRunListError(err: Throwable) {
@@ -35,10 +37,10 @@ class PastRunsPresenter(
     }
 
     fun onViewDetached() {
-        disposable!!.dispose()
+        scope.cancel()
     }
 
-    private fun receivedRunList(runs: List<Run>?) {
+    private fun receivedRunList(runs: List<Run?>?) {
         if (view.get() == null) {
             return
         }
@@ -47,7 +49,7 @@ class PastRunsPresenter(
             view.get()!!.updatePastRuns(LinkedList())
         } else {
             view.get()!!.hideNoPastRunsMessage()
-            view.get()!!.updatePastRuns(runs)
+            view.get()!!.updatePastRuns(runs.filterNotNull())
         }
     }
 

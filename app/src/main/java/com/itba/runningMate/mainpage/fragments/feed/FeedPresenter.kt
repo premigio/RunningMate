@@ -3,34 +3,39 @@ package com.itba.runningMate.mainpage.fragments.feed
 import com.itba.runningMate.R
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.repository.run.RunRepository
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class FeedPresenter(
     private val repo: RunRepository,
-    private val schedulerProvider: SchedulerProvider,
+    private val scope: CoroutineScope,
     view: FeedView
 ) {
 
     private val view: WeakReference<FeedView> = WeakReference(view)
-    private val disposables: CompositeDisposable = CompositeDisposable()
 
     fun onViewAttached() {
-        disposables.add(repo.getRunLazy()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ runs: List<Run> -> receivedRunList(runs) }) { throwable: Throwable ->
-                onRunListError(
-                    throwable
-                )
-            })
-        goalLevel()
+        scope.launch {
+            launch {
+                repo.getRunLazy().collect{r ->
+                    withContext(Dispatchers.Main){
+                        receivedRunList(r.filterNotNull())
+                    }
+                }
+            }
+            launch {
+                withContext(Dispatchers.Main){
+                    goalLevel()
+                }
+            }
+        }
+
     }
 
     fun onViewDetached() {
-        disposables.clear()
+        scope.cancel()
     }
 
     private fun onRunListError(throwable: Throwable) {
@@ -49,7 +54,7 @@ class FeedPresenter(
                 return
             }
             view.get()!!.disappearNoText()
-            val maxVal = Math.min(runs.size, 3)
+            val maxVal = runs.size.coerceAtMost(3)
             for (i in 1..maxVal) {
                 //add data to view
                 view.get()!!.addRunToCard(i - 1, runs[i - 1])
@@ -71,43 +76,45 @@ class FeedPresenter(
         }
     }
 
-    private fun goalLevel() {
-        disposables.add(repo.getTotalDistance()
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ distance: Double -> receivedTotalDistance(distance) }) { throwable: Throwable ->
-                onRunListErrorGoals(
-                    throwable
-                )
-            })
+    private suspend fun goalLevel() {
+        repo.getTotalDistance().collect { d ->
+            receivedTotalDistance(d ?: 0.0)
+        }
     }
 
     private fun receivedTotalDistance(distance: Double) {
         if (view.get() != null) {
-            if (distance < 100.0) { // Taragui
-                view.get()!!.setGoalTitle(R.string.taragui)
-                view.get()!!.setGoalSubtitle(R.string.taragui_subtitle)
-                view.get()!!.setGoalImage(R.drawable.taragui)
-            } else if (distance < 200.0) { // CBSé
-                view.get()!!.setGoalTitle(R.string.cbse)
-                view.get()!!.setGoalSubtitle(R.string.cbse_subtitle)
-                view.get()!!.setGoalImage(R.drawable.cbse)
-            } else if (distance < 300.0) { // Cruz de Malta
-                view.get()!!.setGoalTitle(R.string.cruz_de_malta)
-                view.get()!!.setGoalSubtitle(R.string.cruz_de_malta_subtitle)
-                view.get()!!.setGoalImage(R.drawable.cruzdemalta)
-            } else if (distance < 500.0) { // Playadito
-                view.get()!!.setGoalTitle(R.string.playadito)
-                view.get()!!.setGoalSubtitle(R.string.playadito_subtitle)
-                view.get()!!.setGoalImage(R.drawable.playadito)
-            } else if (distance < 750.0) { // Rosamonte
-                view.get()!!.setGoalTitle(R.string.rosamonte)
-                view.get()!!.setGoalSubtitle(R.string.rosamonte_subtitle)
-                view.get()!!.setGoalImage(R.drawable.rosamonte)
-            } else { // La Merced
-                view.get()!!.setGoalTitle(R.string.merced)
-                view.get()!!.setGoalSubtitle(R.string.merced_subtitle)
-                view.get()!!.setGoalImage(R.drawable.lamerced)
+            when {
+                distance < 100.0 -> { // Taragui
+                    view.get()!!.setGoalTitle(R.string.taragui)
+                    view.get()!!.setGoalSubtitle(R.string.taragui_subtitle)
+                    view.get()!!.setGoalImage(R.drawable.taragui)
+                }
+                distance < 200.0 -> { // CBSé
+                    view.get()!!.setGoalTitle(R.string.cbse)
+                    view.get()!!.setGoalSubtitle(R.string.cbse_subtitle)
+                    view.get()!!.setGoalImage(R.drawable.cbse)
+                }
+                distance < 300.0 -> { // Cruz de Malta
+                    view.get()!!.setGoalTitle(R.string.cruz_de_malta)
+                    view.get()!!.setGoalSubtitle(R.string.cruz_de_malta_subtitle)
+                    view.get()!!.setGoalImage(R.drawable.cruzdemalta)
+                }
+                distance < 500.0 -> { // Playadito
+                    view.get()!!.setGoalTitle(R.string.playadito)
+                    view.get()!!.setGoalSubtitle(R.string.playadito_subtitle)
+                    view.get()!!.setGoalImage(R.drawable.playadito)
+                }
+                distance < 750.0 -> { // Rosamonte
+                    view.get()!!.setGoalTitle(R.string.rosamonte)
+                    view.get()!!.setGoalSubtitle(R.string.rosamonte_subtitle)
+                    view.get()!!.setGoalImage(R.drawable.rosamonte)
+                }
+                else -> { // La Merced
+                    view.get()!!.setGoalTitle(R.string.merced)
+                    view.get()!!.setGoalSubtitle(R.string.merced_subtitle)
+                    view.get()!!.setGoalImage(R.drawable.lamerced)
+                }
             }
         }
     }

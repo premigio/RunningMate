@@ -1,23 +1,21 @@
 package com.itba.runningMate.repository.run
 
 import com.itba.runningMate.domain.Run
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface RunRepository {
 
-    fun getRun(): Flowable<List<Run>>
+    suspend fun getRun(): Flow<List<Run?>>
 
-    fun getRunLazy(): Flowable<List<Run>>
+    suspend fun getRunLazy(): Flow<List<Run?>>
 
-    fun getRun(uid: Long): Single<Run>
+    suspend fun getRun(uid: Long): Flow<Run?>
 
-    fun getRunMetrics(uid: Long): Single<Run>
+    suspend fun getRunMetrics(uid: Long): Flow<Run?>
 
-    fun insertRun(run: Run): Single<Long>
+    suspend fun insertRun(run: Run): Long?
 
-    fun getTotalDistance(): Single<Double>
+    suspend fun getTotalDistance(): Flow<Double?>
 
     suspend fun getMaxTime(): Long?
 
@@ -25,10 +23,10 @@ interface RunRepository {
 
     suspend fun getMaxSpeed(): Double?
 
-    fun deleteRun(run: Run): Completable
+    suspend fun deleteRun(run: Run): Void
 
-    fun deleteRun(runId: Long): Completable
+    suspend fun deleteRun(runId: Long): Void
 
-    fun updateTitle(runId: Long, title: String): Completable
+    suspend fun updateTitle(runId: Long, title: String): Void
 
 }

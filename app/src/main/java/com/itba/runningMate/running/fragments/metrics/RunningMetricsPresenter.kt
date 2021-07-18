@@ -8,23 +8,22 @@ import com.itba.runningMate.services.location.Tracker
 import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener
 import com.itba.runningMate.utils.Constants.DISTANCE_EPSILON
 import com.itba.runningMate.utils.Formatters
-import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
 import com.itba.runningMate.utils.run.RunMetrics.calculateCalories
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.*
 
 class RunningMetricsPresenter(
     private val runRepository: RunRepository,
-    private val schedulers: SchedulerProvider,
+    private val scope: CoroutineScope,
     private val achievementsStorage: AchievementsStorage,
     view: RunningMetricsView?
 ) : OnTrackingMetricsUpdateListener {
 
     private val view: WeakReference<RunningMetricsView> = WeakReference(view)
-
-    private var disposable: Disposable? = null
 
     @get:VisibleForTesting
     var tracker: Tracker? = null
@@ -49,9 +48,7 @@ class RunningMetricsPresenter(
         if (view.get() != null) {
             view.get()!!.detachTrackingService()
         }
-        if (disposable != null) {
-            disposable!!.dispose()
-        }
+        scope.cancel()
     }
 
     fun onTrackingServiceAttached(tracker: Tracker) {
@@ -157,15 +154,21 @@ class RunningMetricsPresenter(
 
     private fun saveRun(run: Run) {
         if (run.distance!! > 0f) {
-            disposable = runRepository.insertRun(run)
-                .subscribeOn(schedulers.io())
-                .observeOn(schedulers.ui())
-                .subscribe({ runId: Long -> onRunSaved(runId) }) { e: Throwable -> onRunSavedError(e) }
+            scope.launch {
+                launch {
+                    val runId = runRepository.insertRun(run)
+                    onRunSaved(runId)
+                }
+            }
         }
     }
 
-    private fun onRunSaved(runId: Long) {
+    private fun onRunSaved(runId: Long?) {
         if (view.get() == null) {
+            return
+        }
+        if (runId == null) {
+            view.get()!!.showSaveRunError()
             return
         }
         view.get()!!.launchRunActivity(runId)
