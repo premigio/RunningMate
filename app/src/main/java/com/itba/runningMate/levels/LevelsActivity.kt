@@ -26,7 +26,9 @@ class LevelsActivity : AppCompatActivity(), LevelsView {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_levels)
+        supportActionBar!!.setTitle(R.string.level)
 
         setUp()
 
