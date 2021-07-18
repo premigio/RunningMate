@@ -29,14 +29,14 @@ class RunDetailsPresenter(
     private lateinit var detail: RunMetricsDetail
 
     fun onViewAttached() {
-        disposables.add(runRepository.getRunMetrics(runId)
+        fetchRun(runId)
+    }
+
+    private fun fetchRun(id: Long) {
+        disposables.add(runRepository.getRunMetrics(id)
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
-            .subscribe({ run: Run -> onReceivedRunMetrics(run) }) { throwable: Throwable ->
-                onReceivedRunMetricsError(
-                    throwable
-                )
-            })
+            .subscribe({ run: Run -> onReceivedRunMetrics(run) }) { onReceivedRunMetricsError() })
     }
 
     private fun onReceivedRunMetrics(run: Run) {
@@ -52,15 +52,11 @@ class RunDetailsPresenter(
         disposables.add(runRepository.getRun(runId)
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
-            .subscribe({ run: Run -> onReceivedRun(run) }) { throwable: Throwable ->
-                onReceivedRunMetricsError(
-                    throwable
-                )
-            })
+            .subscribe({ run: Run -> onReceivedRun(run) }) { onReceivedRunMetricsError() })
     }
 
-    private fun onReceivedRunMetricsError(throwable: Throwable) {
-        Timber.d("Failed to retrieve run route from db for run-id: %l", runId)
+    private fun onReceivedRunMetricsError() {
+        Timber.d("Failed to retrieve run route from db for run-id: %d", runId)
         if (view.get() != null) {
             view.get()!!.showRunNotAvailableError()
         }
@@ -82,25 +78,21 @@ class RunDetailsPresenter(
         disposables.add(runRepository.deleteRun(runId)
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
-            .subscribe({ onRunDeleted() }) { throwable: Throwable -> onRunDeleteError(throwable) })
+            .subscribe({ onRunDeleted() }) { onRunDeleteError() })
     }
 
     fun onRunTitleModified(newTitle: String) {
         disposables.add(runRepository.updateTitle(runId, newTitle)
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.computation())
-            .subscribe({ onRunTitleUpdated() }) { throwable: Throwable? ->
-                onRunTitleUpdateError(
-                    throwable
-                )
-            })
+            .subscribe({ onRunTitleUpdated() }) { onRunTitleUpdateError() })
     }
 
     fun onRunTitleUpdated() {
         Timber.i("Successfully updated title")
     }
 
-    private fun onRunTitleUpdateError(throwable: Throwable?) {
+    private fun onRunTitleUpdateError() {
         Timber.d("Failed to update title")
         if (view.get() != null) {
             view.get()!!.showUpdateTitleError()
@@ -127,8 +119,8 @@ class RunDetailsPresenter(
         }
     }
 
-    private fun onRunDeleteError(throwable: Throwable) {
-        Timber.d("Failed to delete run from db for run-id: %l", runId)
+    private fun onRunDeleteError() {
+        Timber.d("Failed to delete run from db for run-id: %d", runId)
         if (view.get() != null) {
             view.get()!!.showDeleteError()
         }
