@@ -13,10 +13,13 @@
         android:layout_height="90dp"
         android:padding="10dp"
         android:alpha="0.4"
+        android:background="@drawable/background_achievement_badge"
+        android:scaleType="fitXY"
         android:contentDescription="@string/achievement_unlocked_description"
         android:src="@drawable/badge_icon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/achievement_title_name"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

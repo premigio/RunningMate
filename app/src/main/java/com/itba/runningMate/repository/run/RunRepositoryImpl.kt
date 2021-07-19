@@ -1,7 +1,7 @@
 package com.itba.runningMate.repository.run
 
-import com.itba.runningMate.db.RunDao
-import com.itba.runningMate.db.RunEntity
+import com.itba.runningMate.db.run.RunDao
+import com.itba.runningMate.db.run.RunEntity
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.repository.run.RunMapper.Companion.toEntity
 import io.reactivex.Completable

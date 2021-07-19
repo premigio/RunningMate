@@ -20,9 +20,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.itba.runningMate.R
+import com.itba.runningMate.components.map.Map
 import com.itba.runningMate.di.DependencyContainerLocator
 import com.itba.runningMate.domain.Route
-import com.itba.runningMate.components.map.Map
 import com.itba.runningMate.rundetails.model.RunMetricsDetail
 import com.itba.runningMate.utils.ImageProcessing
 
@@ -162,12 +162,12 @@ class RunDetailsActivity : AppCompatActivity(), RunDetailsView, OnMapReadyCallba
         val schedulerProvider = container.getSchedulerProvider()
         val runRepository = container.getRunRepository()
         val cacheFileProvider = container.getCacheFileProvider()
-        val achievementsStorage = container.getAchievementsStorage()
+        val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
         presenter = RunDetailsPresenter(
             cacheFileProvider,
             runRepository,
             schedulerProvider,
-            achievementsStorage,
+            aggregateRunMetricsStorage,
             runId,
             this
         )

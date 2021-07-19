@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.itba.runningMate.R
 import com.itba.runningMate.achievements.achievement.AchievementAdapter
-import com.itba.runningMate.achievements.achievement.AchievementElementView
 import com.itba.runningMate.di.DependencyContainerLocator.locateComponent
 import com.itba.runningMate.domain.Achievements
 
@@ -17,7 +16,6 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
     private lateinit var adapter: AchievementAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var presenter: AchievementsPresenter
-    private lateinit var achievements: MutableList<AchievementElementView>
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +29,8 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
     private fun createPresenter() {
         val container = locateComponent(this)
         val schedulerProvider = container.getSchedulerProvider()
-        val runRepository = container.getRunRepository()
-        val stateStorage = container.getAchievementsStorage()
-        presenter = AchievementsPresenter(runRepository, schedulerProvider, stateStorage, this)
+        val achievementsRepository = container.getAchievementsRepository()
+        presenter = AchievementsPresenter(schedulerProvider, achievementsRepository, this)
     }
 
     private fun setUp() {
@@ -62,12 +59,8 @@ class AchievementsActivity : AppCompatActivity(), AchievementsView {
         presenter.onViewDetached()
     }
 
-    override fun showAchievements(achievements: Array<Achievements>) {
+    override fun showAchievements(achievements: List<Achievements>) {
         adapter.update(achievements)
-    }
-
-    override fun setAchievement(achievementNumber: Achievements, achieved: Boolean) {
-        achievements[achievementNumber.ordinal].setBadgeVisibility(achieved)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

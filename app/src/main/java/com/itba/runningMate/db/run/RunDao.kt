@@ -1,4 +1,4 @@
-package com.itba.runningMate.db
+package com.itba.runningMate.db.run
 
 import androidx.room.Dao
 import androidx.room.Delete

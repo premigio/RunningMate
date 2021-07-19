@@ -52,7 +52,7 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         val container = locateComponent(requireContext())
         presenter = FeedPresenter(
             container.getRunRepository(),
-            container.getAchievementsStorage(),
+            container.getAchievementsRepository(),
             container.getSchedulerProvider(),
             this
         )

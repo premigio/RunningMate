@@ -1,21 +1,15 @@
 package com.itba.runningMate.achievements
 
-import com.itba.runningMate.achievements.model.AggregateRunMetricsDetail
-import com.itba.runningMate.domain.AchievementCategory
 import com.itba.runningMate.domain.Achievements
-import com.itba.runningMate.repository.achievements.AchievementsStorage
-import com.itba.runningMate.repository.run.RunRepository
+import com.itba.runningMate.repository.achievements.AchievementsRepository
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
-import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.lang.ref.WeakReference
-import java.util.*
 
 class AchievementsPresenter(
-    private val repo: RunRepository,
     private val schedulerProvider: SchedulerProvider,
-    private val storage: AchievementsStorage,
+    private val achievementsRepository: AchievementsRepository,
     view: AchievementsView
 ) {
 
@@ -27,38 +21,25 @@ class AchievementsPresenter(
         achievements()
     }
 
-    private fun achievements() {
-        disposables.add(Single.zip(repo.getMaxSpeed(), repo.getMaxKcal(), repo.getMaxTime(),
-            { maxSpeed, maxKcal, maxTime ->
-                AggregateRunMetricsDetail.Builder()
-                    .speed(maxSpeed.toFloat())
-                    .calories(maxKcal.toInt())
-                    .runningTime(maxTime)
-                    .build()
-            })
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ aggregate: AggregateRunMetricsDetail -> receivedAggregate(aggregate) }) { onReceivedAggregateError() }
-        )
+    private fun receivedAchievements(latestCompletedAchievements: List<Achievements>) {
+        view.get()?.showAchievements(latestCompletedAchievements)
     }
 
-    private fun receivedAggregate(aggregate: AggregateRunMetricsDetail) {
-        aggregate.distance = storage.getTotalDistance().toFloat()
-        val completedAchievements: MutableList<Achievements> = mutableListOf()
-        for (a in Achievements.values()) {
-            if (a.completed(aggregate)) {
-                completedAchievements.add(a)
-            }
-        }
-        view.get()?.showAchievements(completedAchievements.toTypedArray())
+    private fun onReceivedAchievementsError() {
+        Timber.d("Failed to retrieve completed achievements from db")
+    }
+
+    private fun achievements() {
+        disposables.add(
+            achievementsRepository.getAchievements()
+                .subscribeOn(schedulerProvider.computation())
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ achievements: List<Achievements> -> receivedAchievements(achievements) }) { onReceivedAchievementsError() }
+        )
     }
 
     fun onViewDetached() {
         disposables.dispose()
-    }
-
-    private fun onReceivedAggregateError() {
-        Timber.d("Failed to retrieve total distance from db")
     }
 
 }

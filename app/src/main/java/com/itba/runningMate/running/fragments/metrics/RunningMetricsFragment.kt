@@ -19,8 +19,8 @@ import com.itba.runningMate.di.DependencyContainerLocator
 import com.itba.runningMate.services.location.Tracker
 import com.itba.runningMate.services.location.TrackingService
 import com.itba.runningMate.utils.Formatters
-import java.text.DecimalFormat
-import java.text.SimpleDateFormat
+import com.itba.runningMate.utils.Formatters.paceFormatter
+import com.itba.runningMate.utils.Formatters.twoDecimalPlacesFormatter
 import java.util.*
 
 class RunningMetricsFragment : Fragment(), RunningMetricsView, ServiceConnection {
@@ -108,9 +108,16 @@ class RunningMetricsFragment : Fragment(), RunningMetricsView, ServiceConnection
         val container = DependencyContainerLocator.locateComponent(requireContext())
         val schedulerProvider = container.getSchedulerProvider()
         val runRepository = container.getRunRepository()
-        val achievementsStorage = container.getAchievementsStorage()
+        val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
+        val achievementsRepository = container.getAchievementsRepository()
         presenter =
-            RunningMetricsPresenter(runRepository, schedulerProvider, achievementsStorage, this)
+            RunningMetricsPresenter(
+                runRepository,
+                schedulerProvider,
+                achievementsRepository,
+                aggregateRunMetricsStorage,
+                this
+            )
     }
 
     override fun updateDistance(elapsedDistance: Float) {
@@ -197,8 +204,4 @@ class RunningMetricsFragment : Fragment(), RunningMetricsView, ServiceConnection
         pauseButton.visibility = View.INVISIBLE
     }
 
-    companion object {
-        private val paceFormatter = SimpleDateFormat("mm'' ss'\"'", Locale.getDefault())
-        private val twoDecimalPlacesFormatter = DecimalFormat("0.00")
-    }
 }
