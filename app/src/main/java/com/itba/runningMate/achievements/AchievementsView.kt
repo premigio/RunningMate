@@ -4,6 +4,6 @@ import com.itba.runningMate.domain.Achievements
 
 interface AchievementsView {
 
-    fun showAchievements(achievements: Array<Achievements>)
+    fun showAchievements(achievements: List<Achievements>)
 
 }

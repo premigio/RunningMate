@@ -1,4 +1,4 @@
-package com.itba.runningMate.achievements.model
+package com.itba.runningMate.domain
 
 data class AggregateRunMetricsDetail(
     val elapsedTime: Long?,

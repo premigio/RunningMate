@@ -2,6 +2,7 @@ package com.itba.runningMate.di
 
 import android.content.Context
 import com.itba.runningMate.repository.achievements.AchievementsRepository
+import com.itba.runningMate.repository.aggregaterunmetrics.AggregateRunMetricsStorage
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.repository.runningstate.RunningStateStorage
 import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher
@@ -20,8 +21,10 @@ interface DependencyContainer {
 
     fun getRunningStateStorage(): RunningStateStorage
 
+    fun getAggregateRunMetricsStorage(): AggregateRunMetricsStorage
+
     fun getTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher
 
-    fun getAchievementsStorage(): AchievementsRepository
+    fun getAchievementsRepository(): AchievementsRepository
 
 }

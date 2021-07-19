@@ -7,14 +7,6 @@ import java.util.*
 
 interface AchievementsRepository {
 
-    fun persistState()
-
-    fun getTotalDistance(): Double
-
-    fun decreaseTotalDistance(distance: Double)
-
-    fun increaseTotalDistance(distance: Double)
-
     /**
      * Returns list of completed achievements in the order they where achieved
      */
@@ -22,20 +14,28 @@ interface AchievementsRepository {
 
     /**
      * Returns latest n completed achievements
+     * @param n number of achievements to retrive
      */
     fun getAchievements(n: Int): Flowable<List<Achievements>>
 
     /**
      * Removes an achievement from achievements list
+     * @param achievements achievement to delete
      */
     fun removeAchievements(achievements: Achievements): Completable
 
     /**
      * Adds an achievement to achievements list
+     * @param achievements achievement to add
+     * @param timestamp date when achievement was latest accomplished
      */
     fun addAchievements(achievements: Achievements, timestamp: Date): Completable
 
-    companion object {
-        const val ACHIEVEMENTS_PREFERENCES_FILE = "PREF_RUNNING_MATE_ACHIEVEMENTS"
-    }
+    /**
+     * Adds an achievements to achievements list, if achievement already completed it will be discarded
+     * @param achievements achievements to add
+     * @param timestamp date when achievements were latest accomplished
+     */
+    fun addAchievements(achievements: List<Achievements>, timestamp: Date): Completable
+
 }

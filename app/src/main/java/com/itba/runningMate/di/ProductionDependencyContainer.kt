@@ -6,6 +6,7 @@ import com.itba.runningMate.db.achievement.AchievementDb
 import com.itba.runningMate.db.run.RunDao
 import com.itba.runningMate.db.run.RunDb
 import com.itba.runningMate.repository.achievements.AchievementsRepository
+import com.itba.runningMate.repository.aggregaterunmetrics.AggregateRunMetricsStorage
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.repository.runningstate.RunningStateStorage
 import com.itba.runningMate.services.location.TrackingLocationUpdatesDispatcher
@@ -20,6 +21,7 @@ class ProductionDependencyContainer(context: Context) : DependencyContainer {
     private var schedulerProvider: SchedulerProvider? = null
     private var cacheFileProvider: CacheFileProvider? = null
     private var runningStateStorage: RunningStateStorage? = null
+    private var aggregateRunMetricsStorage: AggregateRunMetricsStorage? = null
     private var achievementsRepository: AchievementsRepository? = null
     private var runRepository: RunRepository? = null
     private var runDb: RunDb? = null
@@ -50,11 +52,18 @@ class ProductionDependencyContainer(context: Context) : DependencyContainer {
         return runningStateStorage!!
     }
 
-    override fun getAchievementsStorage(): AchievementsRepository {
+    override fun getAchievementsRepository(): AchievementsRepository {
         if (achievementsRepository == null) {
-            achievementsRepository = dependency.provideAchievementsStorage(getAchievementDao())
+            achievementsRepository = dependency.provideAchievementsRepository(getAchievementDao())
         }
         return achievementsRepository!!
+    }
+
+    override fun getAggregateRunMetricsStorage(): AggregateRunMetricsStorage {
+        if (aggregateRunMetricsStorage == null) {
+            aggregateRunMetricsStorage = dependency.provideAggregateRunMetricsStorage()
+        }
+        return aggregateRunMetricsStorage!!
     }
 
     override fun getRunRepository(): RunRepository {
@@ -77,7 +86,6 @@ class ProductionDependencyContainer(context: Context) : DependencyContainer {
         }
         return achievementDb!!.AchievementDao()
     }
-
 
     override fun getTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher {
         if (trackingLocationUpdatesDispatcher == null) {

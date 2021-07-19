@@ -1,7 +1,6 @@
 package com.itba.runningMate.domain
 
 import com.itba.runningMate.R
-import com.itba.runningMate.achievements.model.AggregateRunMetricsDetail
 
 enum class Achievements(
     val title: Int,

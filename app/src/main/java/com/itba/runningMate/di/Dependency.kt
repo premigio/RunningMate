@@ -8,6 +8,8 @@ import com.itba.runningMate.db.run.RunDao
 import com.itba.runningMate.db.run.RunDb
 import com.itba.runningMate.repository.achievements.AchievementsRepository
 import com.itba.runningMate.repository.achievements.AchievementsRepositoryImpl
+import com.itba.runningMate.repository.aggregaterunmetrics.AggregateRunMetricsStorage
+import com.itba.runningMate.repository.aggregaterunmetrics.AggregateRunMetricsStorageImpl
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.repository.run.RunRepositoryImpl
 import com.itba.runningMate.repository.runningstate.RunningStateStorage
@@ -40,6 +42,15 @@ class Dependency(context: Context) {
         return RunningStateStorageImpl(preferences)
     }
 
+    fun provideAggregateRunMetricsStorage(): AggregateRunMetricsStorage {
+        val preferences = applicationContext
+            .getSharedPreferences(
+                AggregateRunMetricsStorage.AGGREGATE_RUN_METRICS_PREFERENCES_FILE,
+                Context.MODE_PRIVATE
+            )
+        return AggregateRunMetricsStorageImpl(preferences)
+    }
+
     fun provideRunRepository(runDao: RunDao): RunRepository {
         return RunRepositoryImpl(runDao)
     }
@@ -60,13 +71,8 @@ class Dependency(context: Context) {
             .build()
     }
 
-    fun provideAchievementsStorage(achievementDao: AchievementDao): AchievementsRepository {
-        val preferences = applicationContext
-            .getSharedPreferences(
-                AchievementsRepository.ACHIEVEMENTS_PREFERENCES_FILE,
-                Context.MODE_PRIVATE
-            )
-        return AchievementsRepositoryImpl(preferences, achievementDao)
+    fun provideAchievementsRepository(achievementDao: AchievementDao): AchievementsRepository {
+        return AchievementsRepositoryImpl(achievementDao)
     }
 
     fun provideTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher {

@@ -107,7 +107,7 @@ class FeedPresenter(
     }
 
     private fun onReceivedAchievementsError() {
-        Timber.d("Failed to retrieve aggregate metrics from db")
+        Timber.d("Failed to retrieve completed achievements from db")
     }
 
     private fun receivedTotalDistance(distance: Double) {
