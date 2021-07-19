@@ -1,5 +1,8 @@
 package com.itba.runningMate.running.fragments.metrics
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.fitness.FitnessOptions
+
 interface RunningMetricsView {
 
     fun attachTrackingService()
@@ -35,4 +38,9 @@ interface RunningMetricsView {
     fun hidePlayBtn()
 
     fun hidePauseBtn()
+    fun getGoogleFitPermissions(account: GoogleSignInAccount, fitApiClient: FitnessOptions)
+    fun isUserLoggedFit(account: GoogleSignInAccount, fitApiClient: FitnessOptions): Boolean
+    fun getFitAccount(fitApiClient: FitnessOptions): GoogleSignInAccount
+    fun buildFitness(): FitnessOptions
+    fun getStepCount(startTime: Long, endTime: Long)
 }

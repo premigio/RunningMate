@@ -93,6 +93,7 @@ class RunningMetricsPresenter(
                 .velocity(tracker!!.queryVelocity())
                 .calories(calculateCalories(distKm))
                 .build()
+            buildFitnessClient(run)
             saveRun(run)
         }
     }
@@ -183,6 +184,15 @@ class RunningMetricsPresenter(
     """.trimIndent()
         )
         view.get()!!.showSaveRunError()
+    }
+
+    fun buildFitnessClient(run: Run) {
+        val fitApiClient = view.get()!!.buildFitness()
+        val account = view.get()!!.getFitAccount(fitApiClient)
+        if (view.get()!!.isUserLoggedFit(account, fitApiClient)) {
+            view.get()!!.getGoogleFitPermissions(account,fitApiClient)
+        }
+        view.get()!!.getStepCount(run.startTime!!.time, run.endTime!!.time)
     }
 
 }

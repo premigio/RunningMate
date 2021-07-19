@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -124,6 +125,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBifC20BsyylNSgFMv4gG8u0BcwnnmmZFc" />
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.fitness."-->
+<!--            android:value="1055170089848-4b3vde16mc01hp419f420qiiujeodg5g.apps.googleusercontent.com"/>-->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -139,5 +143,5 @@
         </provider>
 
     </application>
-
+<!-- 1055170089848-4b3vde16mc01hp419f420qiiujeodg5g.apps.googleusercontent.com -->
 </manifest>
