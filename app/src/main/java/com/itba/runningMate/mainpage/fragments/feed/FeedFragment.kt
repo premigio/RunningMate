@@ -117,8 +117,8 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         achievementsCard.bind(achievements)
     }
 
-    override fun showCurrentLevel(level: Level) {
-        levelCard.bind(level)
+    override fun showCurrentLevel(level: Level, distance: Double) {
+        levelCard.bind(level, distance)
     }
 
     override fun onRunClick(id: Long) {

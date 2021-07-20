@@ -114,7 +114,7 @@ class FeedPresenter(
         if (view.get() != null) {
             view.get()?.stopLevelShimmerAnimation()
             val level = Level.from(distance)
-            view.get()!!.showCurrentLevel(level)
+            view.get()!!.showCurrentLevel(level, distance)
         }
     }
 

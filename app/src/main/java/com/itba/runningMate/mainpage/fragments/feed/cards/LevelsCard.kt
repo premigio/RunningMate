@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -18,6 +19,7 @@ class LevelsCard : CardView {
     private lateinit var image: ImageView
     private lateinit var title: TextView
     private lateinit var subtitle: TextView
+    private lateinit var progressBar: ProgressBar
     private lateinit var seeAll: Button
     private var onSeeAllClickListener: WeakReference<OnSeeAllLevelsListener>? = null
 
@@ -43,6 +45,7 @@ class LevelsCard : CardView {
         image = findViewById(R.id.goal_image_card)
         title = findViewById(R.id.goal_title_card)
         subtitle = findViewById(R.id.goal_subtitle_card)
+        progressBar = findViewById(R.id.progress_bar)
         seeAll = findViewById(R.id.see_all_goals)
         seeAll.setOnClickListener { onSeeAllButtonClicked() }
     }
@@ -66,9 +69,11 @@ class LevelsCard : CardView {
         shimmer.visibility = GONE
     }
 
-    fun bind(level: Level) {
+    fun bind(level: Level, distance: Double) {
         title.setText(level.title)
         subtitle.setText(level.subTitle)
         image.setImageResource(level.image)
+        progressBar.max = level.sizeKm.toInt()
+        progressBar.progress = (distance - level.minKm).toInt()
     }
 }

@@ -16,7 +16,7 @@ interface FeedView {
 
     fun showAchievements(achievements: List<Achievements>)
 
-    fun showCurrentLevel(level: Level)
+    fun showCurrentLevel(level: Level, distance: Double)
 
     fun launchLevelsActivity()
 
