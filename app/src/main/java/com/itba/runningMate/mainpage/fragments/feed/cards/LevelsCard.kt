@@ -24,11 +24,11 @@ class LevelsCard : CardView {
     private var onSeeAllClickListener: WeakReference<OnSeeAllLevelsListener>? = null
 
     constructor(context: Context) : super(context) {
-        prepareFromConstructor(context)
+        setUp(context)
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        prepareFromConstructor(context)
+        setUp(context)
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -36,10 +36,10 @@ class LevelsCard : CardView {
         attrs,
         defStyleAttr
     ) {
-        prepareFromConstructor(context)
+        setUp(context)
     }
 
-    private fun prepareFromConstructor(context: Context) {
+    private fun setUp(context: Context) {
         inflate(context, R.layout.card_level, this)
         shimmer = findViewById(R.id.level_shimmer_view)
         image = findViewById(R.id.goal_image_card)

@@ -21,8 +21,9 @@ class FeedPresenter(
     private val disposables: CompositeDisposable = CompositeDisposable()
 
     fun onViewAttached() {
-        view.get()?.startLevelShimmerAnimation()
         view.get()?.startRecentActivityShimmerAnimation()
+        view.get()?.startLevelShimmerAnimation()
+        view.get()?.startAchievementsShimmerAnimation()
 
         recentActivity()
         level()
@@ -35,29 +36,12 @@ class FeedPresenter(
 
     private fun onRunListError() {
         Timber.d("Failed to retrieve runs from db")
-        if (view.get() != null) {
-            view.get()!!.setPastRunCardsNoText()
-        }
+        view.get()?.showRecentActivity(listOf())
     }
 
     private fun receivedRunList(runs: List<Run>) {
-        Timber.i("Runs %d", runs.size)
-        if (view.get() != null) {
-            view.get()?.stopRecentActivityShimmerAnimation()
-            if (runs.isEmpty()) {
-                view.get()!!.setPastRunCardsNoText()
-                view.get()!!.disappearRuns(0)
-                return
-            }
-            view.get()!!.disappearNoText()
-            val maxVal = runs.size.coerceAtMost(3)
-            for (i in 1..maxVal) {
-                //add data to view
-                view.get()!!.addRunToCard(i - 1, runs[i - 1])
-            }
-            // disappear the run cards where they should not be
-            view.get()!!.disappearRuns(maxVal)
-        }
+        view.get()?.stopRecentActivityShimmerAnimation()
+        view.get()?.showRecentActivity(runs)
     }
 
     fun onPastRunClick(id: Long) {
@@ -103,11 +87,13 @@ class FeedPresenter(
     }
 
     private fun receivedAchievements(latestCompletedAchievements: List<Achievements>) {
+        view.get()?.stopAchievementsShimmerAnimation()
         view.get()?.showAchievements(latestCompletedAchievements)
     }
 
     private fun onReceivedAchievementsError() {
         Timber.d("Failed to retrieve completed achievements from db")
+        view.get()?.showAchievements(listOf())
     }
 
     private fun receivedTotalDistance(distance: Double) {
@@ -123,9 +109,7 @@ class FeedPresenter(
     }
 
     fun goToAchievementsActivity() {
-        if (view.get() != null) {
-            view.get()!!.launchAchievementsActivity()
-        }
+        view.get()?.launchAchievementsActivity()
     }
 
     fun goToLevelsActivity() {
