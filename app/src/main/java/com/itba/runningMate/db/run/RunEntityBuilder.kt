@@ -1,4 +1,4 @@
-package com.itba.runningMate.db
+package com.itba.runningMate.db.run
 
 import com.google.android.gms.maps.model.LatLng
 import java.util.*

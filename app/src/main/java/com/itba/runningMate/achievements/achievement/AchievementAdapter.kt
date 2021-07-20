@@ -10,7 +10,7 @@ class AchievementAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val ITEM_VIEW_TYPE_HEADER = 0
     private val ITEM_VIEW_TYPE_ITEM = 1
 
-    private var completedAchievements: Array<Achievements>? = null
+    private var completedAchievements: List<Achievements>? = null
     private val flatItems: MutableList<Item> = mutableListOf()
 
     init {
@@ -55,7 +55,7 @@ class AchievementAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    fun update(completedAchievements: Array<Achievements>) {
+    fun update(completedAchievements: List<Achievements>) {
         this.completedAchievements = completedAchievements
         notifyDataSetChanged()
     }

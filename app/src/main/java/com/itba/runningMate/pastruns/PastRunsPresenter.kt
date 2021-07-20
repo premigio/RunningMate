@@ -1,9 +1,8 @@
 package com.itba.runningMate.pastruns
 
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.repository.achievements.AchievementsStorage
+import com.itba.runningMate.repository.aggregaterunmetrics.AggregateRunMetricsStorage
 import com.itba.runningMate.repository.run.RunRepository
-import com.itba.runningMate.rundetails.model.RunMetricsDetail
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
@@ -13,7 +12,7 @@ import java.util.*
 class PastRunsPresenter(
     private val schedulerProvider: SchedulerProvider,
     private val runRepository: RunRepository,
-    private val achievementsStorage: AchievementsStorage,
+    private val aggregateRunMetricsStorage: AggregateRunMetricsStorage,
     view: PastRunsView
 ) {
     private val view: WeakReference<PastRunsView> = WeakReference(view)
@@ -74,8 +73,8 @@ class PastRunsPresenter(
 
     private fun onReceivedRunMetrics(run: Run) {
         val distance = run.distance!!.toDouble()
-        achievementsStorage.decreaseTotalDistance(distance)
-        achievementsStorage.persistState()
+        aggregateRunMetricsStorage.decreaseTotalDistance(distance)
+        aggregateRunMetricsStorage.persistState()
     }
 
     private fun onReceivedRunMetricsError() {

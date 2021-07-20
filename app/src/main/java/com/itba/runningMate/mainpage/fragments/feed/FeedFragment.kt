@@ -52,7 +52,7 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         val container = locateComponent(requireContext())
         presenter = FeedPresenter(
             container.getRunRepository(),
-            container.getAchievementsStorage(),
+            container.getAchievementsRepository(),
             container.getSchedulerProvider(),
             this
         )
@@ -117,8 +117,8 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         achievementsCard.bind(achievements)
     }
 
-    override fun showCurrentLevel(level: Level) {
-        levelCard.bind(level)
+    override fun showCurrentLevel(level: Level, distance: Double) {
+        levelCard.bind(level, distance)
     }
 
     override fun onRunClick(id: Long) {

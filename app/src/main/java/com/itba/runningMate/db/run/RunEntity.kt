@@ -1,4 +1,4 @@
-package com.itba.runningMate.db
+package com.itba.runningMate.db.run
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

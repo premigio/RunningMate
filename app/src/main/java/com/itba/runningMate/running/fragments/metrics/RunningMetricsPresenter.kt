@@ -1,8 +1,10 @@
 package com.itba.runningMate.running.fragments.metrics
 
 import androidx.annotation.VisibleForTesting
+import com.itba.runningMate.domain.Achievements
 import com.itba.runningMate.domain.Run
-import com.itba.runningMate.repository.achievements.AchievementsStorage
+import com.itba.runningMate.repository.achievements.AchievementsRepository
+import com.itba.runningMate.repository.aggregaterunmetrics.AggregateRunMetricsStorage
 import com.itba.runningMate.repository.run.RunRepository
 import com.itba.runningMate.services.location.Tracker
 import com.itba.runningMate.services.location.listeners.OnTrackingMetricsUpdateListener
@@ -18,7 +20,8 @@ import java.util.*
 class RunningMetricsPresenter(
     private val runRepository: RunRepository,
     private val schedulers: SchedulerProvider,
-    private val achievementsStorage: AchievementsStorage,
+    private val achievementsRepository: AchievementsRepository,
+    private val aggregateRunMetricsStorage: AggregateRunMetricsStorage,
     view: RunningMetricsView?
 ) : OnTrackingMetricsUpdateListener {
 
@@ -80,8 +83,6 @@ class RunningMetricsPresenter(
             view.get()!!.finishActivity()
         } else {
             val timeMillis = tracker!!.queryElapsedTime()
-            achievementsStorage.increaseTotalDistance(distKm.toDouble())
-            achievementsStorage.persistState()
             val run = Run.Builder()
                 .title("Run on " + Formatters.dateFormat.format(Date(tracker!!.queryStartTime())))
                 .startTime(Date(tracker!!.queryStartTime()))
@@ -94,6 +95,7 @@ class RunningMetricsPresenter(
                 .calories(calculateCalories(distKm))
                 .build()
             saveRun(run)
+            updateAggregateMetrics(run)
         }
     }
 
@@ -160,8 +162,32 @@ class RunningMetricsPresenter(
             disposable = runRepository.insertRun(run)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
-                .subscribe({ runId: Long -> onRunSaved(runId) }) { e: Throwable -> onRunSavedError(e) }
+                .subscribe({ runId: Long -> onRunSaved(runId) }) { onRunSavedError() }
         }
+    }
+
+    private fun updateAggregateMetrics(run: Run) {
+        aggregateRunMetricsStorage.incrementTotalDistance(run.distance!!.toDouble())
+        aggregateRunMetricsStorage.updateMaxDistance(run.distance.toDouble())
+        aggregateRunMetricsStorage.updateMaxRunningTime(run.runningTime!!)
+        aggregateRunMetricsStorage.updateMaxSpeed(run.velocity!!)
+        aggregateRunMetricsStorage.updateMaxPace(run.pace!!)
+        aggregateRunMetricsStorage.updateMaxCalories(run.calories!!)
+        aggregateRunMetricsStorage.persistState()
+        computeAchievements(run.startTime!!)
+    }
+
+    private fun computeAchievements(timestamp: Date) {
+        val aggregate = aggregateRunMetricsStorage.getAggregateRunMetricsDetail()
+        val completedAchievements: MutableList<Achievements> = mutableListOf()
+        for (a in Achievements.values()) {
+            if (a.completed(aggregate)) {
+                completedAchievements.add(a)
+            }
+        }
+        achievementsRepository.addAchievements(completedAchievements, timestamp)
+            .subscribeOn(schedulers.computation())
+            .subscribe()
     }
 
     private fun onRunSaved(runId: Long) {
@@ -172,17 +198,8 @@ class RunningMetricsPresenter(
         Timber.d("Successfully saved run in db for run-id: %d", runId)
     }
 
-    private fun onRunSavedError(e: Throwable) {
-        if (view.get() == null) {
-            return
-        }
-        Timber.d(
-            """
-    Failed to save run
-    ${e.message}
-    """.trimIndent()
-        )
-        view.get()!!.showSaveRunError()
+    private fun onRunSavedError() {
+        Timber.d("Failed to save run on Db")
     }
 
 }

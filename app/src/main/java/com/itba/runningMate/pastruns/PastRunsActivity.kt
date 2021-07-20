@@ -48,8 +48,9 @@ class PastRunsActivity : AppCompatActivity(), PastRunsView, OnRunClickListener,
         val container = locateComponent(this)
         val schedulerProvider = container.getSchedulerProvider()
         val runRepository = container.getRunRepository()
-        val achievementsStorage = container.getAchievementsStorage()
-        presenter = PastRunsPresenter(schedulerProvider, runRepository, achievementsStorage, this)
+        val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
+        presenter =
+            PastRunsPresenter(schedulerProvider, runRepository, aggregateRunMetricsStorage, this)
     }
 
     private fun setUpRecyclerView() {

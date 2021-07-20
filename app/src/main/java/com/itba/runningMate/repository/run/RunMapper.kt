@@ -1,7 +1,7 @@
 package com.itba.runningMate.repository.run
 
-import com.itba.runningMate.db.RunEntity
-import com.itba.runningMate.db.RunEntityBuilder
+import com.itba.runningMate.db.run.RunEntity
+import com.itba.runningMate.db.run.RunEntityBuilder
 import com.itba.runningMate.domain.Run
 import java.util.*
 

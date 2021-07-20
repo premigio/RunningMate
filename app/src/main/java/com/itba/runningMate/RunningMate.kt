@@ -1,10 +1,13 @@
 package com.itba.runningMate
 
 import android.app.Application
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import com.itba.runningMate.utils.Constants
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.WorkManager
+import com.itba.runningMate.notifications.NotificationChannelFactory
+import com.itba.runningMate.notifications.workers.NotificationWorker.Companion.NOTIFICATION_WORKER_NAME
+import com.itba.runningMate.notifications.workers.WorkerFactory
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -12,23 +15,32 @@ class RunningMate : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
         }
+
         createNotificationChannels()
+        createNotificationWorker()
+
+    }
+
+    private fun createNotificationWorker() {
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                NOTIFICATION_WORKER_NAME,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                WorkerFactory.getCustomerEngagementWorker()
+            )
     }
 
     private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val locationServiceChannel = NotificationChannel(
-                Constants.NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID,
-                Constants.NOTIFICATION_LOCATION_SERVICE_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_LOW
-            )
-            val notificationManager = getSystemService(
-                NotificationManager::class.java
-            )
-            notificationManager.createNotificationChannel(locationServiceChannel)
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(NotificationChannelFactory.getTrackingServiceNotificationChannel())
+            notificationManager.createNotificationChannel(NotificationChannelFactory.getCustomerEngagementNotificationChannel())
         }
+
     }
+
 }
