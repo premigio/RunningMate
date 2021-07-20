@@ -6,13 +6,7 @@ import com.itba.runningMate.domain.Run
 
 interface FeedView {
 
-    fun setPastRunCardsNoText()
-
-    fun addRunToCard(i: Int, run: Run)
-
-    fun disappearRuns(abs: Int)
-
-    fun disappearNoText()
+    fun showRecentActivity(recentRuns: List<Run>)
 
     fun showAchievements(achievements: List<Achievements>)
 

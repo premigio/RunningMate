@@ -51,7 +51,7 @@ class RunElementView : ConstraintLayout {
         id = model.uid!!
         title.text = model.title
         distance.text = context.getString(R.string.distance_string, model.distance)
-        time.text = timeFormat.format(model.startTime)
+        time.text = timeFormat.format(model.startTime!!)
         if (listener.get() != null) {
             this.setOnClickListener { listener.get()!!.onRunClick(id) }
         }

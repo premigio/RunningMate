@@ -35,29 +35,12 @@ class FeedPresenter(
 
     private fun onRunListError() {
         Timber.d("Failed to retrieve runs from db")
-        if (view.get() != null) {
-            view.get()!!.setPastRunCardsNoText()
-        }
+        // fixme: show empty message
     }
 
     private fun receivedRunList(runs: List<Run>) {
-        Timber.i("Runs %d", runs.size)
-        if (view.get() != null) {
-            view.get()?.stopRecentActivityShimmerAnimation()
-            if (runs.isEmpty()) {
-                view.get()!!.setPastRunCardsNoText()
-                view.get()!!.disappearRuns(0)
-                return
-            }
-            view.get()!!.disappearNoText()
-            val maxVal = runs.size.coerceAtMost(3)
-            for (i in 1..maxVal) {
-                //add data to view
-                view.get()!!.addRunToCard(i - 1, runs[i - 1])
-            }
-            // disappear the run cards where they should not be
-            view.get()!!.disappearRuns(maxVal)
-        }
+        view.get()?.stopRecentActivityShimmerAnimation()
+        view.get()?.showRecentActivity(runs)
     }
 
     fun onPastRunClick(id: Long) {
@@ -108,6 +91,7 @@ class FeedPresenter(
 
     private fun onReceivedAchievementsError() {
         Timber.d("Failed to retrieve completed achievements from db")
+        // fixme: show empty message
     }
 
     private fun receivedTotalDistance(distance: Double) {
@@ -120,6 +104,7 @@ class FeedPresenter(
 
     private fun onReceivedTotalDistanceError() {
         Timber.d("Failed to retrieve total distance from db")
+        // fixme: show empty message
     }
 
     fun goToAchievementsActivity() {

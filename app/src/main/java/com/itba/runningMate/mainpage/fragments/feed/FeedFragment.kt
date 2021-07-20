@@ -15,16 +15,16 @@ import com.itba.runningMate.domain.Level
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.mainpage.fragments.feed.cards.AchievementsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.LevelsCard
-import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllAchievementsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllPastRunsListener
+import com.itba.runningMate.mainpage.fragments.feed.cards.RecentActivityCard
 
 class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsListener,
     OnSeeAllLevelsListener, OnSeeAllAchievementsListener {
 
     private lateinit var presenter: FeedPresenter
-    private lateinit var pastRunsCard: PastRunsCard
+    private lateinit var RecentActivityCard: RecentActivityCard
     private lateinit var levelCard: LevelsCard
     private lateinit var achievementsCard: AchievementsCard
 
@@ -39,11 +39,11 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createPresenter()
-        pastRunsCard = view.findViewById(R.id.past_run_card)
+        RecentActivityCard = view.findViewById(R.id.past_run_card)
         levelCard = view.findViewById(R.id.level_card)
         achievementsCard = view.findViewById(R.id.achievements_card)
-        pastRunsCard.setElementListener(this)
-        pastRunsCard.setSeeAllListener(this)
+        RecentActivityCard.setElementListener(this)
+        RecentActivityCard.setSeeAllListener(this)
         levelCard.setSeeAllListener(this)
         achievementsCard.setSeeAllListener(this)
     }
@@ -97,20 +97,8 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         presenter.onViewDetached()
     }
 
-    override fun setPastRunCardsNoText() {
-        pastRunsCard.setPastRunCardsNoText()
-    }
-
-    override fun addRunToCard(i: Int, run: Run) {
-        pastRunsCard.addRunToCard(i, run)
-    }
-
-    override fun disappearRuns(abs: Int) {
-        pastRunsCard.disappearRuns(abs)
-    }
-
-    override fun disappearNoText() {
-        pastRunsCard.disappearNoText()
+    override fun showRecentActivity(recentRuns: List<Run>) {
+        RecentActivityCard.bind(recentRuns)
     }
 
     override fun showAchievements(achievements: List<Achievements>) {
@@ -146,10 +134,10 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     }
 
     override fun startRecentActivityShimmerAnimation() {
-        pastRunsCard.startShimmerAnimation()
+        RecentActivityCard.startShimmerAnimation()
     }
 
     override fun stopRecentActivityShimmerAnimation() {
-        pastRunsCard.stopShimmerAnimation()
+        RecentActivityCard.stopShimmerAnimation()
     }
 }
