@@ -11,7 +11,7 @@ enum class Level(
 ) {
 
     TARAGUI(R.string.taragui, R.string.taragui_subtitle, R.drawable.taragui, 0.0, 100.0),
-    CBSE(R.string.cbse, R.string.cbse_subtitle, R.drawable.cbse, 100.0, 100.0),
+    CBSE(R.string.cbse, R.string.cbse_subtitle, R.drawable.cbseaux, 100.0, 100.0),
     CRUZ_DE_MALTA(
         R.string.cruz_de_malta,
         R.string.cruz_de_malta_subtitle,
