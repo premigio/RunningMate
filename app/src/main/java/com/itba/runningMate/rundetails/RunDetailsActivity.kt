@@ -162,12 +162,10 @@ class RunDetailsActivity : AppCompatActivity(), RunDetailsView, OnMapReadyCallba
         val schedulerProvider = container.getSchedulerProvider()
         val runRepository = container.getRunRepository()
         val cacheFileProvider = container.getCacheFileProvider()
-        val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
         presenter = RunDetailsPresenter(
             cacheFileProvider,
             runRepository,
             schedulerProvider,
-            aggregateRunMetricsStorage,
             runId,
             this
         )

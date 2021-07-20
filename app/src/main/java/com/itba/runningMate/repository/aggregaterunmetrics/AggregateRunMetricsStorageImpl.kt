@@ -78,6 +78,12 @@ class AggregateRunMetricsStorageImpl(private val preferences: SharedPreferences)
 
     override fun persistState() {
         val editor = preferences.edit()
+        editor.putFloat(KEY_TOTAL_DISTANCE, totalDistance.toFloat())
+        editor.putFloat(KEY_MAX_DISTANCE, maxDistance.toFloat())
+        editor.putLong(KEY_MAX_RUNNING_TIME, maxRunningTime)
+        editor.putFloat(KEY_MAX_SPEED, maxSpeed)
+        editor.putLong(KEY_MAX_PACE, maxPace)
+        editor.putInt(KEY_MAX_CALORIES, maxCalories)
         editor.apply()
     }
 

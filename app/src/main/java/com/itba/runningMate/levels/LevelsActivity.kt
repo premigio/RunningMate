@@ -54,9 +54,8 @@ class LevelsActivity : AppCompatActivity(), LevelsView {
 
     private fun createPresenter() {
         val container = DependencyContainerLocator.locateComponent(this)
-        val runRepository = container.getRunRepository()
-        val schedulerProvider = container.getSchedulerProvider()
-        presenter = LevelsPresenter(runRepository, schedulerProvider, this)
+        val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
+        presenter = LevelsPresenter(aggregateRunMetricsStorage, this)
     }
 
     override fun onStart() {
