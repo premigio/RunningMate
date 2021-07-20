@@ -36,7 +36,7 @@ class FeedPresenter(
 
     private fun onRunListError() {
         Timber.d("Failed to retrieve runs from db")
-        // fixme: show empty message
+        view.get()?.showRecentActivity(listOf())
     }
 
     private fun receivedRunList(runs: List<Run>) {
@@ -93,7 +93,7 @@ class FeedPresenter(
 
     private fun onReceivedAchievementsError() {
         Timber.d("Failed to retrieve completed achievements from db")
-        // fixme: show empty message
+        view.get()?.showAchievements(listOf())
     }
 
     private fun receivedTotalDistance(distance: Double) {
@@ -106,7 +106,6 @@ class FeedPresenter(
 
     private fun onReceivedTotalDistanceError() {
         Timber.d("Failed to retrieve total distance from db")
-        // fixme: show empty message
     }
 
     fun goToAchievementsActivity() {
