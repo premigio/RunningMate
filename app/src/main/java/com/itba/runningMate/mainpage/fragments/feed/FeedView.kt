@@ -28,4 +28,8 @@ interface FeedView {
 
     fun stopRecentActivityShimmerAnimation()
 
+    fun startAchievementsShimmerAnimation()
+
+    fun stopAchievementsShimmerAnimation()
+
 }

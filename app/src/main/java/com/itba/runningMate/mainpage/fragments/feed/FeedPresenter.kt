@@ -21,8 +21,9 @@ class FeedPresenter(
     private val disposables: CompositeDisposable = CompositeDisposable()
 
     fun onViewAttached() {
-        view.get()?.startLevelShimmerAnimation()
         view.get()?.startRecentActivityShimmerAnimation()
+        view.get()?.startLevelShimmerAnimation()
+        view.get()?.startAchievementsShimmerAnimation()
 
         recentActivity()
         level()
@@ -86,6 +87,7 @@ class FeedPresenter(
     }
 
     private fun receivedAchievements(latestCompletedAchievements: List<Achievements>) {
+        view.get()?.stopAchievementsShimmerAnimation()
         view.get()?.showAchievements(latestCompletedAchievements)
     }
 
@@ -108,9 +110,7 @@ class FeedPresenter(
     }
 
     fun goToAchievementsActivity() {
-        if (view.get() != null) {
-            view.get()!!.launchAchievementsActivity()
-        }
+        view.get()?.launchAchievementsActivity()
     }
 
     fun goToLevelsActivity() {

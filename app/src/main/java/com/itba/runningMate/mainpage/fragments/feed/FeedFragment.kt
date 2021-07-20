@@ -24,7 +24,7 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     OnSeeAllLevelsListener, OnSeeAllAchievementsListener {
 
     private lateinit var presenter: FeedPresenter
-    private lateinit var RecentActivityCard: RecentActivityCard
+    private lateinit var recentActivityCard: RecentActivityCard
     private lateinit var levelCard: LevelsCard
     private lateinit var achievementsCard: AchievementsCard
 
@@ -39,11 +39,11 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createPresenter()
-        RecentActivityCard = view.findViewById(R.id.past_run_card)
+        recentActivityCard = view.findViewById(R.id.past_run_card)
         levelCard = view.findViewById(R.id.level_card)
         achievementsCard = view.findViewById(R.id.achievements_card)
-        RecentActivityCard.setElementListener(this)
-        RecentActivityCard.setSeeAllListener(this)
+        recentActivityCard.setElementListener(this)
+        recentActivityCard.setSeeAllListener(this)
         levelCard.setSeeAllListener(this)
         achievementsCard.setSeeAllListener(this)
     }
@@ -98,7 +98,7 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     }
 
     override fun showRecentActivity(recentRuns: List<Run>) {
-        RecentActivityCard.bind(recentRuns)
+        recentActivityCard.bind(recentRuns)
     }
 
     override fun showAchievements(achievements: List<Achievements>) {
@@ -134,10 +134,18 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     }
 
     override fun startRecentActivityShimmerAnimation() {
-        RecentActivityCard.startShimmerAnimation()
+        recentActivityCard.startShimmerAnimation()
     }
 
     override fun stopRecentActivityShimmerAnimation() {
-        RecentActivityCard.stopShimmerAnimation()
+        recentActivityCard.stopShimmerAnimation()
+    }
+
+    override fun startAchievementsShimmerAnimation() {
+        achievementsCard.startShimmerAnimation()
+    }
+
+    override fun stopAchievementsShimmerAnimation() {
+        achievementsCard.stopShimmerAnimation()
     }
 }
