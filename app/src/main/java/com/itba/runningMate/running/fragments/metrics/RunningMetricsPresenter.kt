@@ -162,7 +162,7 @@ class RunningMetricsPresenter(
             disposable = runRepository.insertRun(run)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
-                .subscribe({ runId: Long -> onRunSaved(runId) }) { e: Throwable -> onRunSavedError(e) }
+                .subscribe({ runId: Long -> onRunSaved(runId) }) { onRunSavedError() }
         }
     }
 
@@ -198,17 +198,8 @@ class RunningMetricsPresenter(
         Timber.d("Successfully saved run in db for run-id: %d", runId)
     }
 
-    private fun onRunSavedError(e: Throwable) {
-        if (view.get() == null) {
-            return
-        }
-        Timber.d(
-            """
-    Failed to save run
-    ${e.message}
-    """.trimIndent()
-        )
-        view.get()!!.showSaveRunError()
+    private fun onRunSavedError() {
+        Timber.d("Failed to save run on Db")
     }
 
 }

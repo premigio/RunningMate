@@ -162,14 +162,14 @@ class TrackingService : Service() {
         stackBuilder.addNextIntentWithParentStack(notificationIntent)
         val pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification =
-            NotificationCompat.Builder(this, Constants.NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID)
+            NotificationCompat.Builder(this, Constants.NOTIFICATION_TRACKING_SERVICE_CHANNEL_ID)
                 .setContentText(getText(R.string.notification_tracking_service))
                 .setSmallIcon(R.drawable.ic_stat_notify_tracking_service)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .build()
-        startForeground(Constants.NOTIFICATION_LOCATION_SERVICE_ID, notification)
+        startForeground(Constants.NOTIFICATION_TRACKING_SERVICE_ID, notification)
     }
 
     private fun stopForegroundService() {

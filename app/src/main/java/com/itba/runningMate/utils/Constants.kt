@@ -7,9 +7,15 @@ object Constants {
     const val WEIGHT = 76.5f
 
     /* Notifications */
-    const val NOTIFICATION_LOCATION_SERVICE_CHANNEL__ID = "LocationServiceChannel"
-    const val NOTIFICATION_LOCATION_SERVICE_CHANNEL_NAME = "Location Service Channel"
-    const val NOTIFICATION_LOCATION_SERVICE_ID = 1
+    const val NOTIFICATION_TRACKING_SERVICE_CHANNEL_ID = "TrackingServiceChannel"
+    const val NOTIFICATION_TRACKING_SERVICE_CHANNEL_NAME = "Tracking Service Channel"
+    const val NOTIFICATION_TRACKING_SERVICE_ID = 1
+
+    const val NOTIFICATION_CUSTOMER_ENGAGEMENT_CHANNEL_ID =
+        "Customer Engagement NotificationChannel"
+    const val NOTIFICATION_CUSTOMER_ENGAGEMENT_CHANNEL_NAME =
+        "Customer Engagement Notification Channel"
+    const val NOTIFICATION_CUSTOMER_ENGAGEMENT_SERVICE_ID = 2
 
     // TODO: encapsular dentro de una clase Permissions
     /* Permissions */
