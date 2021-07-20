@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.itba.runningMate.R
 import com.itba.runningMate.achievements.achievement.AchievementElementView
 import com.itba.runningMate.domain.Achievements
@@ -13,18 +14,18 @@ import java.lang.ref.WeakReference
 
 class AchievementsCard : CardView {
 
-
+    private lateinit var shimmer: ShimmerFrameLayout
     private lateinit var emptyText: TextView
     private lateinit var achievementElements: List<AchievementElementView>
     private lateinit var seeAll: Button
     private var onSeeAllClickListener: WeakReference<OnSeeAllAchievementsListener>? = null
 
     constructor(context: Context) : super(context) {
-        prepareFromConstructor(context)
+        setUp(context)
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        prepareFromConstructor(context)
+        setUp(context)
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -32,11 +33,12 @@ class AchievementsCard : CardView {
         attrs,
         defStyleAttr
     ) {
-        prepareFromConstructor(context)
+        setUp(context)
     }
 
-    private fun prepareFromConstructor(context: Context) {
+    private fun setUp(context: Context) {
         inflate(context, R.layout.card_achievements, this)
+        shimmer = findViewById(R.id.achievements_shimmer_view)
         achievementElements = listOf(
             findViewById(R.id.achievement_1),
             findViewById(R.id.achievement_2),
@@ -61,13 +63,21 @@ class AchievementsCard : CardView {
         if (achievements.isEmpty()) {
             emptyText.visibility = VISIBLE
         }
-        for (i in 0..2) {
+        for (i in 0..achievementElements.size) {
             if (i < achievements.size) {
                 achievementElements[i].bind(achievements[i], true)
-            } else {
-                achievementElements[i].visibility = GONE
+                achievementElements[i].visibility = VISIBLE
             }
         }
+    }
+
+    fun startShimmerAnimation() {
+        shimmer.startShimmerAnimation()
+    }
+
+    fun stopShimmerAnimation() {
+        shimmer.stopShimmerAnimation()
+        shimmer.visibility = GONE
     }
 
 }
