@@ -1,6 +1,8 @@
 package com.itba.runningMate.levels
 
 import android.os.Bundle
+import android.text.Html
+import android.text.Spanned
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -75,8 +77,10 @@ class LevelsActivity : AppCompatActivity(), LevelsView {
         image.setImageResource(level.image)
         progressBar.max = level.sizeKm.toInt()
         progressBar.progress = (distance - level.minKm).toInt()
-        progressKm.text =
-            getString(R.string.current_level_progress_km, distance, level.minKm + level.sizeKm)
+        val text: String =
+            getString(R.string.current_level_progress_km_html, distance, level.minKm + level.sizeKm)
+        val styledText: Spanned = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+        progressKm.text = styledText
         adapter.update(level)
     }
 
