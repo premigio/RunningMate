@@ -2,6 +2,7 @@ package com.itba.runningMate.achievements.achievement
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.itba.runningMate.components.achievement.AchievementElementView
 import com.itba.runningMate.domain.Achievements
 
 class AchievementViewHolder(private val achievementView: AchievementElementView) :

@@ -1,7 +1,7 @@
 package com.itba.runningMate.di
 
 import android.content.Context
-import com.google.firebase.messaging.FirebaseMessaging
+import androidx.work.WorkManager
 import com.itba.runningMate.db.achievement.AchievementDao
 import com.itba.runningMate.db.achievement.AchievementDb
 import com.itba.runningMate.db.run.RunDao
@@ -27,7 +27,7 @@ class ProductionDependencyContainer(context: Context) : DependencyContainer {
     private var runRepository: RunRepository? = null
     private var runDb: RunDb? = null
     private var achievementDb: AchievementDb? = null
-    private var firebaseMessaging: FirebaseMessaging? = null
+    private var workManager: WorkManager? = null
 
     override fun getApplicationContext(): Context {
         return dependency.applicationContext
@@ -97,10 +97,10 @@ class ProductionDependencyContainer(context: Context) : DependencyContainer {
         return trackingLocationUpdatesDispatcher!!
     }
 
-    override fun getFirebaseMessaging(): FirebaseMessaging {
-        if (firebaseMessaging == null) {
-            firebaseMessaging = dependency.provideFirebaseMessaging()
+    override fun getWorkManager(): WorkManager {
+        if (workManager == null) {
+            workManager = dependency.provideWorkManager();
         }
-        return firebaseMessaging!!
+        return workManager!!
     }
 }

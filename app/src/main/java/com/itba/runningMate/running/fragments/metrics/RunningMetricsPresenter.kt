@@ -24,7 +24,6 @@ class RunningMetricsPresenter(
     private val schedulers: SchedulerProvider,
     private val achievementsRepository: AchievementsRepository,
     private val aggregateRunMetricsStorage: AggregateRunMetricsStorage,
-    private val firebaseMessaging: FirebaseMessaging,
     view: RunningMetricsView?
 ) : OnTrackingMetricsUpdateListener {
 
@@ -187,14 +186,6 @@ class RunningMetricsPresenter(
         val nextLevel = Level.from(aggregateRunMetricsStorage.getTotalDistance())
 
         computeAchievements(run.startTime!!)
-        subscribeToNotificationTopics(prevLevel, nextLevel)
-    }
-
-    private fun subscribeToNotificationTopics(prevLevel: Level, nextLevel: Level) {
-        if (prevLevel != nextLevel) {
-            firebaseMessaging.unsubscribeFromTopic(prevLevel.name)
-            firebaseMessaging.subscribeToTopic(nextLevel.name)
-        }
     }
 
     private fun computeAchievements(timestamp: Date) {

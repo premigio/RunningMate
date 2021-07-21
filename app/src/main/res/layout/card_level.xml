@@ -11,7 +11,7 @@
         android:id="@+id/card_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Level"
+        android:text="@string/card_level_title"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
