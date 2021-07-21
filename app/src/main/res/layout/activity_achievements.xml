@@ -28,22 +28,22 @@
         <!--            app:layout_constraintStart_toStartOf="parent"-->
         <!--            app:layout_constraintTop_toBottomOf="@id/achievements_achievements_title_activity">-->
 
-        <!--            <com.itba.runningMate.achievements.achievement.AchievementElementView-->
+        <!--            <com.itba.runningMate.components.achievement.AchievementElementView-->
         <!--                android:id="@+id/achievement1"-->
         <!--                android:layout_width="match_parent"-->
         <!--                android:layout_height="wrap_content" />-->
 
-        <!--            <com.itba.runningMate.achievements.achievement.AchievementElementView-->
+        <!--            <com.itba.runningMate.components.achievement.AchievementElementView-->
         <!--                android:id="@+id/achievement2"-->
         <!--                android:layout_width="match_parent"-->
         <!--                android:layout_height="wrap_content" />-->
 
-        <!--            <com.itba.runningMate.achievements.achievement.AchievementElementView-->
+        <!--            <com.itba.runningMate.components.achievement.AchievementElementView-->
         <!--                android:id="@+id/achievement3"-->
         <!--                android:layout_width="match_parent"-->
         <!--                android:layout_height="wrap_content" />-->
 
-        <!--            <com.itba.runningMate.achievements.achievement.AchievementElementView-->
+        <!--            <com.itba.runningMate.components.achievement.AchievementElementView-->
         <!--                android:id="@+id/achievement4"-->
         <!--                android:layout_width="match_parent"-->
         <!--                android:layout_height="wrap_content" />-->

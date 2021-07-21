@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.itba.runningMate.R
-import com.itba.runningMate.achievements.achievement.AchievementElementView
+import com.itba.runningMate.components.achievement.AchievementElementView
 import com.itba.runningMate.domain.Achievements
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllAchievementsListener
 import java.lang.ref.WeakReference
