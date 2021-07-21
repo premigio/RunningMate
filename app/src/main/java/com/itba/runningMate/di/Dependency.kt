@@ -80,8 +80,4 @@ class Dependency(context: Context) {
         return TrackingLocationUpdatesDispatcherImpl()
     }
 
-    fun provideFirebaseMessaging(): FirebaseMessaging {
-        return FirebaseMessaging.getInstance()
-    }
-
 }

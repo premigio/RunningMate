@@ -28,6 +28,4 @@ interface DependencyContainer {
 
     fun getAchievementsRepository(): AchievementsRepository
 
-    fun getFirebaseMessaging(): FirebaseMessaging
-
 }
