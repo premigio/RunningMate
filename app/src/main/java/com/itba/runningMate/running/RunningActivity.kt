@@ -9,6 +9,7 @@ import com.itba.runningMate.R
 import com.itba.runningMate.running.adapters.ScreenSlidePagerAdapter
 import com.itba.runningMate.running.fragments.map.RunningMapFragment
 import com.itba.runningMate.running.fragments.metrics.RunningMetricsFragment
+import com.itba.runningMate.running.fragments.music.RunningMusicFragment
 import com.itba.runningMate.running.transformers.ZoomOutPageTransformer
 
 class RunningActivity : AppCompatActivity(), RunningView {
@@ -43,10 +44,12 @@ class RunningActivity : AppCompatActivity(), RunningView {
 
     private fun setUpTabs() {
         val pagerAdapter = ScreenSlidePagerAdapter(this)
+        pagerAdapter.addFragment(RunningMusicFragment())
         pagerAdapter.addFragment(RunningMetricsFragment())
         pagerAdapter.addFragment(RunningMapFragment())
         viewPager.adapter = pagerAdapter
         viewPager.setPageTransformer(ZoomOutPageTransformer())
+        viewPager.setCurrentItem(1,false)
         TabLayoutMediator(
             dotsIndicator, viewPager
         ) { _: TabLayout.Tab?, _: Int -> }.attach()
