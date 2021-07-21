@@ -9,4 +9,5 @@ interface RunningMusicView {
     fun changeButton(play:Boolean)
     fun setSongName(name: String)
     fun disappearText()
+    fun lockPlayButton(lock: Boolean)
 }

@@ -17,9 +17,7 @@ import com.spotify.android.appremote.api.Connector.ConnectionListener
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
-import com.spotify.sdk.android.auth.AuthorizationResponse
 import com.spotify.sdk.android.auth.LoginActivity.REQUEST_CODE
-import timber.log.Timber
 
 
 class RunningMusicFragment : Fragment(), RunningMusicView {
@@ -120,7 +118,7 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
     }
 
     private fun setUpButtons() {
-        playButton.setOnClickListener { presenter.onPlayButtonClick() }
+        playButton.setOnClickListener { presenter.onPlayButtonClick(false) }
         pauseButton.setOnClickListener { presenter.onPauseButtonClick() }
         nextButton.setOnClickListener { presenter.onNextButtonClick() }
         backButton.setOnClickListener { presenter.onBackButtonClick() }
@@ -154,13 +152,17 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
         textToDownload.visibility = View.GONE
     }
 
+    override fun lockPlayButton(lock: Boolean) {
+        playButton.setOnClickListener { presenter.onPlayButtonClick(!lock) }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             var response = AuthorizationClient.getResponse(resultCode, data)
-            Timber.d("Download Spotify to use the feature!")
+            presenter.workWithLoginResponse(response)
         }
     }
 

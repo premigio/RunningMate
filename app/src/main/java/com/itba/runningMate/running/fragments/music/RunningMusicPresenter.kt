@@ -16,7 +16,7 @@ class RunningMusicPresenter(view: RunningMusicView?) {
 
     private val view: WeakReference<RunningMusicView> = WeakReference(view)
 
-    fun onPlayButtonClick() {
+    fun onPlayButtonClick(locked: Boolean) {
         if (view.get() == null) {
             return
         }
@@ -24,7 +24,9 @@ class RunningMusicPresenter(view: RunningMusicView?) {
             loginSpotify()
         }
         spotifyAppRemote?.playerApi?.resume()
-        view.get()!!.changeButton(true)
+        if (!locked) {
+            view.get()!!.changeButton(true)
+        }
     }
 
     fun onPauseButtonClick() {
@@ -104,6 +106,19 @@ class RunningMusicPresenter(view: RunningMusicView?) {
                 this.spotifyAppRemote?.playerApi?.play("spotify:track:08mG3Y1vljYA6bvDt4Wqkj")
             }
             view.get()!!.disappearText()
+        }
+    }
+
+    fun workWithLoginResponse(response: AuthorizationResponse?) {
+        if (view.get() == null) {
+            return
+        }
+        if (response?.type != AuthorizationResponse.Type.TOKEN) {
+            Timber.d("Download Spotify to use the feature!")
+            view.get()!!.lockPlayButton(true)
+        }
+        else {
+            view.get()!!.lockPlayButton(false)
         }
     }
 }
