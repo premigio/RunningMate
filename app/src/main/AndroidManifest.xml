@@ -118,9 +118,32 @@
             android:name=".services.location.TrackingService"
             android:foregroundServiceType="location" />
 
+        <service
+            android:name=".notifications.services.NotificationMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.  -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_notify_tracking_service" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/white" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="DefaultNotificationChannel" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBifC20BsyylNSgFMv4gG8u0BcwnnmmZFc" />

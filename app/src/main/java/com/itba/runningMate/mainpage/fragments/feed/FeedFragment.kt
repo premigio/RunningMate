@@ -50,10 +50,15 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
 
     private fun createPresenter() {
         val container = locateComponent(requireContext())
+        val runRepository = container.getRunRepository()
+        val achievementsRepository = container.getAchievementsRepository()
+        val schedulerProvider = container.getSchedulerProvider()
+        val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
         presenter = FeedPresenter(
-            container.getRunRepository(),
-            container.getAchievementsRepository(),
-            container.getSchedulerProvider(),
+            runRepository,
+            achievementsRepository,
+            schedulerProvider,
+            aggregateRunMetricsStorage,
             this
         )
     }

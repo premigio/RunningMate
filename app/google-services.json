@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1092163826875",
+    "project_id": "composite-depot-309303",
+    "storage_bucket": "composite-depot-309303.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092163826875:android:5de741f2ae66d8aefca59e",
+        "android_client_info": {
+          "package_name": "com.itba.runningMate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092163826875-3hfn1vtssddjjvhp2tffobeu3ajdp6er.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsQBfsT9kM59e7XiI7hSktg4bq2PAFWag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092163826875-3hfn1vtssddjjvhp2tffobeu3ajdp6er.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

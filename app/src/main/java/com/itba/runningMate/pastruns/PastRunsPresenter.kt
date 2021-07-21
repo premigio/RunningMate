@@ -65,20 +65,6 @@ class PastRunsPresenter(
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())
             .subscribe({ onRunDeleted(id) }) { onRunDeleteError(id) })
-        disposables.add(runRepository.getRunMetrics(id)
-            .subscribeOn(schedulerProvider.computation())
-            .observeOn(schedulerProvider.ui())
-            .subscribe({ run: Run -> onReceivedRunMetrics(run) }) { onReceivedRunMetricsError() })
-    }
-
-    private fun onReceivedRunMetrics(run: Run) {
-        val distance = run.distance!!.toDouble()
-        aggregateRunMetricsStorage.decreaseTotalDistance(distance)
-        aggregateRunMetricsStorage.persistState()
-    }
-
-    private fun onReceivedRunMetricsError() {
-        Timber.d("Failed to decrease total distance when run deleted")
     }
 
     private fun onRunDeleted(id: Long) {

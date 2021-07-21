@@ -1,6 +1,7 @@
 package com.itba.runningMate.di
 
 import android.content.Context
+import com.google.firebase.messaging.FirebaseMessaging
 import com.itba.runningMate.repository.achievements.AchievementsRepository
 import com.itba.runningMate.repository.aggregaterunmetrics.AggregateRunMetricsStorage
 import com.itba.runningMate.repository.run.RunRepository
@@ -26,5 +27,7 @@ interface DependencyContainer {
     fun getTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher
 
     fun getAchievementsRepository(): AchievementsRepository
+
+    fun getFirebaseMessaging(): FirebaseMessaging
 
 }

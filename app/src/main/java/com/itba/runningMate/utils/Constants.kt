@@ -12,7 +12,7 @@ object Constants {
     const val NOTIFICATION_TRACKING_SERVICE_ID = 1
 
     const val NOTIFICATION_CUSTOMER_ENGAGEMENT_CHANNEL_ID =
-        "Customer Engagement NotificationChannel"
+        "CustomerEngagementNotificationChannel"
     const val NOTIFICATION_CUSTOMER_ENGAGEMENT_CHANNEL_NAME =
         "Customer Engagement Notification Channel"
     const val NOTIFICATION_CUSTOMER_ENGAGEMENT_SERVICE_ID = 2
