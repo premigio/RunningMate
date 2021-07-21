@@ -60,6 +60,9 @@ class RunningPresenter(
         this.tracker = tracker
         isTrackerAttached = true
         tracker.setOnTrackingLocationUpdateListener(this)
+        if (tracker.isTracking()) {
+            view.get()!!.launchRunningActivity()
+        }
     }
 
     fun onTrackingServiceDetached() {

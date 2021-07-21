@@ -86,7 +86,11 @@ class FeedPresenter(
             achievementsRepository.getAchievements(3)
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
-                .subscribe({ achievements: List<Achievements> -> receivedAchievements(achievements) }) { onReceivedAchievementsError() }
+                .subscribe({ achievements: List<Achievements> -> receivedAchievements(achievements) }) { throwable: Throwable ->
+                    onReceivedAchievementsError(
+                        throwable
+                    )
+                }
         )
     }
 
@@ -95,8 +99,9 @@ class FeedPresenter(
         view.get()?.showAchievements(latestCompletedAchievements)
     }
 
-    private fun onReceivedAchievementsError() {
+    private fun onReceivedAchievementsError(throwable: Throwable) {
         Timber.d("Failed to retrieve completed achievements from db")
+        Timber.d(throwable.stackTrace.toString())
         view.get()?.showAchievements(listOf())
     }
 

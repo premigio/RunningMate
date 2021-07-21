@@ -62,11 +62,26 @@ class AchievementsCard : CardView {
     fun bind(achievements: List<Achievements>) {
         if (achievements.isEmpty()) {
             emptyText.visibility = VISIBLE
+            hideAchievementElements()
+        } else {
+            emptyText.visibility = GONE
+            showAchievementElements(achievements)
         }
+    }
+
+    private fun hideAchievementElements() {
+        for (i in achievementElements.indices) {
+            achievementElements[i].visibility = GONE
+        }
+    }
+
+    private fun showAchievementElements(achievements: List<Achievements>) {
         for (i in achievementElements.indices) {
             if (i < achievements.size) {
                 achievementElements[i].bind(achievements[i], true)
                 achievementElements[i].visibility = VISIBLE
+            } else {
+                achievementElements[i].visibility = GONE
             }
         }
     }
