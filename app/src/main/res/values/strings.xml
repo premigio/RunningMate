@@ -65,12 +65,20 @@
     <string name="text_view_run_details_running_time_label">Running Time</string>
     <string name="text_view_run_summary_title">RunningMate</string>
 
+    // Past Runs Activity
+    <string name="past_runs">Activity</string>
+
     // Goals / Achievements Activity
     <string name="goals">Goals</string>
     <string name="goal_title">Title</string>
     <string name="goal_subtitle">This is a subtitle, to explain about the goal!</string>
     <string name="goal_description">This image represents the level you are in.</string>
 
+    // Levels
+    <string name="already_have_an_account">Already have an account? <font color='#FF6200EE'><b>Log In</b></font></string>
+    <string name="welcome_messages">Hello, %1$s! You have &lt;b>%2$d new messages&lt;/b>.</string>
+    <string name="current_level_progress_km_html">&lt;b> &lt;big>&lt;font color=\'#6F8C23\'>%.1f&lt;/font>&lt;/big>/%.0fkm&lt;/b></string>
+    <string name="level_unlock_km">%.0fkm</string>
     <string name="taragui">Taragui</string>
     <string name="taragui_subtitle">Level 1: Taragui, The "yerba" that leads in Argentina.</string>
     <string name="cbse">CBSé</string>
@@ -86,25 +94,61 @@
     <string name="achievements">Achievements</string>
     <string name="achievement_unlocked_description">Achievement Unlocked</string>
     <string name="achievement_description">Description of the achievement</string>
-    <string name="total_distance_achievement_title">Ran 2000km</string>
-    <string name="total_distance_achievement_subtitle">Ran more than a total of 2000km</string>
-    <string name="max_speed_achievement_title">Speed 10km/h</string>
-    <string name="max_speed_achievement_subtitle">Got to run at more than 10km/h</string>
-    <string name="max_kcal_achievement_title">1000 Kcal</string>
-    <string name="max_kcal_achievement_subtitle">Burned more than 1000 kcal in one run.</string>
-    <string name="max_time_achievement_title">Time 1h</string>
-    <string name="max_time_achievement_subtitle">Got to run for more than 1h.</string>
     <string name="level">Level</string>
 
+    // Achievements
+    <string name="max_distance_8_achievement_title">Run 8km</string>
+    <string name="max_distance_8_achievement_subtitle">Run for more than 8km</string>
+    <string name="max_distance_16_achievement_title">Run 16km</string>
+    <string name="max_distance_16_achievement_subtitle">Run for more than 16km</string>
+    <string name="max_distance_32_achievement_title">Run 32km</string>
+    <string name="max_distance_32_achievement_subtitle">Run for more than 32km</string>
+    <string name="max_distance_42_achievement_title">Run 42km</string>
+    <string name="max_distance_42_achievement_subtitle">Run for more than 42km</string>
 
-    <!--    <string name="date_title">%1$s</string>-->
-    <!--    <string name="speed_title">Speed</string>-->
-    <!--    <string name="speed_value">%1$.1f km/h</string>-->
-    <!--    <string name="pace_title">Pace</string>-->
-    <!--    <string name="pace_value">%1$s</string>-->
-    <!--    <string name="distance_title">Distance</string>-->
-    <!--    <string name="time_elapsed_title">Run Time</string>-->
-    <!--    <string name="time_elapsed_value">%1$s min</string>-->
-    <!--    <string name="delete_run">Delete</string>-->
+    <string name="max_speed_8_achievement_title">Speed 8km/h</string>
+    <string name="max_speed_8_achievement_subtitle">Run at an average of 8km/h</string>
+    <string name="max_speed_10_achievement_title">Speed 10km/h</string>
+    <string name="max_speed_10_achievement_subtitle">Run at an average of 10km/h</string>
+    <string name="max_speed_14_achievement_title">Speed 14km/h</string>
+    <string name="max_speed_14_achievement_subtitle">Run at an average of 14km/h</string>
+    <string name="max_speed_16_achievement_title">Speed 16km/h</string>
+    <string name="max_speed_16_achievement_subtitle">Run at an average of 16km/h</string>
+
+    <string name="max_kcal_500_achievement_title">500 Kcal</string>
+    <string name="max_kcal_500_achievement_subtitle">Burn more than 500 kcal in one run.</string>
+    <string name="max_kcal_1000_achievement_title">1000 Kcal</string>
+    <string name="max_kcal_1000_achievement_subtitle">Burn more than 1000 kcal in one run.</string>
+    <string name="max_kcal_2000_achievement_title">2000 Kcal</string>
+    <string name="max_kcal_2000_achievement_subtitle">Burn more than 2000 kcal in one run.</string>
+    <string name="max_kcal_3000_achievement_title">3000 Kcal</string>
+    <string name="max_kcal_3000_achievement_subtitle">Burn more than 3000 kcal in one run.</string>
+
+    <string name="max_time_30m_achievement_title">30 Minutes Run</string>
+    <string name="max_time_30m_achievement_subtitle">Run for more than 30 minutes</string>
+    <string name="max_time_1h_achievement_title">1 Hour Run</string>
+    <string name="max_time_1h_achievement_subtitle">Run for more than 1 hour.</string>
+    <string name="max_time_1h_30m_achievement_title">1 Hour 30 Minutes Run</string>
+    <string name="max_time_1h_30m_achievement_subtitle">Run for more than 1 hour and 30 minutes</string>
+    <string name="max_time_3h_achievement_title">3 Hours Run</string>
+    <string name="max_time_3h_achievement_subtitle">Run for more than 3 hours</string>
+
+    // Achievements categories
+    <string name="achievement_category_time">Run Time</string>
+    <string name="achievement_category_distance">Longest Run</string>
+    <string name="achievement_category_speed">Fastest Run</string>
+    <string name="achievement_category_calories">Calories Burned</string>
+    <string name="achievement_category_streak">Streaks</string>
+
+    <string name="empty" />
+    <string name="achievements_empty_card">You have no achievements yet</string>
+    <string name="achievements_card_title">Achievements</string>
+    <string name="card_level_title">Level</string>
+
+
+    // Spotify
+    <string name="song_name">song-name</string>
+    <string name="powered_by_spotify_download_the_app_to_use_it">Powered by Spotify®. Download the app to use it!</string>
+    <string name="spotify_logo_description">Spotify Logo</string>
 
 </resources>

@@ -1,123 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/achievements_cl_activity"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/achievements_cl_activity"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/achievements_goal_title_activity"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/achievements_rv"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/level"
-            android:textAppearance="?attr/textAppearanceHeadline4"
-            android:textColorHighlight="@color/black"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/goal_image"
-            app:layout_constraintHorizontal_bias="0.072"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.142" />
-
-        <ImageView
-            android:id="@+id/goal_image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:contentDescription="@string/goal_description"
-            app:layout_constraintTop_toBottomOf="@id/achievements_goal_title_activity"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/goal_title"
-            app:layout_constraintVertical_bias="0.692" />
-
-        <TextView
-            android:id="@+id/goal_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:text="@string/goal_title"
-            app:layout_constraintTop_toBottomOf="@id/goal_image"/>
-
-        <TextView
-            android:id="@+id/goal_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/goal_subtitle"
-            app:layout_constraintTop_toBottomOf="@id/goal_title"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/goal_progress_bar"
-            android:layout_width="300dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="@+id/goal_subtitle"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/goal_subtitle"
-            app:layout_constraintTop_toBottomOf="@id/goal_subtitle" />
-
-        <View
-            android:id="@+id/goal_achievement_separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintTop_toBottomOf="@id/goal_progress_bar"/>
-
-        <TextView
-            android:id="@+id/achievements_achievements_title_activity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/achievements"
-            android:textAppearance="?attr/textAppearanceHeadline4"
-            android:textColorHighlight="@color/black"
-            android:textStyle="bold"
-            app:layout_constraintHorizontal_bias="0.072"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/achievements_goal_title_activity"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/goal_achievement_separator"
-            app:layout_constraintVertical_bias="0.009" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/achievements_grid_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toBottomOf="@id/achievements_achievements_title_activity"
-            android:orientation="vertical">
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/achievements_grid_layout"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:orientation="vertical"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/achievements_achievements_title_activity">-->
 
-            <com.itba.runningMate.achievements.achievement.AchievementElementViewImpl
-                android:id="@+id/achievement1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <!--            <com.itba.runningMate.components.achievement.AchievementElementView-->
+        <!--                android:id="@+id/achievement1"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content" />-->
 
-            <com.itba.runningMate.achievements.achievement.AchievementElementViewImpl
-                android:id="@+id/achievement2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <!--            <com.itba.runningMate.components.achievement.AchievementElementView-->
+        <!--                android:id="@+id/achievement2"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content" />-->
 
-            <com.itba.runningMate.achievements.achievement.AchievementElementViewImpl
-                android:id="@+id/achievement3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <!--            <com.itba.runningMate.components.achievement.AchievementElementView-->
+        <!--                android:id="@+id/achievement3"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content" />-->
 
-            <com.itba.runningMate.achievements.achievement.AchievementElementViewImpl
-                android:id="@+id/achievement4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <!--            <com.itba.runningMate.components.achievement.AchievementElementView-->
+        <!--                android:id="@+id/achievement4"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content" />-->
 
 
-        </LinearLayout>
+        <!--        </LinearLayout>-->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+
+</androidx.core.widget.NestedScrollView>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="background">#dddddd</color>
     <color name="mate_color">#FF6F9825</color>
     <color name="mate_color_alpha">#6F8C23</color>
     <color name="mate_color_beta">#5D751D</color>
