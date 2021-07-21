@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference
 class RecentActivityCard : CardView {
 
     private lateinit var shimmer: ShimmerFrameLayout
-    private lateinit var pastRunsEmptyMessage: TextView
+    private lateinit var recentActivityEmptyMessage: TextView
     private lateinit var seeAll: Button
     private lateinit var runElements: List<RunElementView>
     private lateinit var runElementListener: WeakReference<OnRunClickListener>
@@ -46,20 +46,35 @@ class RecentActivityCard : CardView {
             findViewById(R.id.past_run_card_2),
             findViewById(R.id.past_run_card_3)
         )
-        pastRunsEmptyMessage = findViewById(R.id.past_run_empty_card)
+        recentActivityEmptyMessage = findViewById(R.id.past_run_empty_card)
         seeAll = findViewById(R.id.see_all_past_runs)
         seeAll.setOnClickListener { onSeeAllButtonClicked() }
     }
 
     fun bind(recentActivity: List<Run>) {
         if (recentActivity.isEmpty()) {
-            pastRunsEmptyMessage.visibility = VISIBLE
+            recentActivityEmptyMessage.visibility = VISIBLE
+            hideRuntElements()
+        } else {
+            recentActivityEmptyMessage.visibility = GONE
+            showRunElements(recentActivity)
         }
+    }
+
+    private fun hideRuntElements() {
+        for (i in runElements.indices) {
+            runElements[i].visibility = GONE
+        }
+    }
+
+    private fun showRunElements(recentActivity: List<Run>) {
         for (i in runElements.indices) {
             if (i < recentActivity.size) {
                 runElements[i].setOnClick(runElementListener.get())
                 runElements[i].bind(recentActivity[i])
                 runElements[i].visibility = VISIBLE
+            } else {
+                runElements[i].visibility = GONE
             }
         }
     }
