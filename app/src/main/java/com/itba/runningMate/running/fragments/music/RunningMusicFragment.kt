@@ -131,6 +131,7 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
     }
 
     override fun openLoginActivity(requestCode: Int, request: AuthenticationRequest?) {
+        //AuthenticationClient.openLoginInBrowser(requireActivity(),request)
         AuthenticationClient.openLoginActivity(requireActivity(), requestCode, request)
     }
 

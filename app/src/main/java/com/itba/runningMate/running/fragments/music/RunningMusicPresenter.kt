@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference
 class RunningMusicPresenter(view: RunningMusicView?) {
 
     private var spotifyAppRemote: SpotifyAppRemote? = null
-    private val REQUEST_CODE = 1337
+    private var REQUEST_CODE = 1337
     private val REDIRECT_URI = "runningmate://running"
     private val CLIENT_ID = "09b7faf352454d0a86db9ea9e5e2a43f"
 
@@ -20,11 +20,17 @@ class RunningMusicPresenter(view: RunningMusicView?) {
         if (view.get() == null) {
             return
         }
+        if(spotifyAppRemote == null){
+            loginSpotify()
+        }
         spotifyAppRemote?.playerApi?.resume()
         view.get()!!.changeButton(true)
     }
 
     fun onPauseButtonClick() {
+        if(spotifyAppRemote == null){
+            loginSpotify()
+        }
         spotifyAppRemote?.playerApi?.pause()
         if (view.get() == null) {
             return
@@ -33,10 +39,16 @@ class RunningMusicPresenter(view: RunningMusicView?) {
     }
 
     fun onNextButtonClick() {
+        if(spotifyAppRemote == null){
+            loginSpotify()
+        }
         spotifyAppRemote?.playerApi?.skipNext()
     }
 
     fun onBackButtonClick() {
+        if(spotifyAppRemote == null){
+            loginSpotify()
+        }
         spotifyAppRemote?.playerApi?.skipPrevious()
     }
 
@@ -79,7 +91,7 @@ class RunningMusicPresenter(view: RunningMusicView?) {
         builder.setScopes(arrayOf("streaming"))
         val request = builder.build()
 
-        view.get()!!.openLoginActivity(REQUEST_CODE,request)
+        view.get()!!.openLoginActivity(REQUEST_CODE++,request)
     }
 
     fun spotifyConnected(spotifyAppRemote: SpotifyAppRemote?) {
@@ -89,8 +101,9 @@ class RunningMusicPresenter(view: RunningMusicView?) {
             if (it.track?.name != null && it.track?.artist?.name != null)
                 name = it.track?.name + " - " + it.track?.artist?.name
             view.get()!!.setSongName(name)
-            //view.get()!!.changeButton(!it.isPaused)
-
+            if(it?.track == null) {
+                this.spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DXcBWIGoYB")
+            }
         }
     }
 }
