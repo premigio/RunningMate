@@ -1,5 +1,6 @@
 package com.itba.runningMate.running.fragments.music
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -16,6 +17,10 @@ import com.spotify.android.appremote.api.Connector.ConnectionListener
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
+import com.spotify.sdk.android.auth.AuthorizationResponse
+import com.spotify.sdk.android.auth.LoginActivity.REQUEST_CODE
+import timber.log.Timber
+
 
 class RunningMusicFragment : Fragment(), RunningMusicView {
 
@@ -136,7 +141,7 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
     }
 
     override fun openLoginActivity(requestCode: Int, request: AuthorizationRequest?) {
-        AuthorizationClient.stopLoginActivity(requireActivity(),requestCode)
+        //AuthorizationClient.stopLoginActivity(requireActivity(),requestCode)
         AuthorizationClient.openLoginActivity(requireActivity(), requestCode, request)
     }
 
@@ -147,6 +152,16 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
     override fun disappearText() {
         spotifyLogo.visibility = View.GONE
         textToDownload.visibility = View.GONE
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Check if result comes from the correct activity
+        if (requestCode == REQUEST_CODE) {
+            var response = AuthorizationClient.getResponse(resultCode, data)
+            Timber.d("Download Spotify to use the feature!")
+        }
     }
 
 }

@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference
 class RunningMusicPresenter(view: RunningMusicView?) {
 
     private var spotifyAppRemote: SpotifyAppRemote? = null
-    private val REQUEST_CODE = 1337
+    private val REQUEST_CODE = 1138
     private val REDIRECT_URI = "runningmate://running"
     private val CLIENT_ID = "09b7faf352454d0a86db9ea9e5e2a43f" //CLIENT_ID de local.properties
 
@@ -87,8 +87,8 @@ class RunningMusicPresenter(view: RunningMusicView?) {
             AuthorizationResponse.Type.TOKEN,
             REDIRECT_URI
         )
-
-        builder.setScopes(arrayOf("streaming"))
+        builder.setShowDialog(true)
+        //builder.setScopes(arrayOf("streaming"))
         val request = builder.build()
         view.get()!!.openLoginActivity(REQUEST_CODE,request)
     }
