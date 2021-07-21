@@ -98,7 +98,6 @@ class RunningMetricsPresenter(
                 .calories(calculateCalories(distKm))
                 .build()
             saveRun(run)
-            updateAggregateMetrics(run)
         }
     }
 
@@ -165,7 +164,12 @@ class RunningMetricsPresenter(
             disposable = runRepository.insertRun(run)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
-                .subscribe({ runId: Long -> onRunSaved(runId) }) { onRunSavedError() }
+                .subscribe({ runId: Long ->
+                    onRunSaved(
+                        runId,
+                        run
+                    )
+                }) { throwable: Throwable -> onRunSavedError(throwable) }
         }
     }
 
@@ -206,16 +210,18 @@ class RunningMetricsPresenter(
             .subscribe()
     }
 
-    private fun onRunSaved(runId: Long) {
+    private fun onRunSaved(runId: Long, run: Run) {
         if (view.get() == null) {
             return
         }
+        updateAggregateMetrics(run)
         view.get()!!.launchRunActivity(runId)
         Timber.d("Successfully saved run in db for run-id: %d", runId)
     }
 
-    private fun onRunSavedError() {
+    private fun onRunSavedError(throwable: Throwable) {
         Timber.d("Failed to save run on Db")
+        view.get()?.showSaveRunError()
     }
 
 }

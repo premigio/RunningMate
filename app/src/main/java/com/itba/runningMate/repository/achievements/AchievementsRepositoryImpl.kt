@@ -26,7 +26,7 @@ class AchievementsRepositoryImpl(
         return achievementDao.deleteAchievement(achievements)
     }
 
-    override fun addAchievements(achievements: Achievements, timestamp: Date): Completable {
+    override fun addAchievement(achievements: Achievements, timestamp: Date): Completable {
         return achievementDao.insertAchievement(
             AchievementEntityBuilder()
                 .achievement(achievements)
