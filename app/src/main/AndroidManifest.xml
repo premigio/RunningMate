@@ -113,6 +113,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <!-- Required for Android 10 (API level 29) and higher. -->
         <service
             android:name=".services.location.TrackingService"
