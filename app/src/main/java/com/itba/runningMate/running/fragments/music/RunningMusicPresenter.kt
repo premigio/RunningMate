@@ -2,17 +2,17 @@ package com.itba.runningMate.running.fragments.music
 
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.sdk.android.authentication.AuthenticationRequest
-import com.spotify.sdk.android.authentication.AuthenticationResponse
+import com.spotify.sdk.android.auth.AuthorizationRequest
+import com.spotify.sdk.android.auth.AuthorizationResponse
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class RunningMusicPresenter(view: RunningMusicView?) {
 
     private var spotifyAppRemote: SpotifyAppRemote? = null
-    private var REQUEST_CODE = 1337
+    private val REQUEST_CODE = 1337
     private val REDIRECT_URI = "runningmate://running"
-    private val CLIENT_ID = "09b7faf352454d0a86db9ea9e5e2a43f"
+    private val CLIENT_ID = "09b7faf352454d0a86db9ea9e5e2a43f" //CLIENT_ID de local.properties
 
     private val view: WeakReference<RunningMusicView> = WeakReference(view)
 
@@ -72,7 +72,7 @@ class RunningMusicPresenter(view: RunningMusicView?) {
             .build()
     }
 
-    fun onSpotifyConnectFailure(error: Throwable?) {
+    fun onSpotifyConnectFailure() {
         Timber.d("Could not connect to Spotify")
         loginSpotify()
     }
@@ -82,16 +82,15 @@ class RunningMusicPresenter(view: RunningMusicView?) {
             return
         }
 
-        val builder = AuthenticationRequest.Builder(
+        val builder = AuthorizationRequest.Builder(
             CLIENT_ID,
-            AuthenticationResponse.Type.TOKEN,
+            AuthorizationResponse.Type.TOKEN,
             REDIRECT_URI
         )
 
         builder.setScopes(arrayOf("streaming"))
         val request = builder.build()
-
-        view.get()!!.openLoginActivity(REQUEST_CODE++,request)
+        view.get()!!.openLoginActivity(REQUEST_CODE,request)
     }
 
     fun spotifyConnected(spotifyAppRemote: SpotifyAppRemote?) {
@@ -102,8 +101,9 @@ class RunningMusicPresenter(view: RunningMusicView?) {
                 name = it.track?.name + " - " + it.track?.artist?.name
             view.get()!!.setSongName(name)
             if(it?.track == null) {
-                this.spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DXcBWIGoYB")
+                this.spotifyAppRemote?.playerApi?.play("spotify:track:08mG3Y1vljYA6bvDt4Wqkj")
             }
+            view.get()!!.disappearText()
         }
     }
 }

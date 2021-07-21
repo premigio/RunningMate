@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -13,9 +14,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.itba.runningMate.R
 import com.spotify.android.appremote.api.Connector.ConnectionListener
 import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.sdk.android.authentication.AuthenticationClient
-import com.spotify.sdk.android.authentication.AuthenticationRequest
-
+import com.spotify.sdk.android.auth.AuthorizationClient
+import com.spotify.sdk.android.auth.AuthorizationRequest
 
 class RunningMusicFragment : Fragment(), RunningMusicView {
 
@@ -24,7 +24,10 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
     private lateinit var nextButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
     private lateinit var songName: TextView
+    private lateinit var textToDownload: TextView
+    private lateinit var spotifyLogo: ImageView
     private lateinit var presenter: RunningMusicPresenter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +45,8 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
         nextButton = view.findViewById(R.id.next_song)
         backButton = view.findViewById(R.id.back_song)
         songName = view.findViewById(R.id.song_name)
+        textToDownload = view.findViewById(R.id.message_no_spotify)
+        spotifyLogo = view.findViewById(R.id.spotify_logo)
         songName.ellipsize = TextUtils.TruncateAt.MARQUEE;
         songName.isSelected = true;
         songName.isSingleLine = true;
@@ -58,7 +63,7 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
                 }
 
                 override fun onFailure(error: Throwable?) {
-                    presenter.onSpotifyConnectFailure(error)
+                    presenter.onSpotifyConnectFailure()
                 }
             })
 
@@ -130,13 +135,18 @@ class RunningMusicFragment : Fragment(), RunningMusicView {
         presenter.onViewDetached()
     }
 
-    override fun openLoginActivity(requestCode: Int, request: AuthenticationRequest?) {
-        //AuthenticationClient.openLoginInBrowser(requireActivity(),request)
-        AuthenticationClient.openLoginActivity(requireActivity(), requestCode, request)
+    override fun openLoginActivity(requestCode: Int, request: AuthorizationRequest?) {
+        AuthorizationClient.stopLoginActivity(requireActivity(),requestCode)
+        AuthorizationClient.openLoginActivity(requireActivity(), requestCode, request)
     }
 
     override fun setSongName(name: String) {
         songName.text = name
+    }
+
+    override fun disappearText() {
+        spotifyLogo.visibility = View.GONE
+        textToDownload.visibility = View.GONE
     }
 
 }

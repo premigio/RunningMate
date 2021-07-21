@@ -1,2 +1,2 @@
-include ':app', ':spotify-app-remote-release-0.7.2'
+include ':app', ':spotify-app-remote-release-0.7.2', 'spotify-auth-release-1.2.3'
 rootProject.name = "Running Mate"
