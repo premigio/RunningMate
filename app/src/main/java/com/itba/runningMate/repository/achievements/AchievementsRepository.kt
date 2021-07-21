@@ -29,7 +29,7 @@ interface AchievementsRepository {
      * @param achievements achievement to add
      * @param timestamp date when achievement was latest accomplished
      */
-    fun addAchievements(achievements: Achievements, timestamp: Date): Completable
+    fun addAchievement(achievements: Achievements, timestamp: Date): Completable
 
     /**
      * Adds an achievements to achievements list, if achievement already completed it will be discarded
