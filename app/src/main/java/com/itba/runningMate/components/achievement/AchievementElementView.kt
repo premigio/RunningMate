@@ -1,4 +1,4 @@
-package com.itba.runningMate.achievements.achievement
+package com.itba.runningMate.components.achievement
 
 import android.content.Context
 import android.graphics.Color

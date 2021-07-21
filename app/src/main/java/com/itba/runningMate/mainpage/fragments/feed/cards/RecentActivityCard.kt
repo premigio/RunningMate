@@ -55,7 +55,7 @@ class RecentActivityCard : CardView {
         if (recentActivity.isEmpty()) {
             pastRunsEmptyMessage.visibility = VISIBLE
         }
-        for (i in 0..runElements.size) {
+        for (i in runElements.indices) {
             if (i < recentActivity.size) {
                 runElements[i].setOnClick(runElementListener.get())
                 runElements[i].bind(recentActivity[i])
