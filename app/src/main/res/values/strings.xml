@@ -145,4 +145,10 @@
     <string name="achievements_card_title">Achievements</string>
     <string name="card_level_title">Level</string>
 
+
+    // Spotify
+    <string name="song_name">song-name</string>
+    <string name="powered_by_spotify_download_the_app_to_use_it">Powered by Spotify®. Download the app to use it!</string>
+    <string name="spotify_logo_description">Spotify Logo</string>
+
 </resources>
