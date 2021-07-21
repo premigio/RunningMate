@@ -1,6 +1,7 @@
 package com.itba.runningMate.running.fragments.metrics
 
 import com.google.firebase.messaging.FirebaseMessaging
+import com.itba.runningMate.domain.AggregateRunMetricsDetail
 import com.itba.runningMate.domain.Route
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.repository.achievements.AchievementsRepository
@@ -11,13 +12,15 @@ import com.itba.runningMate.utils.Constants
 import com.itba.runningMate.utils.Constants.DISTANCE_EPSILON
 import com.itba.runningMate.utils.providers.schedulers.SchedulerProvider
 import com.itba.runningMate.utils.run.RunMetrics.calculateCalories
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 
 class RunningMetricsPresenterTest {
 
@@ -31,6 +34,15 @@ class RunningMetricsPresenterTest {
     private lateinit var presenter: RunningMetricsPresenter
     private lateinit var presenterSpy: RunningMetricsPresenter
     private lateinit var route: Route
+
+    private var aggregateMetrics: AggregateRunMetricsDetail = AggregateRunMetricsDetail.Builder()
+        .distance(50f)
+        .calories(40)
+        .pace(40)
+        .runningTime(40)
+        .elapsedTime(40)
+        .speed(30f)
+        .build()
 
     @Before
     @Throws(Exception::class)
@@ -96,7 +108,7 @@ class RunningMetricsPresenterTest {
 
     @Test
     fun givenStopButtonClickWhenDistanceLessThanThresholdTHenShowStopConfirm() {
-        Mockito.`when`(tracker.queryDistance()).thenReturn((DISTANCE_EPSILON - 0.5) as Float)
+        Mockito.`when`(tracker.queryDistance()).thenReturn((DISTANCE_EPSILON - 0.5).toFloat())
         presenter.onTrackingServiceAttached(tracker)
         presenter.onStopButtonClick()
         Mockito.verify(view).showStopConfirm()
@@ -209,7 +221,7 @@ class RunningMetricsPresenterTest {
 
     @Test
     fun givenStopRunWhenTrackingDistanceLessThanThresholdThenEndActivity() {
-        Mockito.`when`(tracker.queryDistance()).thenReturn((DISTANCE_EPSILON - 0.5) as Float)
+        Mockito.`when`(tracker.queryDistance()).thenReturn((DISTANCE_EPSILON - 0.5).toFloat())
         presenter.onTrackingServiceAttached(tracker)
         presenter.stopRun()
         Mockito.verify(view).finishActivity()
@@ -224,16 +236,24 @@ class RunningMetricsPresenterTest {
         Mockito.`when`(tracker.queryVelocity()).thenReturn(10f / 10000f)
         Mockito.`when`(tracker.queryPace()).thenReturn(10000L / 10)
         Mockito.`when`(tracker.queryRoute()).thenReturn(route)
+        Mockito.`when`(aggregateRunMetricsStorage.getAggregateRunMetricsDetail())
+            .thenReturn(aggregateMetrics)
+
         Mockito.`when`(schedulers.io()).thenReturn(Schedulers.trampoline())
         Mockito.`when`(schedulers.ui()).thenReturn(Schedulers.trampoline())
+        Mockito.`when`(schedulers.computation()).thenReturn(Schedulers.trampoline())
+
         val runId = 1L
+        val argumentCaptor = argumentCaptor<Run>()
+
         Mockito.`when`(
-            runRepository.insertRun(
-                ArgumentMatchers.any(
-                    Run::class.java
-                )
-            )
+            runRepository.insertRun(argumentCaptor.capture())
         ).thenReturn(Single.just(runId))
+
+        Mockito.`when`(
+            achievementsRepository.addAchievements(any(), any())
+        ).thenReturn(Completable.complete())
+
         presenter.onTrackingServiceAttached(tracker)
         presenter.stopRun()
         Mockito.verify(view).launchRunActivity(runId)
@@ -250,16 +270,22 @@ class RunningMetricsPresenterTest {
         Mockito.`when`(tracker.queryRoute()).thenReturn(route)
         Mockito.`when`(schedulers.io()).thenReturn(Schedulers.trampoline())
         Mockito.`when`(schedulers.ui()).thenReturn(Schedulers.trampoline())
-        val runId = 1L
+        Mockito.`when`(schedulers.computation()).thenReturn(Schedulers.trampoline())
+
+        Mockito.`when`(aggregateRunMetricsStorage.getAggregateRunMetricsDetail())
+            .thenReturn(aggregateMetrics)
+
         Mockito.`when`(
-            runRepository.insertRun(
-                ArgumentMatchers.any(
-                    Run::class.java
-                )
-            )
-        ).thenReturn(Single.error(RuntimeException("Could not save run")))
+            achievementsRepository.addAchievements(any(), any())
+        ).thenReturn(Completable.complete())
+
+        Mockito.`when`(
+            runRepository.insertRun(any())
+        ).thenReturn(Single.error(RuntimeException()))
+
         presenter.onTrackingServiceAttached(tracker)
         presenter.stopRun()
+
         Mockito.verify(view).showSaveRunError()
     }
 }
