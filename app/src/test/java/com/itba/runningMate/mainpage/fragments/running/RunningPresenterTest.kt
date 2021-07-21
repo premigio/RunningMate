@@ -1,223 +1,186 @@
-package com.itba.runningMate.mainpage.fragments.running;
+package com.itba.runningMate.mainpage.fragments.running
 
-import com.itba.runningMate.repository.runningstate.RunningStateStorage;
-import com.itba.runningMate.services.location.Tracker;
-import com.itba.runningMate.utils.Constants;
+import com.itba.runningMate.repository.runningstate.RunningStateStorage
+import com.itba.runningMate.services.location.Tracker
+import com.itba.runningMate.utils.Constants
+import org.junit.Before
+import org.junit.Test
+import org.mockito.Mockito
 
-import org.junit.Before;
-import org.junit.Test;
+class RunningPresenterTest {
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-public class RunningPresenterTest {
-
-    private RunningView view;
-    private RunningStateStorage stateStorage;
-    private Tracker tracker;
-
-    private RunningPresenter presenter;
+    private lateinit var view: RunningView
+    private lateinit var stateStorage: RunningStateStorage
+    private lateinit var tracker: Tracker
+    private lateinit var presenter: RunningPresenter
 
     @Before
-    public void setUp() {
-        view = mock(RunningView.class);
-        stateStorage = mock(RunningStateStorage.class);
-        tracker = mock(Tracker.class);
-
-        presenter = new RunningPresenter(stateStorage, view);
+    fun setUp() {
+        view = Mockito.mock(RunningView::class.java)
+        stateStorage = Mockito.mock(RunningStateStorage::class.java)
+        tracker = Mockito.mock(Tracker::class.java)
+        presenter = RunningPresenter(stateStorage, view)
     }
 
     @Test
-    public void givenViewAttachedWhenLocationPermissionNotGrantedThenRequestLocationPermission() {
-        when(!view.areLocationPermissionGranted()).thenReturn(false);
-
-        presenter.onViewAttached();
-
-        verify(view).requestLocationPermission();
+    fun givenViewAttachedWhenLocationPermissionNotGrantedThenRequestLocationPermission() {
+        Mockito.`when`(!view.areLocationPermissionGranted()).thenReturn(false)
+        presenter.onViewAttached()
+        Mockito.verify(view).requestLocationPermission()
     }
 
     @Test
-    public void givenViewAttachedWhenLocationPermissionGrantedThenDoNotRequestLocationPermission() {
-        when(view.areLocationPermissionGranted()).thenReturn(true);
-
-        presenter.onViewAttached();
-
-        verify(view, never()).requestLocationPermission();
+    fun givenViewAttachedWhenLocationPermissionGrantedThenDoNotRequestLocationPermission() {
+        Mockito.`when`(view.areLocationPermissionGranted()).thenReturn(true)
+        presenter.onViewAttached()
+        Mockito.verify(view, Mockito.never()).requestLocationPermission()
     }
 
     @Test
-    public void givenViewAttachedWhenLocationPermissionGrantedThenLaunchAndAttachTrackingService() {
-        when(view.areLocationPermissionGranted()).thenReturn(true);
-
-        presenter.onViewAttached();
-
-        verify(view).launchAndAttachTrackingService();
+    fun givenViewAttachedWhenLocationPermissionGrantedThenLaunchAndAttachTrackingService() {
+        Mockito.`when`(view.areLocationPermissionGranted()).thenReturn(true)
+        presenter.onViewAttached()
+        Mockito.verify(view).launchAndAttachTrackingService()
     }
 
     @Test
-    public void givenViewDetachedThenPersistState() {
-        presenter.onViewDetached();
-
-        verify(stateStorage).persistState();
+    fun givenViewDetachedThenPersistState() {
+        presenter.onViewDetached()
+        Mockito.verify(stateStorage).persistState()
     }
 
     @Test
-    public void givenViewDetachedThenDetachTrackingService() {
-
-        presenter.onTrackingServiceAttached(tracker);
-        presenter.onViewDetached();
-
-        verify(tracker).removeTrackingLocationUpdateListener(presenter);
-        verify(view).detachTrackingService();
+    fun givenViewDetachedThenDetachTrackingService() {
+        presenter.onTrackingServiceAttached(tracker)
+        presenter.onViewDetached()
+        Mockito.verify(tracker).removeTrackingLocationUpdateListener(
+            presenter
+        )
+        Mockito.verify(view).detachTrackingService()
     }
 
     @Test
-    public void givenMapAttachedWhenLocationPermissionGrantedThenEnableMyLocationOnMap() {
-        when(view.areLocationPermissionGranted()).thenReturn(true);
-
-        presenter.onMapAttached();
-
-        verify(view).mapEnableMyLocation();
+    fun givenMapAttachedWhenLocationPermissionGrantedThenEnableMyLocationOnMap() {
+        Mockito.`when`(view.areLocationPermissionGranted()).thenReturn(true)
+        presenter.onMapAttached()
+        Mockito.verify(view).mapEnableMyLocation()
     }
 
     @Test
-    public void givenMapAttachedWhenLocationPermissionGrantedAndStateStorageHasLastKnownLocationThenShowLastKnownLocation() {
-        when(view.areLocationPermissionGranted()).thenReturn(true);
-        when(stateStorage.hasLastKnownLocation()).thenReturn(true);
-
-        presenter.onMapAttached();
-
-        verify(view).showLocation(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude());
+    fun givenMapAttachedWhenLocationPermissionGrantedAndStateStorageHasLastKnownLocationThenShowLastKnownLocation() {
+        Mockito.`when`(view.areLocationPermissionGranted()).thenReturn(true)
+        Mockito.`when`(stateStorage.hasLastKnownLocation()).thenReturn(true)
+        presenter.onMapAttached()
+        Mockito.verify(view).showLocation(
+            stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude()
+        )
     }
 
     @Test
-    public void givenMapAttachedWhenLocationPermissionNotGrantedThenDisableMyLocationOnMapAndShowDefaultLocation() {
-        when(!view.areLocationPermissionGranted()).thenReturn(false);
-
-        presenter.onMapAttached();
-
-        verify(view).mapDisableMyLocation();
-        verify(view).showDefaultLocation();
+    fun givenMapAttachedWhenLocationPermissionNotGrantedThenDisableMyLocationOnMapAndShowDefaultLocation() {
+        Mockito.`when`(!view.areLocationPermissionGranted()).thenReturn(false)
+        presenter.onMapAttached()
+        Mockito.verify(view).mapDisableMyLocation()
+        Mockito.verify(view).showDefaultLocation()
     }
 
     @Test
-    public void giveTrackingServiceAttachedThenBind() {
-        presenter.onTrackingServiceAttached(tracker);
-
-        verify(tracker).setOnTrackingLocationUpdateListener(presenter);
+    fun giveTrackingServiceAttachedThenBind() {
+        presenter.onTrackingServiceAttached(tracker)
+        Mockito.verify(tracker).setOnTrackingLocationUpdateListener(
+            presenter
+        )
     }
 
     @Test
-    public void onTrackingServiceDetached() {
-        presenter.onTrackingServiceDetached();
-        assert presenter.getTracker() == null;
+    fun onTrackingServiceDetached() {
+        presenter.onTrackingServiceDetached()
+        assert(presenter.tracker == null)
     }
 
     @Test
-    public void givenCenterCameraThenActivateCenterCamera() {
-        presenter.centerCamera();
-
-        verify(stateStorage).setCenterCamera(true);
+    fun givenCenterCameraThenActivateCenterCamera() {
+        presenter.centerCamera()
+        Mockito.verify(stateStorage).setCenterCamera(true)
     }
 
     @Test
-    public void givenCenterCameraWhenStateStorageHasLastKnownLocationThenShowCenteredLastKnownLocation() {
-        when(stateStorage.hasLastKnownLocation()).thenReturn(true);
-
-        presenter.centerCamera();
-
-        verify(stateStorage).setCenterCamera(true);
-        verify(view).showLocation(stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude());
+    fun givenCenterCameraWhenStateStorageHasLastKnownLocationThenShowCenteredLastKnownLocation() {
+        Mockito.`when`(stateStorage.hasLastKnownLocation()).thenReturn(true)
+        presenter.centerCamera()
+        Mockito.verify(stateStorage).setCenterCamera(true)
+        Mockito.verify(view).showLocation(
+            stateStorage.getLastKnownLatitude(), stateStorage.getLastKnownLongitude()
+        )
     }
 
     @Test
-    public void givenFreeCameraThenFreeCamera() {
-        presenter.freeCamera();
-
-        verify(stateStorage).setCenterCamera(false);
+    fun givenFreeCameraThenFreeCamera() {
+        presenter.freeCamera()
+        Mockito.verify(stateStorage).setCenterCamera(false)
     }
 
     @Test
-    public void givenAcceptedRequestLocationPermissionThenLaunchAndAttachTrackingService() {
-        final boolean grantedPermission = true;
-
-        presenter.onRequestLocationPermissionResult(grantedPermission);
-
-        verify(view).launchAndAttachTrackingService();
+    fun givenAcceptedRequestLocationPermissionThenLaunchAndAttachTrackingService() {
+        val grantedPermission = true
+        presenter.onRequestLocationPermissionResult(grantedPermission)
+        Mockito.verify(view).launchAndAttachTrackingService()
         // onMapAttached();
     }
 
     @Test
-    public void givenDenyRequestLocationPermissionThenLaunchAndAttachTrackingService() {
-        final boolean grantedPermission = false;
-
-        presenter.onRequestLocationPermissionResult(grantedPermission);
-
-        verify(view).showLocationPermissionNotGrantedError();
+    fun givenDenyRequestLocationPermissionThenLaunchAndAttachTrackingService() {
+        val grantedPermission = false
+        presenter.onRequestLocationPermissionResult(grantedPermission)
+        Mockito.verify(view).showLocationPermissionNotGrantedError()
     }
 
     @Test
-    public void givenStartButtonClickedWhenLocationPermissionNotGrantedThenRequestLocationPermission() {
-        when(!view.areLocationPermissionGranted()).thenReturn(false);
-
-        presenter.onStartButtonClick();
-
-        verify(view).requestLocationPermission();
+    fun givenStartButtonClickedWhenLocationPermissionNotGrantedThenRequestLocationPermission() {
+        Mockito.`when`(!view.areLocationPermissionGranted()).thenReturn(false)
+        presenter.onStartButtonClick()
+        Mockito.verify(view).requestLocationPermission()
     }
 
     @Test
-    public void givenStartButtonClickedWhenLocationPermissionGrantedThenDoNotRequestLocationPermission() {
-        when(view.areLocationPermissionGranted()).thenReturn(true);
-
-        presenter.onStartButtonClick();
-
-        verify(view, never()).requestLocationPermission();
+    fun givenStartButtonClickedWhenLocationPermissionGrantedThenDoNotRequestLocationPermission() {
+        Mockito.`when`(view.areLocationPermissionGranted()).thenReturn(true)
+        presenter.onStartButtonClick()
+        Mockito.verify(view, Mockito.never()).requestLocationPermission()
     }
 
     @Test
-    public void givenStartButtonClickedWhenLocationPermissionGrantedAndTrackingServiceAttachedAndNotTrackingThenStartTracking() {
-        when(view.areLocationPermissionGranted()).thenReturn(true);
-        when(tracker.isTracking()).thenReturn(false);
-
-        presenter.onTrackingServiceAttached(tracker);
-        presenter.onStartButtonClick();
-
-        verify(tracker).startTracking();
+    fun givenStartButtonClickedWhenLocationPermissionGrantedAndTrackingServiceAttachedAndNotTrackingThenStartTracking() {
+        Mockito.`when`(view.areLocationPermissionGranted()).thenReturn(true)
+        Mockito.`when`(tracker.isTracking()).thenReturn(false)
+        presenter.onTrackingServiceAttached(tracker)
+        presenter.onStartButtonClick()
+        Mockito.verify(tracker).startTracking()
     }
 
     @Test
-    public void givenStartButtonClickedWhenLocationPermissionGrantedAndTrackingServiceAttachedAndNotTrackingThenLaunchRunningActivity() {
-        when(view.areLocationPermissionGranted()).thenReturn(true);
-        when(tracker.isTracking()).thenReturn(false);
-
-        presenter.onTrackingServiceAttached(tracker);
-        presenter.onStartButtonClick();
-
-        verify(view).launchRunningActivity();
+    fun givenStartButtonClickedWhenLocationPermissionGrantedAndTrackingServiceAttachedAndNotTrackingThenLaunchRunningActivity() {
+        Mockito.`when`(view.areLocationPermissionGranted()).thenReturn(true)
+        Mockito.`when`(tracker.isTracking()).thenReturn(false)
+        presenter.onTrackingServiceAttached(tracker)
+        presenter.onStartButtonClick()
+        Mockito.verify(view).launchRunningActivity()
     }
 
     @Test
-    public void givenLocationUpdateWhenCenteredCameraEnabledThenShowLocation() {
-        final double latitude = Constants.DEFAULT_LATITUDE;
-        final double longitude = Constants.DEFAULT_LONGITUDE;
-
-        when(stateStorage.isCenterCamera()).thenReturn(true);
-
-        presenter.onLocationUpdate(latitude, longitude);
-
-        verify(view).showLocation(latitude, longitude);
+    fun givenLocationUpdateWhenCenteredCameraEnabledThenShowLocation() {
+        val latitude = Constants.DEFAULT_LATITUDE
+        val longitude = Constants.DEFAULT_LONGITUDE
+        Mockito.`when`(stateStorage.isCenterCamera()).thenReturn(true)
+        presenter.onLocationUpdate(latitude, longitude)
+        Mockito.verify(view).showLocation(latitude, longitude)
     }
 
     @Test
-    public void givenLocationUpdateThenSaveSaveToStateStorage() {
-        final double latitude = Constants.DEFAULT_LATITUDE;
-        final double longitude = Constants.DEFAULT_LONGITUDE;
-
-        presenter.onLocationUpdate(latitude, longitude);
-
-        verify(stateStorage).setLastKnownLocation(latitude, longitude);
+    fun givenLocationUpdateThenSaveSaveToStateStorage() {
+        val latitude = Constants.DEFAULT_LATITUDE
+        val longitude = Constants.DEFAULT_LONGITUDE
+        presenter.onLocationUpdate(latitude, longitude)
+        Mockito.verify(stateStorage).setLastKnownLocation(latitude, longitude)
     }
-
 }
