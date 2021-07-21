@@ -10,9 +10,9 @@ class WorkerFactory {
     companion object {
 
         fun getCustomerEngagementWorker(): PeriodicWorkRequest {
-            return PeriodicWorkRequestBuilder<NotificationWorker>(7, TimeUnit.DAYS)
+            return PeriodicWorkRequestBuilder<NotificationWorker>(3, TimeUnit.MINUTES)
                 .addTag(Constants.NOTIFICATION_CUSTOMER_ENGAGEMENT_CHANNEL_NAME)
-                .setInitialDelay(7, TimeUnit.DAYS)
+                .setInitialDelay(3, TimeUnit.MINUTES)
                 .build()
         }
     }
