@@ -18,7 +18,6 @@ class RunDetailsPresenter(
     private val cacheFileProvider: CacheFileProvider,
     private val runRepository: RunRepository,
     private val schedulerProvider: SchedulerProvider,
-    private val aggregateRunMetricsStorage: AggregateRunMetricsStorage,
     private val runId: Long,
     view: RunDetailsView?
 ) {
@@ -73,8 +72,6 @@ class RunDetailsPresenter(
     }
 
     fun onDeleteButtonClick() {
-        aggregateRunMetricsStorage.decreaseTotalDistance(distance)
-        aggregateRunMetricsStorage.persistState()
         disposables.add(runRepository.deleteRun(runId)
             .subscribeOn(schedulerProvider.computation())
             .observeOn(schedulerProvider.ui())

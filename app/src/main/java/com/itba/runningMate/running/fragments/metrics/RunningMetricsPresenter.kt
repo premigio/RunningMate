@@ -1,7 +1,9 @@
 package com.itba.runningMate.running.fragments.metrics
 
 import androidx.annotation.VisibleForTesting
+import com.google.firebase.messaging.FirebaseMessaging
 import com.itba.runningMate.domain.Achievements
+import com.itba.runningMate.domain.Level
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.repository.achievements.AchievementsRepository
 import com.itba.runningMate.repository.aggregaterunmetrics.AggregateRunMetricsStorage
@@ -22,6 +24,7 @@ class RunningMetricsPresenter(
     private val schedulers: SchedulerProvider,
     private val achievementsRepository: AchievementsRepository,
     private val aggregateRunMetricsStorage: AggregateRunMetricsStorage,
+    private val firebaseMessaging: FirebaseMessaging,
     view: RunningMetricsView?
 ) : OnTrackingMetricsUpdateListener {
 
@@ -162,11 +165,13 @@ class RunningMetricsPresenter(
             disposable = runRepository.insertRun(run)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
-                .subscribe({ runId: Long -> onRunSaved(runId) }) { e: Throwable -> onRunSavedError(e) }
+                .subscribe({ runId: Long -> onRunSaved(runId) }) { onRunSavedError() }
         }
     }
 
     private fun updateAggregateMetrics(run: Run) {
+        val prevLevel = Level.from(aggregateRunMetricsStorage.getTotalDistance())
+
         aggregateRunMetricsStorage.incrementTotalDistance(run.distance!!.toDouble())
         aggregateRunMetricsStorage.updateMaxDistance(run.distance.toDouble())
         aggregateRunMetricsStorage.updateMaxRunningTime(run.runningTime!!)
@@ -174,7 +179,18 @@ class RunningMetricsPresenter(
         aggregateRunMetricsStorage.updateMaxPace(run.pace!!)
         aggregateRunMetricsStorage.updateMaxCalories(run.calories!!)
         aggregateRunMetricsStorage.persistState()
+
+        val nextLevel = Level.from(aggregateRunMetricsStorage.getTotalDistance())
+
         computeAchievements(run.startTime!!)
+        subscribeToNotificationTopics(prevLevel, nextLevel)
+    }
+
+    private fun subscribeToNotificationTopics(prevLevel: Level, nextLevel: Level) {
+        if (prevLevel != nextLevel) {
+            firebaseMessaging.unsubscribeFromTopic(prevLevel.name)
+            firebaseMessaging.subscribeToTopic(nextLevel.name)
+        }
     }
 
     private fun computeAchievements(timestamp: Date) {
@@ -198,17 +214,8 @@ class RunningMetricsPresenter(
         Timber.d("Successfully saved run in db for run-id: %d", runId)
     }
 
-    private fun onRunSavedError(e: Throwable) {
-        if (view.get() == null) {
-            return
-        }
-        Timber.d(
-            """
-    Failed to save run
-    ${e.message}
-    """.trimIndent()
-        )
-        view.get()!!.showSaveRunError()
+    private fun onRunSavedError() {
+        Timber.d("Failed to save run on Db")
     }
 
 }

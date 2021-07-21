@@ -10,7 +10,7 @@ enum class AchievementCategory(
     CALORIES(R.string.achievement_category_calories),
     DISTANCE(R.string.achievement_category_distance),
     SPEED(R.string.achievement_category_speed),
-    STREAKS(R.string.achievement_category_streak),
+//    STREAKS(R.string.achievement_category_streak),
     ;
 
     companion object {

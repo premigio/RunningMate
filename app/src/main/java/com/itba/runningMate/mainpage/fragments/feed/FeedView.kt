@@ -6,17 +6,11 @@ import com.itba.runningMate.domain.Run
 
 interface FeedView {
 
-    fun setPastRunCardsNoText()
-
-    fun addRunToCard(i: Int, run: Run)
-
-    fun disappearRuns(abs: Int)
-
-    fun disappearNoText()
+    fun showRecentActivity(recentRuns: List<Run>)
 
     fun showAchievements(achievements: List<Achievements>)
 
-    fun showCurrentLevel(level: Level)
+    fun showCurrentLevel(level: Level, distance: Double)
 
     fun launchLevelsActivity()
 
@@ -33,5 +27,9 @@ interface FeedView {
     fun startRecentActivityShimmerAnimation()
 
     fun stopRecentActivityShimmerAnimation()
+
+    fun startAchievementsShimmerAnimation()
+
+    fun stopAchievementsShimmerAnimation()
 
 }

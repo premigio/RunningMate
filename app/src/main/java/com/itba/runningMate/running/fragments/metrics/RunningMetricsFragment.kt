@@ -110,12 +110,14 @@ class RunningMetricsFragment : Fragment(), RunningMetricsView, ServiceConnection
         val runRepository = container.getRunRepository()
         val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
         val achievementsRepository = container.getAchievementsRepository()
+        val firebaseMessaging = container.getFirebaseMessaging()
         presenter =
             RunningMetricsPresenter(
                 runRepository,
                 schedulerProvider,
                 achievementsRepository,
                 aggregateRunMetricsStorage,
+                firebaseMessaging,
                 this
             )
     }

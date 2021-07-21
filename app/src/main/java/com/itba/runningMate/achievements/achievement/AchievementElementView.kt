@@ -2,6 +2,7 @@ package com.itba.runningMate.achievements.achievement
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
@@ -14,7 +15,7 @@ class AchievementElementView : ConstraintLayout {
 
     private lateinit var titleTextView: TextView
     private lateinit var descriptionTextView: TextView
-    private lateinit var imageView: ImageView
+    private lateinit var bageImageView: ImageView
 
     constructor(context: Context) : super(context) {
         inflate(context, R.layout.view_achievement_element, this)
@@ -46,7 +47,8 @@ class AchievementElementView : ConstraintLayout {
     }
 
     private fun setUp() {
-        imageView = findViewById(R.id.badge_icon)
+        bageImageView = findViewById(R.id.badge_icon)
+//        badgeBckgroundImageView = findViewById(R.id.badge_icon_background)
         titleTextView = findViewById(R.id.achievement_title_name)
         descriptionTextView = findViewById(R.id.achievement_description)
     }
@@ -59,25 +61,40 @@ class AchievementElementView : ConstraintLayout {
     fun bind(achievement: Achievements, achieved: Boolean) {
         titleTextView.setText(achievement.title)
         descriptionTextView.setText(achievement.description)
-        setBadgeColor(achievement.level)
+        bageImageView.setImageResource(achievement.image)
         if (achieved) {
-            imageView.alpha = 1.0f
+            bageImageView.alpha = 1.0f
+        } else {
+            bageImageView.alpha = 0.3f
         }
+        setBadgeColor(achievement.level)
     }
 
     private fun setBadgeColor(level: AchievementLevel) {
         when (level) {
             AchievementLevel.BRONZE -> {
-                imageView.background.setTint(Color.parseColor("#b08d57"))
+                bageImageView.background.setColorFilter(
+                    Color.parseColor("#CD7F32"),
+                    PorterDuff.Mode.SRC_ATOP
+                )
             }
             AchievementLevel.SILVER -> {
-                imageView.background.setTint(Color.parseColor("#aaa9ad"))
+                bageImageView.background.setColorFilter(
+                    Color.parseColor("#C0C0C0"),
+                    PorterDuff.Mode.SRC_ATOP
+                )
             }
             AchievementLevel.GOLD -> {
-                imageView.background.setTint(Color.parseColor("#d4af37"))
+                bageImageView.background.setColorFilter(
+                    Color.parseColor("#FFD700"),
+                    PorterDuff.Mode.SRC_ATOP
+                )
             }
             AchievementLevel.PLATINUM -> {
-                imageView.background.setTint(Color.parseColor("#e5e4e2"))
+                bageImageView.background.setColorFilter(
+                    resources.getColor(R.color.mate_color),
+                    PorterDuff.Mode.SRC_ATOP
+                )
             }
         }
     }

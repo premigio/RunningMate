@@ -15,16 +15,16 @@ import com.itba.runningMate.domain.Level
 import com.itba.runningMate.domain.Run
 import com.itba.runningMate.mainpage.fragments.feed.cards.AchievementsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.LevelsCard
-import com.itba.runningMate.mainpage.fragments.feed.cards.PastRunsCard
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllAchievementsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllLevelsListener
 import com.itba.runningMate.mainpage.fragments.feed.cards.listeners.OnSeeAllPastRunsListener
+import com.itba.runningMate.mainpage.fragments.feed.cards.RecentActivityCard
 
 class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsListener,
     OnSeeAllLevelsListener, OnSeeAllAchievementsListener {
 
     private lateinit var presenter: FeedPresenter
-    private lateinit var pastRunsCard: PastRunsCard
+    private lateinit var recentActivityCard: RecentActivityCard
     private lateinit var levelCard: LevelsCard
     private lateinit var achievementsCard: AchievementsCard
 
@@ -39,21 +39,26 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createPresenter()
-        pastRunsCard = view.findViewById(R.id.past_run_card)
+        recentActivityCard = view.findViewById(R.id.past_run_card)
         levelCard = view.findViewById(R.id.level_card)
         achievementsCard = view.findViewById(R.id.achievements_card)
-        pastRunsCard.setElementListener(this)
-        pastRunsCard.setSeeAllListener(this)
+        recentActivityCard.setElementListener(this)
+        recentActivityCard.setSeeAllListener(this)
         levelCard.setSeeAllListener(this)
         achievementsCard.setSeeAllListener(this)
     }
 
     private fun createPresenter() {
         val container = locateComponent(requireContext())
+        val runRepository = container.getRunRepository()
+        val achievementsRepository = container.getAchievementsRepository()
+        val schedulerProvider = container.getSchedulerProvider()
+        val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
         presenter = FeedPresenter(
-            container.getRunRepository(),
-            container.getAchievementsRepository(),
-            container.getSchedulerProvider(),
+            runRepository,
+            achievementsRepository,
+            schedulerProvider,
+            aggregateRunMetricsStorage,
             this
         )
     }
@@ -97,28 +102,16 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
         presenter.onViewDetached()
     }
 
-    override fun setPastRunCardsNoText() {
-        pastRunsCard.setPastRunCardsNoText()
-    }
-
-    override fun addRunToCard(i: Int, run: Run) {
-        pastRunsCard.addRunToCard(i, run)
-    }
-
-    override fun disappearRuns(abs: Int) {
-        pastRunsCard.disappearRuns(abs)
-    }
-
-    override fun disappearNoText() {
-        pastRunsCard.disappearNoText()
+    override fun showRecentActivity(recentRuns: List<Run>) {
+        recentActivityCard.bind(recentRuns)
     }
 
     override fun showAchievements(achievements: List<Achievements>) {
         achievementsCard.bind(achievements)
     }
 
-    override fun showCurrentLevel(level: Level) {
-        levelCard.bind(level)
+    override fun showCurrentLevel(level: Level, distance: Double) {
+        levelCard.bind(level, distance)
     }
 
     override fun onRunClick(id: Long) {
@@ -146,10 +139,18 @@ class FeedFragment : Fragment(), FeedView, OnRunClickListener, OnSeeAllPastRunsL
     }
 
     override fun startRecentActivityShimmerAnimation() {
-        pastRunsCard.startShimmerAnimation()
+        recentActivityCard.startShimmerAnimation()
     }
 
     override fun stopRecentActivityShimmerAnimation() {
-        pastRunsCard.stopShimmerAnimation()
+        recentActivityCard.stopShimmerAnimation()
+    }
+
+    override fun startAchievementsShimmerAnimation() {
+        achievementsCard.startShimmerAnimation()
+    }
+
+    override fun stopAchievementsShimmerAnimation() {
+        achievementsCard.stopShimmerAnimation()
     }
 }

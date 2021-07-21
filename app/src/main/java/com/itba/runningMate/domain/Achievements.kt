@@ -16,7 +16,7 @@ enum class Achievements(
     DISTANCE_8(
         R.string.max_distance_8_achievement_title,
         R.string.max_distance_8_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_distance,
         AchievementCategory.DISTANCE,
         AchievementLevel.BRONZE
     ) {
@@ -27,7 +27,7 @@ enum class Achievements(
     DISTANCE_16(
         R.string.max_distance_16_achievement_title,
         R.string.max_distance_16_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_distance,
         AchievementCategory.DISTANCE,
         AchievementLevel.SILVER
     ) {
@@ -38,7 +38,7 @@ enum class Achievements(
     DISTANCE_32(
         R.string.max_distance_32_achievement_title,
         R.string.max_distance_32_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_distance,
         AchievementCategory.DISTANCE,
         AchievementLevel.GOLD
     ) {
@@ -49,7 +49,7 @@ enum class Achievements(
     DISTANCE_42(
         R.string.max_distance_42_achievement_title,
         R.string.max_distance_42_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_distance,
         AchievementCategory.DISTANCE,
         AchievementLevel.PLATINUM
     ) {
@@ -63,7 +63,7 @@ enum class Achievements(
     KCAL_500(
         R.string.max_kcal_500_achievement_title,
         R.string.max_kcal_500_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_calories,
         AchievementCategory.CALORIES,
         AchievementLevel.BRONZE
     ) {
@@ -74,7 +74,7 @@ enum class Achievements(
     KCAL_1000(
         R.string.max_kcal_1000_achievement_title,
         R.string.max_kcal_1000_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_calories,
         AchievementCategory.CALORIES,
         AchievementLevel.SILVER
     ) {
@@ -85,7 +85,7 @@ enum class Achievements(
     KCAL_2000(
         R.string.max_kcal_2000_achievement_title,
         R.string.max_kcal_2000_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_calories,
         AchievementCategory.CALORIES,
         AchievementLevel.GOLD
     ) {
@@ -96,7 +96,7 @@ enum class Achievements(
     KCAL_3000(
         R.string.max_kcal_3000_achievement_title,
         R.string.max_kcal_3000_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_calories,
         AchievementCategory.CALORIES,
         AchievementLevel.PLATINUM
     ) {
@@ -110,7 +110,7 @@ enum class Achievements(
     SPEED_8(
         R.string.max_speed_8_achievement_title,
         R.string.max_speed_8_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_speed,
         AchievementCategory.SPEED,
         AchievementLevel.BRONZE
     ) {
@@ -121,7 +121,7 @@ enum class Achievements(
     SPEED_10(
         R.string.max_speed_10_achievement_title,
         R.string.max_speed_10_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_speed,
         AchievementCategory.SPEED,
         AchievementLevel.SILVER
     ) {
@@ -132,7 +132,7 @@ enum class Achievements(
     SPEED_14(
         R.string.max_speed_14_achievement_title,
         R.string.max_speed_14_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_speed,
         AchievementCategory.SPEED,
         AchievementLevel.GOLD
     ) {
@@ -143,7 +143,7 @@ enum class Achievements(
     SPEED_16(
         R.string.max_speed_16_achievement_title,
         R.string.max_speed_16_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_speed,
         AchievementCategory.SPEED,
         AchievementLevel.PLATINUM
     ) {
@@ -157,7 +157,7 @@ enum class Achievements(
     TIME_30M(
         R.string.max_time_30m_achievement_title,
         R.string.max_time_30m_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_time,
         AchievementCategory.TIME,
         AchievementLevel.BRONZE
     ) {
@@ -168,7 +168,7 @@ enum class Achievements(
     TIME_1H(
         R.string.max_time_1h_achievement_title,
         R.string.max_time_1h_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_time,
         AchievementCategory.TIME,
         AchievementLevel.SILVER
     ) {
@@ -179,7 +179,7 @@ enum class Achievements(
     TIME_1H_30M(
         R.string.max_time_1h_30m_achievement_title,
         R.string.max_time_1h_30m_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_time,
         AchievementCategory.TIME,
         AchievementLevel.GOLD
     ) {
@@ -190,7 +190,7 @@ enum class Achievements(
     TIME_3H(
         R.string.max_time_3h_achievement_title,
         R.string.max_time_3h_achievement_subtitle,
-        R.drawable.badge_icon,
+        R.drawable.ic_badge_time,
         AchievementCategory.TIME,
         AchievementLevel.PLATINUM
     ) {

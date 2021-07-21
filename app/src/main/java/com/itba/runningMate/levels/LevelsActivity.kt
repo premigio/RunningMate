@@ -1,6 +1,8 @@
 package com.itba.runningMate.levels
 
 import android.os.Bundle
+import android.text.Html
+import android.text.Spanned
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -23,6 +25,7 @@ class LevelsActivity : AppCompatActivity(), LevelsView {
     private lateinit var title: TextView
     private lateinit var description: TextView
     private lateinit var progressBar: ProgressBar
+    private lateinit var progressKm: TextView
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,7 @@ class LevelsActivity : AppCompatActivity(), LevelsView {
         title = findViewById(R.id.level_title)
         description = findViewById(R.id.level_subtitle)
         progressBar = findViewById(R.id.current_level_progress_bar)
+        progressKm = findViewById(R.id.current_level_progress_km)
 
         // back btn
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -50,9 +54,8 @@ class LevelsActivity : AppCompatActivity(), LevelsView {
 
     private fun createPresenter() {
         val container = DependencyContainerLocator.locateComponent(this)
-        val runRepository = container.getRunRepository()
-        val schedulerProvider = container.getSchedulerProvider()
-        presenter = LevelsPresenter(runRepository, schedulerProvider, this)
+        val aggregateRunMetricsStorage = container.getAggregateRunMetricsStorage()
+        presenter = LevelsPresenter(aggregateRunMetricsStorage, this)
     }
 
     override fun onStart() {
@@ -73,6 +76,10 @@ class LevelsActivity : AppCompatActivity(), LevelsView {
         image.setImageResource(level.image)
         progressBar.max = level.sizeKm.toInt()
         progressBar.progress = (distance - level.minKm).toInt()
+        val text: String =
+            getString(R.string.current_level_progress_km_html, distance, level.minKm + level.sizeKm)
+        val styledText: Spanned = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+        progressKm.text = styledText
         adapter.update(level)
     }
 

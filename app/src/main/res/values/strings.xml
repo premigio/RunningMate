@@ -75,7 +75,10 @@
     <string name="goal_description">This image represents the level you are in.</string>
 
     // Levels
-
+    <string name="already_have_an_account">Already have an account? <font color='#FF6200EE'><b>Log In</b></font></string>
+    <string name="welcome_messages">Hello, %1$s! You have &lt;b>%2$d new messages&lt;/b>.</string>
+    <string name="current_level_progress_km_html">&lt;b> &lt;big>&lt;font color=\'#6F8C23\'>%.1f&lt;/font>&lt;/big>/%.0fkm&lt;/b></string>
+    <string name="level_unlock_km">%.0fkm</string>
     <string name="taragui">Taragui</string>
     <string name="taragui_subtitle">Level 1: Taragui, The "yerba" that leads in Argentina.</string>
     <string name="cbse">CBSé</string>
@@ -138,14 +141,8 @@
     <string name="achievement_category_streak">Streaks</string>
     <string name="song_name">song-name</string>
 
-    <!--    <string name="date_title">%1$s</string>-->
-    <!--    <string name="speed_title">Speed</string>-->
-    <!--    <string name="speed_value">%1$.1f km/h</string>-->
-    <!--    <string name="pace_title">Pace</string>-->
-    <!--    <string name="pace_value">%1$s</string>-->
-    <!--    <string name="distance_title">Distance</string>-->
-    <!--    <string name="time_elapsed_title">Run Time</string>-->
-    <!--    <string name="time_elapsed_value">%1$s min</string>-->
-    <!--    <string name="delete_run">Delete</string>-->
+    <string name="empty" />
+    <string name="achievements_empty_card">You have no achievements yet</string>
+    <string name="achievements_card_title">Achievements</string>
 
 </resources>
