@@ -63,7 +63,7 @@ class AchievementsCard : CardView {
         if (achievements.isEmpty()) {
             emptyText.visibility = VISIBLE
         }
-        for (i in 0..achievementElements.size) {
+        for (i in achievementElements.indices) {
             if (i < achievements.size) {
                 achievementElements[i].bind(achievements[i], true)
                 achievementElements[i].visibility = VISIBLE

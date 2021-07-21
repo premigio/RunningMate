@@ -2,7 +2,7 @@ package com.itba.runningMate.di
 
 import android.content.Context
 import androidx.room.Room
-import com.google.firebase.messaging.FirebaseMessaging
+import androidx.work.WorkManager
 import com.itba.runningMate.db.achievement.AchievementDao
 import com.itba.runningMate.db.achievement.AchievementDb
 import com.itba.runningMate.db.run.RunDao
@@ -78,6 +78,10 @@ class Dependency(context: Context) {
 
     fun provideTrackingLocationUpdatesDispatcher(): TrackingLocationUpdatesDispatcher {
         return TrackingLocationUpdatesDispatcherImpl()
+    }
+
+    fun provideWorkManager(): WorkManager {
+        return WorkManager.getInstance(applicationContext)
     }
 
 }

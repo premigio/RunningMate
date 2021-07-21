@@ -4,7 +4,7 @@ import android.app.Application
 import android.app.NotificationManager
 import android.os.Build
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.WorkManager
+import com.itba.runningMate.di.DependencyContainerLocator
 import com.itba.runningMate.notifications.NotificationChannelFactory
 import com.itba.runningMate.notifications.workers.NotificationWorker.Companion.NOTIFICATION_WORKER_NAME
 import com.itba.runningMate.notifications.workers.WorkerFactory
@@ -26,7 +26,8 @@ class RunningMate : Application() {
     }
 
     private fun createNotificationWorker() {
-        WorkManager.getInstance(this)
+        val container = DependencyContainerLocator.locateComponent(this)
+        container.getWorkManager()
             .enqueueUniquePeriodicWork(
                 NOTIFICATION_WORKER_NAME,
                 ExistingPeriodicWorkPolicy.REPLACE,

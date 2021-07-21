@@ -124,13 +124,13 @@
     <string name="max_kcal_3000_achievement_title">3000 Kcal</string>
     <string name="max_kcal_3000_achievement_subtitle">Burn more than 3000 kcal in one run.</string>
 
-    <string name="max_time_30m_achievement_title">Time 00:30</string>
+    <string name="max_time_30m_achievement_title">30 Minutes Run</string>
     <string name="max_time_30m_achievement_subtitle">Run for more than 30 minutes</string>
-    <string name="max_time_1h_achievement_title">Time 1:00</string>
+    <string name="max_time_1h_achievement_title">1 Hour Run</string>
     <string name="max_time_1h_achievement_subtitle">Run for more than 1 hour.</string>
-    <string name="max_time_1h_30m_achievement_title">Time 1:30</string>
+    <string name="max_time_1h_30m_achievement_title">1 Hour 30 Minutes Run</string>
     <string name="max_time_1h_30m_achievement_subtitle">Run for more than 1 hour and 30 minutes</string>
-    <string name="max_time_3h_achievement_title">Time 3:00</string>
+    <string name="max_time_3h_achievement_title">3 Hours Run</string>
     <string name="max_time_3h_achievement_subtitle">Run for more than 3 hours</string>
 
     // Achievements categories
@@ -143,5 +143,6 @@
     <string name="empty" />
     <string name="achievements_empty_card">You have no achievements yet</string>
     <string name="achievements_card_title">Achievements</string>
+    <string name="card_level_title">Level</string>
 
 </resources>
